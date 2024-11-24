@@ -34,7 +34,7 @@ setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <>app</>
+    <div>app</div>
   </IonApp>
 );
 
