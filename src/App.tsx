@@ -1,4 +1,5 @@
-import { IonApp, setupIonicReact } from '@ionic/react';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -29,12 +30,21 @@ import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Menu from './components/Menu';
+import { Route } from 'react-router';
 
 setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
-    <div>app</div>
+    <IonReactRouter>
+      <IonRouterOutlet>
+        <Route exact path="/">
+          <div>login / data loading</div>
+        </Route>
+        <Route component={Menu} path="/app" />
+      </IonRouterOutlet>
+    </IonReactRouter>
   </IonApp>
 );
 
