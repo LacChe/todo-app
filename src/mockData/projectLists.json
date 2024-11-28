@@ -1,0 +1,10 @@
+[
+  {
+    "id": "list-0001",
+    "projectIds": ["proj-0001", "proj-0002"]
+  },
+  {
+    "id": "list-0002",
+    "projectIds": ["proj-0003"]
+  }
+]

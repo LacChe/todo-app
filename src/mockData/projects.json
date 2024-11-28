@@ -1,0 +1,23 @@
+[
+  {
+    "id": "proj-0001",
+    "name": "Project 1",
+    "color": "#0000ff",
+    "taskIds": ["task-0001", "task-0002", "task-0003"],
+    "viewSettings": {}
+  },
+  {
+    "id": "proj-0002",
+    "name": "Project 2",
+    "color": "#00ff00",
+    "taskIds": ["task-0004", "task-0005"],
+    "viewSettings": {}
+  },
+  {
+    "id": "proj-0003",
+    "name": "Project 3",
+    "color": "#ff0000",
+    "taskIds": ["task-0006", "task-0007"],
+    "viewSettings": {}
+  }
+]
