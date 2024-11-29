@@ -26,16 +26,17 @@ export function getUserId(): string {
  * @param {string} userId
  * The ID of the user whose project list to retrieve.
  *
- * @returns {ProjectListType}
- * A promise that resolves to a project list object.
+ * @returns {Promise<ProjectListType>}
+ * A promise that resolves to the project list object.
  */
-export function getProjectList(userId: string): ProjectListType {
+export async function getProjectList(userId: string): Promise<ProjectListType> {
   if (import.meta.env.VITE_MOCK_DATA_MODE) {
     return mockProjectLists[0];
   } else {
-    // TODO load real data
-    console.log('TODO load real data');
-    return mockProjectLists[0];
+    let retrievedLocalProjectList = await getPreference('localProjectList');
+    let projectList;
+    if (retrievedLocalProjectList) projectList = await JSON.parse(retrievedLocalProjectList);
+    return projectList;
   }
 }
 
@@ -45,38 +46,39 @@ export function getProjectList(userId: string): ProjectListType {
  * @param {string} userId
  * The ID of the user whose projects to retrieve.
  *
- * @returns {ProjectType[]}
+ * @returns {Promise<ProjectType[]>}
  * A promise that resolves to an array of project objects.
  */
-export function getProjects(userId: string): ProjectType[] {
+export async function getProjects(userId: string): Promise<ProjectType[]> {
   if (import.meta.env.VITE_MOCK_DATA_MODE) {
     const returnProjects = mockProjects.filter((project) => mockProjectLists[0].projectIds.includes(project.id));
     return returnProjects;
   } else {
-    // TODO load real data
-    console.log('TODO load real data');
-    const returnProjects = mockProjects.filter((project) => mockProjectLists[0].projectIds.includes(project.id));
-    return returnProjects;
+    let retrievedLocalProjects = await getPreference('localProjects');
+    let projects = [];
+    if (retrievedLocalProjects) projects = await JSON.parse(retrievedLocalProjects);
+    return projects;
   }
 }
 
 /**
- * Retrieve a project by its ID.
+ * Retrieve a single project by ID.
  *
  * @param {string} projectId
  * The ID of the project to retrieve.
  *
- * @returns {ProjectType | null}
- * A promise that resolves to the requested project, or null if not found.
+ * @returns {Promise<ProjectType | null>}
+ * A promise that resolves to the project object, or null if not found.
  */
-export function getProject(projectId: string): ProjectType | null {
+export async function getProject(projectId: string): Promise<ProjectType | null> {
   if (import.meta.env.VITE_MOCK_DATA_MODE) {
     const returnProject = mockProjects.filter((project) => project.id === projectId)[0];
     return returnProject;
   } else {
-    // TODO load real data
-    console.log('TODO load real data');
-    const returnProject = mockProjects.filter((project) => project.id === projectId)[0];
+    let retrievedLocalProjects = await getPreference('localProjects');
+    let projects = [];
+    if (retrievedLocalProjects) projects = await JSON.parse(retrievedLocalProjects);
+    const returnProject = projects.filter((project: ProjectType) => project.id === projectId)[0];
     return returnProject;
   }
 }

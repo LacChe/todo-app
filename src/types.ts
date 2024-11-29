@@ -1,6 +1,6 @@
 export type TabType = 'list' | 'matrix' | 'calendar';
 
-export type PreferenceKeyType = 'currentTab' | 'currentProjectId';
+export type PreferenceKeyType = 'localProjectList' | 'localProjects' | 'currentTab' | 'currentProjectId';
 
 export type ProjectListType = {
   id: string;

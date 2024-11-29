@@ -10,11 +10,15 @@ const MatrixView: React.FC = () => {
 
   // retrieve project when id changes
   useEffect(() => {
+    loadData();
+  }, [projectId]);
+
+  async function loadData() {
     if (projectId === 'undefined') return;
-    const retrievedProject = getProject(projectId);
+    const retrievedProject = await getProject(projectId);
     if (retrievedProject) setProject(retrievedProject);
     else console.error(`ProjectId: ${projectId} not found`);
-  }, [projectId]);
+  }
 
   return (
     <IonPage>
