@@ -1,11 +1,4 @@
-import {
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-} from '@ionic/react';
+import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from '@ionic/react';
 import React from 'react';
 import { triangle, ellipse, square } from 'ionicons/icons';
 import { Route } from 'react-router';
@@ -20,7 +13,18 @@ interface ProjectProps {
   setCurrentTab: (tabName: TabType) => Promise<void>;
 }
 
-const Project: React.FC<ProjectProps> = ({ setCurrentTab }) => {
+/**
+ * The `Project` component renders a tab-based navigation interface for a project,
+ * allowing users to switch between different views: List, Matrix, and Calendar.
+ *
+ * @param {Object} props - The component props.
+ * @param {Function} props.setCurrentTab - A function to update the current tab preference.
+ *
+ * @returns {JSX.Element} A tabbed interface with routes specific to the project ID.
+ * The component utilizes `IonTabs` and `IonTabBar` from Ionic framework, with each tab
+ * representing a different view of the project.
+ */
+const Project: React.FC<ProjectProps> = ({ setCurrentTab }: { setCurrentTab: Function }): JSX.Element => {
   let { projectId } = useParams() as any;
 
   return (
@@ -60,16 +64,8 @@ const Project: React.FC<ProjectProps> = ({ setCurrentTab }) => {
 
       <IonRouterOutlet>
         <Route exact path="/app/project/:projectId/list" component={ListView} />
-        <Route
-          exact
-          path="/app/project/:projectId/matrix"
-          component={MatrixView}
-        />
-        <Route
-          exact
-          path="/app/project/:projectId/calendar"
-          component={CalendarView}
-        />
+        <Route exact path="/app/project/:projectId/matrix" component={MatrixView} />
+        <Route exact path="/app/project/:projectId/calendar" component={CalendarView} />
       </IonRouterOutlet>
     </IonTabs>
   );

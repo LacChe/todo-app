@@ -1,26 +1,19 @@
-import {
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonMenuButton,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-} from '@ionic/react';
+import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { ProjectType } from '../../types';
 import { getProject } from '../../dataRetrieval';
 
 const CalendarView: React.FC = () => {
-  let { projectId } = useParams() as any;
-
+  let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
+
+  // retrieve project when id changes
   useEffect(() => {
-    // TODO error checking
     const retrievedProject = getProject(projectId);
-    setProject(retrievedProject);
-  }, []);
+    if (retrievedProject) setProject(retrievedProject);
+    else console.error(`ProjectId: ${projectId} not found`);
+  }, [projectId]);
 
   return (
     <IonPage>
