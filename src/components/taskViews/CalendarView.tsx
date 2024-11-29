@@ -10,6 +10,7 @@ const CalendarView: React.FC = () => {
 
   // retrieve project when id changes
   useEffect(() => {
+    if (projectId === 'undefined') return;
     const retrievedProject = getProject(projectId);
     if (retrievedProject) setProject(retrievedProject);
     else console.error(`ProjectId: ${projectId} not found`);

@@ -14,13 +14,16 @@ import React, { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router';
 import Project from '../pages/Project';
 import Settings from '../pages/Settings';
+import { useIonRouter } from '@ionic/react';
 
 import { ProjectType, ProjectListType, TabType } from '../types';
 import { getProjects, getProjectList, getUserId, setPreference, getPreference } from '../dataRetrieval';
 
 const Menu: React.FC = () => {
+  const router = useIonRouter();
+
   // TODO set current tab in preferences and save, load from storage
-  let [currentProjectId, setCurrentProjectId] = useState<string>('proj-0000');
+  let [currentProjectId, setCurrentProjectId] = useState<string>();
   let [currentTab, setCurrentTab] = useState<TabType>();
 
   const [projectList, setProjectList] = useState<ProjectListType>();
@@ -35,10 +38,14 @@ const Menu: React.FC = () => {
    * Load preferences from storage and set useStates.
    * Set defaults if no preference are found.
    */
-  function loadPreferences() {
-    getPreference('currentTab').then((retrievedCurrentTab) => {
-      setCurrentTab(retrievedCurrentTab ? (retrievedCurrentTab as TabType) : 'list');
-    });
+  async function loadPreferences() {
+    const retrievedCurrentTab = await getPreference('currentTab');
+    setCurrentTab(retrievedCurrentTab ? (retrievedCurrentTab as TabType) : 'list');
+    const retrievedCurrentProjectId = await getPreference('currentProjectId');
+    setCurrentProjectId(retrievedCurrentProjectId ? (retrievedCurrentProjectId as string) : 'proj-0000');
+
+    // redirect to saved link after finising loading
+    router.push(`/app/project/${retrievedCurrentProjectId}/${retrievedCurrentTab}`, 'root', 'replace');
   }
 
   function loadUserData() {
@@ -56,6 +63,16 @@ const Menu: React.FC = () => {
   async function handleSetCurrentTab(tabName: TabType) {
     setCurrentTab(tabName);
     setPreference('currentTab', tabName);
+  }
+
+  /**
+   * Set the current project ID preference and save it to storage.
+   *
+   * @param {string} projectId - The ID of the project to set as the current project.
+   */
+  async function handleSetCurrentProjectId(projectId: string) {
+    setCurrentProjectId(projectId);
+    setPreference('currentProjectId', projectId);
   }
 
   return (
@@ -77,7 +94,13 @@ const Menu: React.FC = () => {
             {/* list all project names */}
             {projectList?.projectIds.map((projectId, index) => (
               <IonMenuToggle key={index} autoHide={false}>
-                <IonItem routerLink={`/app/project/${projectId}/${currentTab}`} routerDirection="none">
+                <IonItem
+                  onClick={() => {
+                    handleSetCurrentProjectId(projectId);
+                  }}
+                  routerLink={`/app/project/${projectId}/${currentTab}`}
+                  routerDirection="none"
+                >
                   {projects.filter((project) => project.id === projectId)[0].name}
                 </IonItem>
               </IonMenuToggle>

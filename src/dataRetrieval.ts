@@ -4,8 +4,6 @@ import mockProjects from './mockData/projects.json';
 import { Preferences } from '@capacitor/preferences';
 import { PreferenceKeyType, ProjectListType, ProjectType } from './types';
 
-// TODO save all data here
-
 /**
  * Retrieve the ID of the user.
  *
