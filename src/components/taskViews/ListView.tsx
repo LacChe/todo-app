@@ -9,10 +9,10 @@ import {
 } from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { ProjectType } from '../types';
-import { getProject } from '../dataRetrieval';
+import { ProjectType } from '../../types';
+import { getProject } from '../../dataRetrieval';
 
-const tab2: React.FC = () => {
+const ListView: React.FC = () => {
   let { projectId } = useParams() as any;
 
   const [project, setProject] = useState<ProjectType>();
@@ -29,7 +29,7 @@ const tab2: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Tab 2</IonTitle>
+          <IonTitle>{project?.name} ListView</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">UI goes here...</IonContent>
@@ -37,4 +37,4 @@ const tab2: React.FC = () => {
   );
 };
 
-export default tab2;
+export default ListView;

@@ -21,7 +21,7 @@ import { getProjects, getProjectList, getUserId } from '../dataRetrieval';
 const Menu: React.FC = () => {
   // TODO set current tab in preferences and save, load from storage
   let [currentProjectId, setCurrentProjectId] = useState<string>('proj-0000');
-  let [currentTab, setCurrentTab] = useState<string>('tab1');
+  let [currentTab, setCurrentTab] = useState<string>('list');
 
   const [projectList, setProjectList] = useState<ProjectListType>();
 
