@@ -14,10 +14,11 @@ import MatrixView from '../components/taskViews/MatrixView';
 import CalendarView from '../components/taskViews/CalendarView';
 
 import { useParams } from 'react-router';
+import { TabType } from '../types';
 
-type ProjectProps = {
-  setCurrentTab: React.Dispatch<React.SetStateAction<string>>;
-};
+interface ProjectProps {
+  setCurrentTab: (tabName: TabType) => Promise<void>;
+}
 
 const Project: React.FC<ProjectProps> = ({ setCurrentTab }) => {
   let { projectId } = useParams() as any;

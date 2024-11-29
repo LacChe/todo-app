@@ -1,6 +1,9 @@
 import mockProjectLists from './mockData/projectLists.json';
 import mockProjects from './mockData/projects.json';
 
+import { Preferences } from '@capacitor/preferences';
+import { PreferenceKeyType } from './types';
+
 export function getUserId() {
   if (import.meta.env.VITE_MOCK_DATA_MODE) {
     return 'user-0000';
@@ -52,3 +55,19 @@ export function getProject(projectId: string) {
     return returnProject;
   }
 }
+
+export const setPreference = async (key: PreferenceKeyType, value: string) => {
+  await Preferences.set({
+    key,
+    value,
+  });
+};
+
+export const getPreference = async (key: PreferenceKeyType) => {
+  const { value } = await Preferences.get({ key });
+  return value;
+};
+
+export const removePreference = async (key: PreferenceKeyType) => {
+  await Preferences.remove({ key });
+};
