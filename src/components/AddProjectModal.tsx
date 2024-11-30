@@ -1,4 +1,4 @@
-import { IonInput, IonModal } from '@ionic/react';
+import { IonInput, IonModal, useIonRouter } from '@ionic/react';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -12,6 +12,7 @@ interface AddProjectModalProps {
 
 const AddProjectModal: React.FC<AddProjectModalProps> = ({ setProjects, setProjectList }) => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
+  const router = useIonRouter();
 
   let [newProjectName, setNewProjectName] = useState<string>('');
 
@@ -67,6 +68,7 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ setProjects, setProje
     });
 
     setNewProjectName('');
+    router.push(`/app/project/${newProject.id}/list`, 'root', 'replace');
   }
 
   return (
