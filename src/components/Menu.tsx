@@ -3,11 +3,9 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonInput,
   IonItem,
   IonMenu,
   IonMenuToggle,
-  IonModal,
   IonPage,
   IonRouterOutlet,
   IonRow,
@@ -15,9 +13,8 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import { v4 as uuidv4 } from 'uuid';
 import { add, settings } from 'ionicons/icons';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router';
 import { useIonRouter } from '@ionic/react';
 
@@ -29,17 +26,14 @@ import { getProjects, getProjectList, getUserId, setPreference, getPreference } 
 
 import './Menu.css';
 import NewProject from '../pages/NewProject';
+import AddProjectModal from './AddProjectModal';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
-  const addProjectModal = useRef<HTMLIonModalElement>(null);
 
   // preferences
   let [currentProjectId, setCurrentProjectId] = useState<string>();
   let [currentTab, setCurrentTab] = useState<TabType>();
-
-  // for modal usage
-  let [newProjectName, setNewProjectName] = useState<string>('');
 
   // user data
   const [projectList, setProjectList] = useState<ProjectListType>();
@@ -101,51 +95,6 @@ const Menu: React.FC = () => {
     setPreference('currentProjectId', projectId);
   }
 
-  /**
-   * Create a new project, add it to the project list, save to preferences.
-   * It also clears the new project name input after creation.
-   */
-  function handleCreateNewProject() {
-    // TODO check valid name
-    if (!newProjectName || newProjectName === '') return;
-
-    // create new project
-    const newProject: ProjectType = {
-      id: 'proj-' + uuidv4(),
-      name: newProjectName,
-      color: '000000',
-      taskIds: [],
-      viewSettings: {},
-    };
-
-    // add new project to project list
-    setProjects((prev: ProjectType[]) => {
-      let newProjects = [...prev];
-      newProjects.push(newProject);
-      setPreference('localProjects', JSON.stringify(newProjects));
-      return newProjects;
-    });
-
-    // add new id to project list
-    setProjectList((prev: ProjectListType | undefined) => {
-      let newProjectList;
-      if (!prev) {
-        newProjectList = {
-          id: 'list-' + uuidv4(),
-          projectIds: [],
-        };
-      } else {
-        newProjectList = { ...prev };
-      }
-      // this set state is running twice, check duplicate before push
-      if (!newProjectList.projectIds.includes(newProject.id)) newProjectList.projectIds.push(newProject.id);
-      setPreference('localProjectList', JSON.stringify(newProjectList));
-      return newProjectList;
-    });
-
-    setNewProjectName('');
-  }
-
   return (
     <IonPage>
       <IonSplitPane contentId="main">
@@ -184,34 +133,8 @@ const Menu: React.FC = () => {
               );
             })}
 
-            {/* modal to add project TODO move modal out*/}
-            <IonModal
-              ref={addProjectModal}
-              className="add-project-modal"
-              trigger="open-modal"
-              initialBreakpoint={1}
-              breakpoints={[0, 1]}
-            >
-              <form className="add-project-modal-form">
-                <IonInput
-                  label="Name"
-                  id="add-project-modal-input"
-                  placeholder="Project Name"
-                  value={newProjectName}
-                  onIonInput={(e) => setNewProjectName(e.detail.value as string)}
-                />
-                <button
-                  type="submit"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleCreateNewProject();
-                    addProjectModal.current?.dismiss();
-                  }}
-                >
-                  Save
-                </button>
-              </form>
-            </IonModal>
+            {/* modal to add project */}
+            <AddProjectModal setProjectList={setProjectList} setProjects={setProjects} />
           </IonContent>
         </IonMenu>
         <IonRouterOutlet id="main">
