@@ -128,6 +128,7 @@ const Menu: React.FC = () => {
                     routerDirection="none"
                   >
                     {projects.filter((project) => project.id === projectId)[0].name}
+                    {/* TODO show incomplete task count */}
                   </IonItem>
                 </IonMenuToggle>
               );
@@ -160,13 +161,7 @@ const Menu: React.FC = () => {
               return <Project setCurrentTab={handleSetCurrentTab} />;
             }}
           />
-          <Route
-            exact
-            path="/app/project/new"
-            render={() => {
-              return <NewProject setProjectList={setProjectList} setProjects={setProjects} />;
-            }}
-          />
+          <Route exact path="/app/project/new" component={NewProject} />
           <Route exact path="/app/settings" component={Settings} />
 
           {/* routes for variable connections */}

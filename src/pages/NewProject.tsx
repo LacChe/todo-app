@@ -9,16 +9,10 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { add } from 'ionicons/icons';
-import { ProjectListType, ProjectType } from '../types';
 
-interface NewProjectPageProps {
-  setProjectList: Dispatch<SetStateAction<ProjectListType | undefined>>;
-  setProjects: Dispatch<SetStateAction<ProjectType[]>>;
-}
-
-const NewProject: React.FC<NewProjectPageProps> = ({ setProjectList, setProjects }) => {
+const NewProject: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
