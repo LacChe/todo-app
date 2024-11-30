@@ -15,12 +15,14 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
+import { v4 as uuidv4 } from 'uuid';
 import { add, settings } from 'ionicons/icons';
 import React, { useEffect, useState, useRef } from 'react';
 import { Redirect, Route } from 'react-router';
+import { useIonRouter } from '@ionic/react';
+
 import Project from '../pages/Project';
 import Settings from '../pages/Settings';
-import { useIonRouter } from '@ionic/react';
 
 import { ProjectType, ProjectListType, TabType } from '../types';
 import { getProjects, getProjectList, getUserId, setPreference, getPreference } from '../dataRetrieval';
@@ -99,15 +101,17 @@ const Menu: React.FC = () => {
     setPreference('currentProjectId', projectId);
   }
 
+  /**
+   * Create a new project, add it to the project list, save to preferences.
+   * It also clears the new project name input after creation.
+   */
   function handleCreateNewProject() {
-    console.log(5555, newProjectName);
     // TODO check valid name
     if (!newProjectName || newProjectName === '') return;
 
     // create new project
     const newProject: ProjectType = {
-      // TODO generate unique id
-      id: 'temp-' + newProjectName, // TODO
+      id: 'proj-' + uuidv4(),
       name: newProjectName,
       color: '000000',
       taskIds: [],
@@ -127,8 +131,7 @@ const Menu: React.FC = () => {
       let newProjectList;
       if (!prev) {
         newProjectList = {
-          // TODO generate unique id
-          id: 'temp-list',
+          id: 'list-' + uuidv4(),
           projectIds: [],
         };
       } else {
@@ -181,9 +184,15 @@ const Menu: React.FC = () => {
               );
             })}
 
-            {/* modal to add project */}
-            <IonModal ref={addProjectModal} trigger="open-modal" initialBreakpoint={1} breakpoints={[0, 1]}>
-              <form className="add-project-modal">
+            {/* modal to add project TODO move modal out*/}
+            <IonModal
+              ref={addProjectModal}
+              className="add-project-modal"
+              trigger="open-modal"
+              initialBreakpoint={1}
+              breakpoints={[0, 1]}
+            >
+              <form className="add-project-modal-form">
                 <IonInput
                   label="Name"
                   id="add-project-modal-input"
