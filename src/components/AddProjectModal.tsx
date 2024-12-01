@@ -1,4 +1,4 @@
-import { IonInput, IonModal, useIonRouter } from '@ionic/react';
+import { IonButton, IonInput, IonModal, useIonRouter } from '@ionic/react';
 import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -75,19 +75,18 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ setProjects, setProje
     <IonModal
       ref={addProjectModal}
       className="add-project-modal"
-      trigger="open-modal"
+      trigger="open-add-project-modal"
       initialBreakpoint={1}
       breakpoints={[0, 1]}
     >
       <form className="add-project-modal-form">
         <IonInput
           label="Name"
-          id="add-project-modal-input"
           placeholder="Project Name"
           value={newProjectName}
           onIonInput={(e) => setNewProjectName(e.detail.value as string)}
         />
-        <button
+        <IonButton
           type="submit"
           onClick={(e) => {
             e.preventDefault();
@@ -96,7 +95,7 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ setProjects, setProje
           }}
         >
           Save
-        </button>
+        </IonButton>
       </form>
     </IonModal>
   );

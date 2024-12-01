@@ -104,7 +104,7 @@ const Menu: React.FC = () => {
             <IonToolbar color={'secondary'}>
               <IonTitle>Menu</IonTitle>
               <IonRow slot="end" className="ion-padding-end">
-                <IonButton id="open-modal">
+                <IonButton id="open-add-project-modal">
                   <IonIcon icon={add}></IonIcon>
                 </IonButton>
                 <IonMenuToggle autoHide={false}>
@@ -144,21 +144,39 @@ const Menu: React.FC = () => {
             exact
             path={`/app/project/:projectId/list`}
             render={() => {
-              return <Project setCurrentTab={handleSetCurrentTab} />;
+              return (
+                <Project
+                  setCurrentTab={handleSetCurrentTab}
+                  setProjectList={setProjectList}
+                  setProjects={setProjects}
+                />
+              );
             }}
           />
           <Route
             exact
             path={`/app/project/:projectId/matrix`}
             render={() => {
-              return <Project setCurrentTab={handleSetCurrentTab} />;
+              return (
+                <Project
+                  setCurrentTab={handleSetCurrentTab}
+                  setProjectList={setProjectList}
+                  setProjects={setProjects}
+                />
+              );
             }}
           />
           <Route
             exact
             path={`/app/project/:projectId/calendar`}
             render={() => {
-              return <Project setCurrentTab={handleSetCurrentTab} />;
+              return (
+                <Project
+                  setCurrentTab={handleSetCurrentTab}
+                  setProjectList={setProjectList}
+                  setProjects={setProjects}
+                />
+              );
             }}
           />
           <Route exact path="/app/project/new" component={NewProject} />
@@ -168,7 +186,13 @@ const Menu: React.FC = () => {
           <Route
             path={`/app/project/:projectId/${currentTab ? currentTab : 'list'}`}
             render={() => {
-              return <Project setCurrentTab={handleSetCurrentTab} />;
+              return (
+                <Project
+                  setCurrentTab={handleSetCurrentTab}
+                  setProjectList={setProjectList}
+                  setProjects={setProjects}
+                />
+              );
             }}
           />
           <Route exact path="/app">

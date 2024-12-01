@@ -1,4 +1,5 @@
 import {
+  IonButton,
   IonFab,
   IonFabButton,
   IonIcon,
@@ -8,7 +9,7 @@ import {
   IonTabButton,
   IonTabs,
 } from '@ionic/react';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { triangle, ellipse, square, add } from 'ionicons/icons';
 import { Route } from 'react-router';
 
@@ -17,26 +18,18 @@ import MatrixView from '../components/taskViews/MatrixView';
 import CalendarView from '../components/taskViews/CalendarView';
 
 import { useParams } from 'react-router';
-import { TabType } from '../types';
+import { ProjectListType, ProjectType, TabType } from '../types';
 
 import './Project.css';
+import EditProjectModal from '../components/EditProjectModal';
 
 interface ProjectProps {
   setCurrentTab: (tabName: TabType) => Promise<void>;
+  setProjectList: Dispatch<SetStateAction<ProjectListType | undefined>>;
+  setProjects: Dispatch<SetStateAction<ProjectType[]>>;
 }
 
-/**
- * The `Project` component renders a tab-based navigation interface for a project,
- * allowing users to switch between different views: List, Matrix, and Calendar.
- *
- * @param {Object} props - The component props.
- * @param {Function} props.setCurrentTab - A function to update the current tab preference.
- *
- * @returns {JSX.Element} A tabbed interface with routes specific to the project ID.
- * The component utilizes `IonTabs` and `IonTabBar` from Ionic framework, with each tab
- * representing a different view of the project.
- */
-const Project: React.FC<ProjectProps> = ({ setCurrentTab }: { setCurrentTab: Function }): JSX.Element => {
+const Project: React.FC<ProjectProps> = ({ setCurrentTab, setProjectList, setProjects }): JSX.Element => {
   let { projectId } = useParams() as any;
 
   return (
@@ -46,6 +39,10 @@ const Project: React.FC<ProjectProps> = ({ setCurrentTab }: { setCurrentTab: Fun
           <IonIcon icon={add}></IonIcon>
         </IonFabButton>
       </IonFab>
+
+      {/* modal to edit project */}
+      <div id="open-edit-project-modal" />
+      <EditProjectModal setProjectList={setProjectList} setProjects={setProjects} />
 
       <IonTabs>
         <IonTabBar slot="bottom">

@@ -24,7 +24,7 @@ const NewProject: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonButton onClick={() => document.getElementById('open-modal')?.click()}>
+        <IonButton onClick={() => document.getElementById('open-add-project-modal')?.click()}>
           <IonIcon icon={add} />
           Add a new Project to Begin
         </IonButton>

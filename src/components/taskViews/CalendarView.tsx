@@ -23,16 +23,18 @@ const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
 
-  const Popover = () => (
-    <IonContent class="ion-padding">
-      <IonButtons>
-        <IonButton>Edit</IonButton>
-        <IonButton>Hide Completed</IonButton>
-        <IonButton>Hide Details</IonButton>
-      </IonButtons>
-    </IonContent>
-  );
-  const [presentPopover] = useIonPopover(Popover);
+  function calendarOptionsPopover() {
+    return (
+      <IonContent class="ion-padding">
+        <IonButtons>
+          <IonButton onClick={() => document.getElementById('open-edit-project-modal')?.click()}>Edit</IonButton>
+          <IonButton>Hide Completed</IonButton>
+          <IonButton>Hide Details</IonButton>
+        </IonButtons>
+      </IonContent>
+    );
+  }
+  const [presentPopover] = useIonPopover(calendarOptionsPopover);
 
   // retrieve project when id changes
   useEffect(() => {
