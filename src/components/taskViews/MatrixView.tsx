@@ -1,12 +1,38 @@
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonIcon,
+  IonMenuButton,
+  IonPage,
+  IonTitle,
+  IonToolbar,
+  IonPopover,
+  useIonPopover,
+} from '@ionic/react';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { ProjectType } from '../../types';
 import { getProject } from '../../dataRetrieval';
+import { ellipsisVerticalOutline } from 'ionicons/icons';
+
+import './TaskView.css';
 
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
+
+  const Popover = () => (
+    <IonContent class="ion-padding">
+      <IonButtons>
+        <IonButton>Edit</IonButton>
+        <IonButton>Hide Completed</IonButton>
+        <IonButton>Hide Details</IonButton>
+      </IonButtons>
+    </IonContent>
+  );
+  const [presentPopover] = useIonPopover(Popover);
 
   // retrieve project when id changes
   useEffect(() => {
@@ -24,10 +50,18 @@ const MatrixView: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="success">
-          <IonButtons slot="start">
+          {/* menu button */}
+          <IonButtons slot="start" collapse={true}>
             <IonMenuButton />
           </IonButtons>
+          {/* title */}
           <IonTitle>{project?.name} MatrixView</IonTitle>
+          {/* options button */}
+          <IonButtons slot="end" collapse={true}>
+            <IonButton onClick={(e: any) => presentPopover({ event: e })}>
+              <IonIcon icon={ellipsisVerticalOutline} />
+            </IonButton>
+          </IonButtons>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">UI goes here...</IonContent>
