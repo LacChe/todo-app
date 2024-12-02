@@ -3,9 +3,9 @@ import { getPreference, getProjectList, getProjects, getTasks, getUserId, setPre
 import { ProjectListType, ProjectType, TabType, TaskType } from '../types';
 
 // TODO set types
-interface ContextType {
+type ContextType = {
   [key: string]: any;
-}
+};
 
 export const Context = React.createContext<ContextType>({});
 

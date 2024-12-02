@@ -42,7 +42,37 @@ const AddProjectModal: React.FC = () => {
       name: newProjectName,
       color: '#000000',
       taskIds: [],
-      viewSettings: {},
+      viewSettings: {
+        listSettings: {
+          taskIds: [],
+          settings: {
+            showDetails: false,
+            showDone: false,
+            sort: '', // TODO set to default
+            group: '', // TODO set to default
+          },
+        },
+        matrixSettings: {
+          blocks: [
+            // TODO setup default names and colors
+            { name: 'block-1', taskIds: [], color: '#E12330' },
+            { name: 'block-2', taskIds: [], color: '#1D2A90' },
+            { name: 'block-3', taskIds: [], color: '#CB69BC' },
+            { name: 'block-4', taskIds: [], color: '#1E8351' },
+          ],
+          settings: {
+            showDetails: false,
+            showDone: false,
+          },
+        },
+        calendarSettings: {
+          dateContainer: {},
+          settings: {
+            showDetails: false,
+            showDone: false,
+          },
+        },
+      },
     };
 
     // add new project to project list

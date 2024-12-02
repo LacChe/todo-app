@@ -36,7 +36,8 @@ const AddTaskModal: React.FC = () => {
       createdDate: JSON.stringify(new Date()).split('T')[0].slice(1),
       name: newTaskName,
       status: 'todo',
-      typeData: {}, // TODO
+      typeData: { name: 'single' },
+      showDetailsOverride: false,
       notes: newTaskNotes,
     };
 
@@ -79,6 +80,7 @@ const AddTaskModal: React.FC = () => {
         <IonButton type="submit" onClick={handleSubmit}>
           Save
         </IonButton>
+        {/* add button to change to detailed creation mode */}
       </form>
     </IonModal>
   );
