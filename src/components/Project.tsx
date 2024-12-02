@@ -7,15 +7,14 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
-  useIonRouter,
 } from '@ionic/react';
 import React, { useContext } from 'react';
 import { triangle, ellipse, square, add } from 'ionicons/icons';
 import { Route } from 'react-router';
 
-import ListView from '../components/taskViews/ListView';
-import MatrixView from '../components/taskViews/MatrixView';
-import CalendarView from '../components/taskViews/CalendarView';
+import ListView from '../pages/taskViews/ListView';
+import MatrixView from '../pages/taskViews/MatrixView';
+import CalendarView from '../pages/taskViews/CalendarView';
 
 import { useParams } from 'react-router';
 

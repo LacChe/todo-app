@@ -18,7 +18,7 @@ import { add, settings } from 'ionicons/icons';
 import React, { useContext, useEffect } from 'react';
 import { Redirect, Route } from 'react-router';
 
-import Project from '../pages/Project';
+import Project from './Project';
 import Settings from '../pages/Settings';
 
 import './Menu.css';
