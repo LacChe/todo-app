@@ -1,18 +1,21 @@
 import { IonButton, IonInput, IonModal, useIonRouter } from '@ionic/react';
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ProjectListType, ProjectType } from '../types';
-import { setPreference } from '../dataRetrieval';
+import { ProjectType } from '../types';
+import { Context } from '../dataManagement/ContextProvider';
 
-interface AddProjectModalProps {
-  setProjectList: Dispatch<SetStateAction<ProjectListType | undefined>>;
-  setProjects: Dispatch<SetStateAction<ProjectType[]>>;
-}
-
-const AddProjectModal: React.FC<AddProjectModalProps> = ({ setProjects, setProjectList }) => {
+const AddProjectModal: React.FC = () => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
   const router = useIonRouter();
+  const {
+    projects,
+    projectList,
+    handleSetProjects,
+    handleSetProjectList,
+    handleSetCurrentProjectId,
+    handleSetCurrentTab,
+  } = useContext(Context);
 
   let [newProjectName, setNewProjectName] = useState<string>('');
 
@@ -43,32 +46,41 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ setProjects, setProje
     };
 
     // add new project to project list
-    setProjects((prev: ProjectType[]) => {
-      let newProjects = [...prev];
-      newProjects.push(newProject);
-      setPreference('localProjects', JSON.stringify(newProjects));
-      return newProjects;
-    });
+    let newProjects = [...projects];
+    newProjects.push(newProject);
+    handleSetProjects(newProjects);
 
     // add new id to project list
-    setProjectList((prev: ProjectListType | undefined) => {
-      let newProjectList;
-      if (!prev) {
-        newProjectList = {
-          id: 'list-' + uuidv4(),
-          projectIds: [],
-        };
-      } else {
-        newProjectList = { ...prev };
-      }
-      // this set state is running twice, check duplicate before push
-      if (!newProjectList.projectIds.includes(newProject.id)) newProjectList.projectIds.push(newProject.id);
-      setPreference('localProjectList', JSON.stringify(newProjectList));
-      return newProjectList;
-    });
+    let newProjectList;
+    if (!projectList) {
+      newProjectList = {
+        id: 'list-' + uuidv4(),
+        projectIds: [],
+      };
+    } else {
+      newProjectList = { ...projectList };
+    }
+    // this set state is running twice, check duplicate before push
+    if (!newProjectList.projectIds.includes(newProject.id)) newProjectList.projectIds.push(newProject.id);
+    handleSetProjectList(newProjectList);
 
     setNewProjectName('');
+    console.log(newProject);
+    handleSetCurrentProjectId(newProject.id);
+    handleSetCurrentTab('list');
     router.push(`/app/project/${newProject.id}/list`, 'root', 'replace');
+  }
+
+  /**
+   * Handle the submission of the edit project form by creating a new project
+   * and then dismissing the modal.
+   *
+   * @param {any} e - The form submission event.
+   */
+  function handleSubmit(e: any) {
+    e.preventDefault();
+    handleCreateNewProject();
+    addProjectModal.current?.dismiss();
   }
 
   return (
@@ -79,21 +91,14 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ setProjects, setProje
       initialBreakpoint={1}
       breakpoints={[0, 1]}
     >
-      <form className="add-project-modal-form">
+      <form onSubmit={handleSubmit} className="add-project-modal-form">
         <IonInput
           label="Name"
           placeholder="Project Name"
           value={newProjectName}
           onIonInput={(e) => setNewProjectName(e.detail.value as string)}
         />
-        <IonButton
-          type="submit"
-          onClick={(e) => {
-            e.preventDefault();
-            handleCreateNewProject();
-            addProjectModal.current?.dismiss();
-          }}
-        >
+        <IonButton type="submit" onClick={handleSubmit}>
           Save
         </IonButton>
       </form>

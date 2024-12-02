@@ -1,5 +1,4 @@
 import {
-  IonButton,
   IonFab,
   IonFabButton,
   IonIcon,
@@ -9,7 +8,7 @@ import {
   IonTabButton,
   IonTabs,
 } from '@ionic/react';
-import React, { Dispatch, SetStateAction } from 'react';
+import React, { useContext } from 'react';
 import { triangle, ellipse, square, add } from 'ionicons/icons';
 import { Route } from 'react-router';
 
@@ -18,19 +17,14 @@ import MatrixView from '../components/taskViews/MatrixView';
 import CalendarView from '../components/taskViews/CalendarView';
 
 import { useParams } from 'react-router';
-import { ProjectListType, ProjectType, TabType } from '../types';
 
-import './Project.css';
+import { Context } from '../dataManagement/ContextProvider';
 import EditProjectModal from '../components/EditProjectModal';
+import './Project.css';
 
-interface ProjectProps {
-  setCurrentTab: (tabName: TabType) => Promise<void>;
-  setProjectList: Dispatch<SetStateAction<ProjectListType | undefined>>;
-  setProjects: Dispatch<SetStateAction<ProjectType[]>>;
-}
-
-const Project: React.FC<ProjectProps> = ({ setCurrentTab, setProjectList, setProjects }): JSX.Element => {
+const Project: React.FC = (): JSX.Element => {
   let { projectId } = useParams() as any;
+  const { handleSetCurrentTab } = useContext(Context);
 
   return (
     <>
@@ -42,7 +36,7 @@ const Project: React.FC<ProjectProps> = ({ setCurrentTab, setProjectList, setPro
 
       {/* modal to edit project */}
       <div id="open-edit-project-modal" />
-      <EditProjectModal setProjectList={setProjectList} setProjects={setProjects} />
+      <EditProjectModal />
 
       <IonTabs>
         <IonTabBar slot="bottom">
@@ -50,7 +44,7 @@ const Project: React.FC<ProjectProps> = ({ setCurrentTab, setProjectList, setPro
             tab="list"
             href={`/app/project/${projectId}/list`}
             onClick={() => {
-              setCurrentTab('list');
+              handleSetCurrentTab('list');
             }}
           >
             <IonIcon icon={triangle} />
@@ -60,7 +54,7 @@ const Project: React.FC<ProjectProps> = ({ setCurrentTab, setProjectList, setPro
             tab="matrix"
             href={`/app/project/${projectId}/matrix`}
             onClick={() => {
-              setCurrentTab('matrix');
+              handleSetCurrentTab('matrix');
             }}
           >
             <IonIcon icon={ellipse} />
@@ -70,7 +64,7 @@ const Project: React.FC<ProjectProps> = ({ setCurrentTab, setProjectList, setPro
             tab="calendar"
             href={`/app/project/${projectId}/calendar`}
             onClick={() => {
-              setCurrentTab('calendar');
+              handleSetCurrentTab('calendar');
             }}
           >
             <IonIcon icon={square} />

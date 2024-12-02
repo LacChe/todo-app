@@ -1,8 +1,6 @@
 import {
   IonButton,
-  IonButtons,
   IonContent,
-  IonHeader,
   IonIcon,
   IonInput,
   IonLabel,
@@ -15,64 +13,15 @@ import {
   IonItem,
   IonReorder,
 } from '@ionic/react';
-import React, { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
+import React, { useRef } from 'react';
 
-import { ProjectListType, ProjectType } from '../types';
-import { setPreference } from '../dataRetrieval';
-import { checkmark, close, ellipse, square } from 'ionicons/icons';
+import { checkmark, close, square } from 'ionicons/icons';
 
-interface EditProjectModalProps {
-  setProjectList: Dispatch<SetStateAction<ProjectListType | undefined>>;
-  setProjects: Dispatch<SetStateAction<ProjectType[]>>;
-}
-
-const EditProjectModal: React.FC<EditProjectModalProps> = ({ setProjects, setProjectList }) => {
+const EditProjectModal: React.FC = () => {
   const editProjectModal = useRef<HTMLIonModalElement>(null);
   const router = useIonRouter();
 
-  function handleCreateNewProject() {
-    // TODO check valid data
-
-    // TODO edited project
-    // create new project
-    const newProject: ProjectType = {
-      id: 'temp',
-      name: 'temp',
-      color: '000000',
-      taskIds: [],
-      viewSettings: {},
-    };
-
-    // TODO save new project and project list
-    // add new project to project list
-    setProjects((prev: ProjectType[]) => {
-      let newProjects = [...prev];
-      newProjects.push(newProject);
-      setPreference('localProjects', JSON.stringify(newProjects));
-      return newProjects;
-    });
-
-    // TODO save new project and project list
-    // add new id to project list
-    setProjectList((prev: ProjectListType | undefined) => {
-      let newProjectList;
-      if (!prev) {
-        newProjectList = {
-          id: 'list-' + uuidv4(),
-          projectIds: [],
-        };
-      } else {
-        newProjectList = { ...prev };
-      }
-      // this set state is running twice, check duplicate before push
-      if (!newProjectList.projectIds.includes(newProject.id)) newProjectList.projectIds.push(newProject.id);
-      setPreference('localProjectList', JSON.stringify(newProjectList));
-      return newProjectList;
-    });
-
-    router.push(`/app/project/${newProject.id}/list`, 'root', 'replace');
-  }
+  function handleEditProject() {}
 
   function colorPickerPopover() {
     const colors = [
@@ -104,6 +53,18 @@ const EditProjectModal: React.FC<EditProjectModalProps> = ({ setProjects, setPro
     e.detail.complete();
   }
 
+  /**
+   * Handle the submission of the edit project form by creating a new project
+   * and then dismissing the modal.
+   *
+   * @param {any} e - The form submission event.
+   */
+  function handleSubmit(e: any) {
+    e.preventDefault();
+    handleEditProject();
+    editProjectModal.current?.dismiss();
+  }
+
   return (
     <IonModal
       ref={editProjectModal}
@@ -112,7 +73,7 @@ const EditProjectModal: React.FC<EditProjectModalProps> = ({ setProjects, setPro
       initialBreakpoint={1}
       breakpoints={[0, 1]}
     >
-      <form className="edit-project-modal-form">
+      <form onSubmit={handleSubmit} className="edit-project-modal-form">
         <IonToolbar>
           <IonButton
             type="button"

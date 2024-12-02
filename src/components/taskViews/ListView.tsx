@@ -10,17 +10,18 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { ProjectType } from '../../types';
-import { getProject } from '../../dataRetrieval';
 import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
+import { Context } from '../../dataManagement/ContextProvider';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
+  const { loading, getProject } = useContext(Context);
 
   function listOptionsPopover() {
     return (
@@ -37,16 +38,15 @@ const ListView: React.FC = () => {
   const [presentPopover] = useIonPopover(listOptionsPopover);
 
   // retrieve project when id changes
+  // retrieve project when id changes
   useEffect(() => {
-    loadData();
-  }, [projectId]);
-
-  async function loadData() {
-    if (projectId === 'undefined') return;
-    const retrievedProject = await getProject(projectId);
-    if (retrievedProject) setProject(retrievedProject);
-    else console.error(`ProjectId: ${projectId} not found`);
-  }
+    if (!loading) {
+      if (projectId === 'undefined') return;
+      const retrievedProject = getProject(projectId);
+      if (retrievedProject) setProject(retrievedProject);
+      else console.error(`ProjectId: ${projectId} not found`);
+    }
+  }, [loading, projectId]);
 
   return (
     <IonPage>

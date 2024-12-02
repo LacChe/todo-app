@@ -1,8 +1,8 @@
-import mockProjectLists from './mockData/projectLists.json';
-import mockProjects from './mockData/projects.json';
+import mockProjectLists from '../mockData/projectLists.json';
+import mockProjects from '../mockData/projects.json';
 
 import { Preferences } from '@capacitor/preferences';
-import { PreferenceKeyType, ProjectListType, ProjectType } from './types';
+import { PreferenceKeyType, ProjectListType, ProjectType } from '../types';
 
 /**
  * Retrieve the ID of the user.
@@ -58,28 +58,6 @@ export async function getProjects(userId: string): Promise<ProjectType[]> {
     let projects = [];
     if (retrievedLocalProjects) projects = await JSON.parse(retrievedLocalProjects);
     return projects;
-  }
-}
-
-/**
- * Retrieve a single project by ID.
- *
- * @param {string} projectId
- * The ID of the project to retrieve.
- *
- * @returns {Promise<ProjectType | null>}
- * A promise that resolves to the project object, or null if not found.
- */
-export async function getProject(projectId: string): Promise<ProjectType | null> {
-  if (import.meta.env.VITE_MOCK_DATA_MODE) {
-    const returnProject = mockProjects.filter((project) => project.id === projectId)[0];
-    return returnProject;
-  } else {
-    let retrievedLocalProjects = await getPreference('localProjects');
-    let projects = [];
-    if (retrievedLocalProjects) projects = await JSON.parse(retrievedLocalProjects);
-    const returnProject = projects.filter((project: ProjectType) => project.id === projectId)[0];
-    return returnProject;
   }
 }
 
