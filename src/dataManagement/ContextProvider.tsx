@@ -84,6 +84,19 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   }
 
   /**
+   * Retrieve a task by its ID.
+   *
+   * @param {string} taskId - The ID of the task to retrieve.
+   * @returns {TaskType | undefined} The task object if found, otherwise undefined.
+   */
+  function getTaskById(taskId: string): TaskType | undefined {
+    const returnTask = tasks.filter((task) => {
+      if (task.id === taskId) return task;
+    })[0];
+    return returnTask;
+  }
+
+  /**
    * Set the current tab preference and save it to storage.
    * @param {TabType} tabName - The name of the tab to set as the current tab.
    */
@@ -137,6 +150,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
         loading,
         getProject,
         getTasksByProjectId,
+        getTaskById,
         currentTab,
         handleSetCurrentTab,
         currentProjectId,

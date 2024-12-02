@@ -4,6 +4,7 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonList,
   IonMenuButton,
   IonPage,
   IonTitle,
@@ -12,17 +13,17 @@ import {
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { ProjectType, TaskType } from '../../types';
+import { ProjectType } from '../../types';
 import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
+import TaskItem from '../../components/TaskItem';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
-  const [projectTasks, setProjectTasks] = useState<TaskType[]>();
-  const { loading, getProject, getTasksByProjectId, tasks } = useContext(Context);
+  const { loading, getProject, tasks } = useContext(Context);
 
   function listOptionsPopover() {
     return (
@@ -52,7 +53,6 @@ const ListView: React.FC = () => {
       const retrievedProject = getProject(projectId);
       if (retrievedProject) {
         setProject(retrievedProject);
-        setProjectTasks(getTasksByProjectId(projectId));
       } else console.error(`ProjectId: ${projectId} not found`);
     }
   }, [loading, projectId, tasks]);
@@ -76,12 +76,12 @@ const ListView: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div>{projectTasks?.length}</div>
-        {projectTasks?.map((task, index) => (
-          <div key={index}>
-            {task.name} {task.createdDate} {task.status} {task.notes}
-          </div>
-        ))}
+        {/* list task items */}
+        <IonList>
+          {project?.taskIds?.map((taskId, index) => (
+            <TaskItem taskId={taskId} key={index} />
+          ))}
+        </IonList>
       </IonContent>
     </IonPage>
   );
