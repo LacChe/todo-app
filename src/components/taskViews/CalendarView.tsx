@@ -27,14 +27,21 @@ const CalendarView: React.FC = () => {
     return (
       <IonContent class="ion-padding">
         <IonButtons>
-          <IonButton onClick={() => document.getElementById('open-edit-project-modal')?.click()}>Edit</IonButton>
+          <IonButton
+            onClick={() => {
+              document.getElementById('open-edit-project-modal')?.click();
+              dismissCalendarPopover();
+            }}
+          >
+            Edit
+          </IonButton>
           <IonButton>Hide Completed</IonButton>
           <IonButton>Hide Details</IonButton>
         </IonButtons>
       </IonContent>
     );
   }
-  const [presentCalendarPopover] = useIonPopover(calendarOptionsPopover);
+  const [presentCalendarPopover, dismissCalendarPopover] = useIonPopover(calendarOptionsPopover);
 
   // retrieve project when id changes
   useEffect(() => {

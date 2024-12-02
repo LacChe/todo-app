@@ -27,7 +27,14 @@ const ListView: React.FC = () => {
     return (
       <IonContent class="ion-padding">
         <IonButtons>
-          <IonButton onClick={() => document.getElementById('open-edit-project-modal')?.click()}>Edit</IonButton>
+          <IonButton
+            onClick={() => {
+              document.getElementById('open-edit-project-modal')?.click();
+              dismissListPopover();
+            }}
+          >
+            Edit
+          </IonButton>
           <IonButton>Hide Completed</IonButton>
           <IonButton>Hide Details</IonButton>
           <IonButton>Sort</IonButton>
@@ -35,7 +42,7 @@ const ListView: React.FC = () => {
       </IonContent>
     );
   }
-  const [presentListPopover] = useIonPopover(listOptionsPopover);
+  const [presentListPopover, dismissListPopover] = useIonPopover(listOptionsPopover);
 
   // retrieve project when id changes
   // retrieve project when id changes

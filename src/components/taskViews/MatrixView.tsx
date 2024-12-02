@@ -27,14 +27,21 @@ const MatrixView: React.FC = () => {
     return (
       <IonContent class="ion-padding">
         <IonButtons>
-          <IonButton onClick={() => document.getElementById('open-edit-project-modal')?.click()}>Edit</IonButton>
+          <IonButton
+            onClick={() => {
+              document.getElementById('open-edit-project-modal')?.click();
+              dismissMatrixPopover();
+            }}
+          >
+            Edit
+          </IonButton>
           <IonButton>Hide Completed</IonButton>
           <IonButton>Hide Details</IonButton>
         </IonButtons>
       </IonContent>
     );
   }
-  const [presentMatrixPopover] = useIonPopover(matrixOptionsPopover);
+  const [presentMatrixPopover, dismissMatrixPopover] = useIonPopover(matrixOptionsPopover);
 
   // retrieve project when id changes
   useEffect(() => {
