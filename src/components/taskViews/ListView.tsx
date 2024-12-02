@@ -35,7 +35,7 @@ const ListView: React.FC = () => {
       </IonContent>
     );
   }
-  const [presentPopover] = useIonPopover(listOptionsPopover);
+  const [presentListPopover] = useIonPopover(listOptionsPopover);
 
   // retrieve project when id changes
   // retrieve project when id changes
@@ -60,7 +60,7 @@ const ListView: React.FC = () => {
           <IonTitle>{project?.name} ListView</IonTitle>
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
-            <IonButton onClick={(e: any) => presentPopover({ event: e })}>
+            <IonButton onClick={(e: any) => presentListPopover({ event: e })}>
               <IonIcon icon={ellipsisVerticalOutline} />
             </IonButton>
           </IonButtons>

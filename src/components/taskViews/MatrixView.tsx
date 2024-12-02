@@ -34,7 +34,7 @@ const MatrixView: React.FC = () => {
       </IonContent>
     );
   }
-  const [presentPopover] = useIonPopover(matrixOptionsPopover);
+  const [presentMatrixPopover] = useIonPopover(matrixOptionsPopover);
 
   // retrieve project when id changes
   useEffect(() => {
@@ -58,7 +58,7 @@ const MatrixView: React.FC = () => {
           <IonTitle>{project?.name} MatrixView</IonTitle>
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
-            <IonButton onClick={(e: any) => presentPopover({ event: e })}>
+            <IonButton onClick={(e: any) => presentMatrixPopover({ event: e })}>
               <IonIcon icon={ellipsisVerticalOutline} />
             </IonButton>
           </IonButtons>

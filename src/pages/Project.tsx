@@ -7,6 +7,7 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
+  useIonRouter,
 } from '@ionic/react';
 import React, { useContext } from 'react';
 import { triangle, ellipse, square, add } from 'ionicons/icons';
@@ -25,6 +26,7 @@ import './Project.css';
 const Project: React.FC = (): JSX.Element => {
   let { projectId } = useParams() as any;
   const { handleSetCurrentTab } = useContext(Context);
+  const router = useIonRouter();
 
   return (
     <>
@@ -45,6 +47,7 @@ const Project: React.FC = (): JSX.Element => {
             href={`/app/project/${projectId}/list`}
             onClick={() => {
               handleSetCurrentTab('list');
+              //router.push(`/app/project/${projectId}/list`, 'root', 'replace');
             }}
           >
             <IonIcon icon={triangle} />
@@ -55,6 +58,7 @@ const Project: React.FC = (): JSX.Element => {
             href={`/app/project/${projectId}/matrix`}
             onClick={() => {
               handleSetCurrentTab('matrix');
+              //router.push(`/app/project/${projectId}/matrix`, 'root', 'replace');
             }}
           >
             <IonIcon icon={ellipse} />
@@ -65,6 +69,7 @@ const Project: React.FC = (): JSX.Element => {
             href={`/app/project/${projectId}/calendar`}
             onClick={() => {
               handleSetCurrentTab('calendar');
+              //router.push(`/app/project/${projectId}/calendar`, 'root', 'replace');
             }}
           >
             <IonIcon icon={square} />

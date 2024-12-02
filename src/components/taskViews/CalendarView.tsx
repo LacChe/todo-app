@@ -34,7 +34,7 @@ const CalendarView: React.FC = () => {
       </IonContent>
     );
   }
-  const [presentPopover] = useIonPopover(calendarOptionsPopover);
+  const [presentCalendarPopover] = useIonPopover(calendarOptionsPopover);
 
   // retrieve project when id changes
   useEffect(() => {
@@ -58,7 +58,7 @@ const CalendarView: React.FC = () => {
           <IonTitle>{project?.name} CalendarView</IonTitle>
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
-            <IonButton onClick={(e: any) => presentPopover({ event: e })}>
+            <IonButton onClick={(e: any) => presentCalendarPopover({ event: e })}>
               <IonIcon icon={ellipsisVerticalOutline} />
             </IonButton>
           </IonButtons>
