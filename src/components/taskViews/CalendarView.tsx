@@ -6,7 +6,6 @@ import {
   IonIcon,
   IonMenuButton,
   IonPage,
-  IonPopover,
   IonTitle,
   IonToolbar,
   useIonPopover,
@@ -50,7 +49,7 @@ const CalendarView: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="success">
+        <IonToolbar style={{ '--background': project?.color }}>
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />

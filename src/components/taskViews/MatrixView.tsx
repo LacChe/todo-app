@@ -8,7 +8,6 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonPopover,
   useIonPopover,
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
@@ -50,7 +49,7 @@ const MatrixView: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="success">
+        <IonToolbar style={{ '--background': project?.color }}>
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />

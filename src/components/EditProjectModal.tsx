@@ -6,24 +6,44 @@ import {
   IonLabel,
   IonModal,
   IonToolbar,
-  useIonRouter,
   useIonPopover,
   IonList,
   IonReorderGroup,
   IonItem,
   IonReorder,
 } from '@ionic/react';
-import React, { useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 
 import { checkmark, close, square } from 'ionicons/icons';
+import { Context } from '../dataManagement/ContextProvider';
+import { ProjectType } from '../types';
 
 const EditProjectModal: React.FC = () => {
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const router = useIonRouter();
+  const { projects, handleSetProjects, getProject, currentProjectId } = useContext(Context);
 
-  function handleEditProject() {}
+  let retrievedProject: ProjectType = getProject(currentProjectId);
 
-  function colorPickerPopover() {
+  const [newProjectName, setNewProjectName] = useState<string>(retrievedProject?.name);
+  const [newProjectColor, setNewProjectColor] = useState<string>(retrievedProject?.color);
+  // const [newProjectBlocks, setNewProjectBlocks] = useState();
+
+  function handleEditProject() {
+    // TODO check valid values
+
+    retrievedProject.name = newProjectName;
+    retrievedProject.color = newProjectColor;
+    // retrievedProject.viewSettings = newProjectBlocks;
+
+    // replace edited project into project list
+    let newProjects = projects.map((project: ProjectType) => {
+      if (project.id === currentProjectId) return retrievedProject;
+      else return project;
+    });
+    handleSetProjects(newProjects);
+  }
+
+  function colorPickerPopover(setColor: { (value: React.SetStateAction<string>): void; (arg0: string): void }) {
     const colors = [
       ['#000000', '#FFFFFF', '#FF0000', '#00FF00'],
       ['#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'],
@@ -37,7 +57,14 @@ const EditProjectModal: React.FC = () => {
             <div key={index}>
               {row.map((color, index) => {
                 return (
-                  <button className="color-picker-popover-button" style={{ backgroundColor: color }} key={index} />
+                  <button
+                    className="color-picker-popover-button"
+                    style={{ backgroundColor: color }}
+                    onClick={() => {
+                      setColor(color);
+                    }}
+                    key={index}
+                  />
                 );
               })}
             </div>
@@ -46,7 +73,7 @@ const EditProjectModal: React.FC = () => {
       </IonContent>
     );
   }
-  const [presentPopover] = useIonPopover(colorPickerPopover);
+  const [presentPopover] = useIonPopover(colorPickerPopover(setNewProjectColor));
 
   function handleBlockReorder(e: any) {
     console.log('reorder', e);
@@ -100,8 +127,8 @@ const EditProjectModal: React.FC = () => {
           <IonInput
             label="Name"
             placeholder="Project Name"
-            // value={newProjectName}
-            // onIonInput={(e) => setNewProjectName(e.detail.value as string)}
+            value={newProjectName}
+            onIonInput={(e) => setNewProjectName(e.detail.value as string)}
           />
           <div className="form-inputs-color-picker">
             <IonLabel>Color</IonLabel>

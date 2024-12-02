@@ -17,7 +17,7 @@ const AddProjectModal: React.FC = () => {
     handleSetCurrentTab,
   } = useContext(Context);
 
-  let [newProjectName, setNewProjectName] = useState<string>('');
+  const [newProjectName, setNewProjectName] = useState<string>('');
 
   // set focus to input when displayed
   useEffect(() => {
@@ -40,7 +40,7 @@ const AddProjectModal: React.FC = () => {
     const newProject: ProjectType = {
       id: 'proj-' + uuidv4(),
       name: newProjectName,
-      color: '000000',
+      color: '#000000',
       taskIds: [],
       viewSettings: {},
     };
@@ -65,7 +65,6 @@ const AddProjectModal: React.FC = () => {
     handleSetProjectList(newProjectList);
 
     setNewProjectName('');
-    console.log(newProject);
     handleSetCurrentProjectId(newProject.id);
     handleSetCurrentTab('list');
     router.push(`/app/project/${newProject.id}/list`, 'root', 'replace');
