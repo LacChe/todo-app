@@ -26,6 +26,7 @@ import NewProject from '../pages/NewProject';
 import AddProjectModal from './AddProjectModal';
 import { Context } from '../dataManagement/ContextProvider';
 import { ProjectType } from '../types';
+import EditProjectModal from './EditProjectModal';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
@@ -84,6 +85,9 @@ const Menu: React.FC = () => {
 
             {/* modal to add project */}
             <AddProjectModal />
+            {/* modal to edit project */}
+            <div id="open-edit-project-modal" />
+            <EditProjectModal />
           </IonContent>
         </IonMenu>
         <IonRouterOutlet id="main">

@@ -20,13 +20,11 @@ import CalendarView from '../components/taskViews/CalendarView';
 import { useParams } from 'react-router';
 
 import { Context } from '../dataManagement/ContextProvider';
-import EditProjectModal from '../components/EditProjectModal';
 import './Project.css';
 
 const Project: React.FC = (): JSX.Element => {
   let { projectId } = useParams() as any;
   const { handleSetCurrentTab } = useContext(Context);
-  const router = useIonRouter();
 
   return (
     <>
@@ -36,10 +34,6 @@ const Project: React.FC = (): JSX.Element => {
         </IonFabButton>
       </IonFab>
 
-      {/* modal to edit project */}
-      <div id="open-edit-project-modal" />
-      <EditProjectModal />
-
       <IonTabs>
         <IonTabBar slot="bottom">
           <IonTabButton
@@ -47,7 +41,6 @@ const Project: React.FC = (): JSX.Element => {
             href={`/app/project/${projectId}/list`}
             onClick={() => {
               handleSetCurrentTab('list');
-              //router.push(`/app/project/${projectId}/list`, 'root', 'replace');
             }}
           >
             <IonIcon icon={triangle} />
@@ -58,7 +51,6 @@ const Project: React.FC = (): JSX.Element => {
             href={`/app/project/${projectId}/matrix`}
             onClick={() => {
               handleSetCurrentTab('matrix');
-              //router.push(`/app/project/${projectId}/matrix`, 'root', 'replace');
             }}
           >
             <IonIcon icon={ellipse} />
@@ -69,7 +61,6 @@ const Project: React.FC = (): JSX.Element => {
             href={`/app/project/${projectId}/calendar`}
             onClick={() => {
               handleSetCurrentTab('calendar');
-              //router.push(`/app/project/${projectId}/calendar`, 'root', 'replace');
             }}
           >
             <IonIcon icon={square} />
