@@ -6,7 +6,6 @@ import {
   IonLabel,
   IonModal,
   IonToolbar,
-  useIonPopover,
   IonList,
   IonReorderGroup,
   IonItem,
@@ -16,8 +15,8 @@ import {
 import React, { useContext, useRef, useState } from 'react';
 
 import { checkmark, close, square } from 'ionicons/icons';
-import { Context } from '../dataManagement/ContextProvider';
-import { ProjectType } from '../types';
+import { Context } from '../../dataManagement/ContextProvider';
+import { ProjectType } from '../../types';
 
 const EditProjectModal: React.FC = () => {
   // TODO temp selection
@@ -98,7 +97,7 @@ const EditProjectModal: React.FC = () => {
           <IonInput
             label="Name"
             placeholder="Project Name"
-            value={newProjectName}
+            value={newProjectName} // TODO value not set on first load
             onIonInput={(e) => setNewProjectName(e.detail.value as string)}
           />
           {/* Color Input */}

@@ -2,7 +2,7 @@ import mockProjectLists from '../mockData/projectLists.json';
 import mockProjects from '../mockData/projects.json';
 
 import { Preferences } from '@capacitor/preferences';
-import { PreferenceKeyType, ProjectListType, ProjectType } from '../types';
+import { PreferenceKeyType, ProjectListType, ProjectType, TaskType } from '../types';
 
 /**
  * Retrieve the ID of the user.
@@ -11,13 +11,9 @@ import { PreferenceKeyType, ProjectListType, ProjectType } from '../types';
  * A promise that resolves to the ID of the user.
  */
 export function getUserId(): string {
-  if (import.meta.env.VITE_MOCK_DATA_MODE) {
-    return 'user-0000';
-  } else {
-    // TODO load real data
-    console.log('TODO load real data');
-    return 'user-0000';
-  }
+  // TODO load real data
+  console.log('TODO load real data');
+  return 'user-0000';
 }
 
 /**
@@ -30,14 +26,10 @@ export function getUserId(): string {
  * A promise that resolves to the project list object.
  */
 export async function getProjectList(userId: string): Promise<ProjectListType> {
-  if (import.meta.env.VITE_MOCK_DATA_MODE) {
-    return mockProjectLists[0];
-  } else {
-    let retrievedLocalProjectList = await getPreference('localProjectList');
-    let projectList;
-    if (retrievedLocalProjectList) projectList = await JSON.parse(retrievedLocalProjectList);
-    return projectList;
-  }
+  let retrievedLocalProjectList = await getPreference('localProjectList');
+  let projectList;
+  if (retrievedLocalProjectList) projectList = await JSON.parse(retrievedLocalProjectList);
+  return projectList;
 }
 
 /**
@@ -50,15 +42,26 @@ export async function getProjectList(userId: string): Promise<ProjectListType> {
  * A promise that resolves to an array of project objects.
  */
 export async function getProjects(userId: string): Promise<ProjectType[]> {
-  if (import.meta.env.VITE_MOCK_DATA_MODE) {
-    const returnProjects = mockProjects.filter((project) => mockProjectLists[0].projectIds.includes(project.id));
-    return returnProjects;
-  } else {
-    let retrievedLocalProjects = await getPreference('localProjects');
-    let projects = [];
-    if (retrievedLocalProjects) projects = await JSON.parse(retrievedLocalProjects);
-    return projects;
-  }
+  let retrievedLocalProjects = await getPreference('localProjects');
+  let projects = [];
+  if (retrievedLocalProjects) projects = await JSON.parse(retrievedLocalProjects);
+  return projects;
+}
+
+/**
+ * Retrieve all tasks for a given user.
+ *
+ * @param {string} userId
+ * The ID of the user whose tasks to retrieve.
+ *
+ * @returns {Promise<TaskType[]>}
+ * A promise that resolves to an array of task objects.
+ */
+export async function getTasks(userId: string): Promise<TaskType[]> {
+  let retrievedLocalTasks = await getPreference('localTasks');
+  let tasks = [];
+  if (retrievedLocalTasks) tasks = await JSON.parse(retrievedLocalTasks);
+  return tasks;
 }
 
 /**

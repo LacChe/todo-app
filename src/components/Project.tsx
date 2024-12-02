@@ -28,7 +28,7 @@ const Project: React.FC = (): JSX.Element => {
   return (
     <>
       <IonFab vertical="bottom" horizontal="end">
-        <IonFabButton onClick={() => console.log('fab click')}>
+        <IonFabButton onClick={() => document.getElementById('open-add-task-modal')?.click()}>
           <IonIcon icon={add}></IonIcon>
         </IonFabButton>
       </IonFab>

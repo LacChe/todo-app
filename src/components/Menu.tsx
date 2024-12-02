@@ -23,10 +23,11 @@ import Settings from '../pages/Settings';
 
 import './Menu.css';
 import NewProject from '../pages/NewProject';
-import AddProjectModal from './AddProjectModal';
+import AddProjectModal from './modals/AddProjectModal';
+import EditProjectModal from './modals/EditProjectModal';
+import AddTaskModal from './modals/AddTaskModal';
 import { Context } from '../dataManagement/ContextProvider';
 import { ProjectType } from '../types';
-import EditProjectModal from './EditProjectModal';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
@@ -35,9 +36,15 @@ const Menu: React.FC = () => {
 
   //direct to correct page after loading
   useEffect(() => {
+    if (loading) return;
     // redirect to new project page if no preferences
-    if (!currentTab || !currentProjectId) {
+    if (!projectList || !projects) {
       router.push('/app/project/new', 'root', 'replace');
+      return;
+    }
+    // redirect to first project list view if no preferences
+    if (!currentTab || !currentProjectId) {
+      router.push(`/app/project/${projects[0].id}/list`, 'root', 'replace');
       return;
     }
     // redirect to saved link after finishing loading
@@ -88,6 +95,9 @@ const Menu: React.FC = () => {
             {/* modal to edit project */}
             <div id="open-edit-project-modal" />
             <EditProjectModal />
+            {/* modal to edit project */}
+            <div id="open-add-task-modal" />
+            <AddTaskModal />
           </IonContent>
         </IonMenu>
         <IonRouterOutlet id="main">

@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
-import { getPreference, getProjectList, getProjects, getUserId, setPreference } from './dataRetrieval';
-import { ProjectListType, ProjectType, TabType } from '../types';
+import { getPreference, getProjectList, getProjects, getTasks, getUserId, setPreference } from './dataRetrieval';
+import { ProjectListType, ProjectType, TabType, TaskType } from '../types';
 
 // TODO set types
 interface ContextType {
@@ -19,6 +19,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   // user data
   const [projectList, setProjectList] = useState<ProjectListType>();
   const [projects, setProjects] = useState<ProjectType[]>([]);
+  const [tasks, setTasks] = useState<TaskType[]>([]);
 
   // load on first render
   useEffect(() => {
@@ -52,6 +53,8 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     setProjectList(retrievedProjectList);
     const retrievedProjects = await getProjects(getUserId());
     setProjects(retrievedProjects);
+    const retrievedtasks = await getTasks(getUserId());
+    setTasks(retrievedtasks);
   }
 
   /**
@@ -60,9 +63,24 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
    * @param {string} projectId - The ID of the project to retrieve.
    * @returns {ProjectType | undefined} The project object if found, otherwise undefined.
    */
-  function getProject(projectId: string) {
+  function getProject(projectId: string): ProjectType | undefined {
     const returnProject = projects.filter((project: ProjectType) => project.id === projectId)[0];
     return returnProject;
+  }
+
+  /**
+   * Retrieve a task by its projects ID.
+   *
+   * @param {string} projectId - The ID of the project to retrieve tasks from.
+   * @returns {TaskType | undefined} The task array.
+   */
+  function getTasksByProjectId(projectId: string): TaskType[] {
+    let returnTasks: TaskType[] = [];
+    const returnProject = projects.filter((project: ProjectType) => project.id === projectId)[0];
+    if (returnProject) {
+      returnTasks = tasks.filter((task) => returnProject.taskIds.includes(task.id));
+    }
+    return returnTasks;
   }
 
   /**
@@ -103,11 +121,22 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     setPreference('localProjects', JSON.stringify(newProjects));
   }
 
+  /**
+   * Set the tasks state and store it in preferences.
+   *
+   * @param {TaskType[]} newTasks - The array of tasks to set as the current tasks.
+   */
+  async function handleSetTasks(newTasks: TaskType[]) {
+    setTasks(newTasks);
+    setPreference('localTasks', JSON.stringify(newTasks));
+  }
+
   return (
     <Context.Provider
       value={{
         loading,
         getProject,
+        getTasksByProjectId,
         currentTab,
         handleSetCurrentTab,
         currentProjectId,
@@ -116,6 +145,8 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
         handleSetProjectList,
         projects,
         handleSetProjects,
+        tasks,
+        handleSetTasks,
       }}
     >
       {children}

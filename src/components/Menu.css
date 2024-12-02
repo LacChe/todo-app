@@ -1,10 +1,57 @@
-.add-project-modal-form {
+.add-project-modal-form,
+.add-task-modal-form {
   width: 100%;
   height: max-content;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 50px;
+}
+
+.add-task-modal-form > div {
+  width: 100%;
+}
+
+.edit-project-modal-form {
+  width: 100%;
+  height: max-content;
+}
+
+.form-inputs {
+  padding: 20px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: center;
+  gap: 10px;
+}
+
+.form-inputs-color-picker {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.color-picker-popover {
+  align-items: center;
+}
+
+.color-picker-popover-button {
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  border-radius: 50%;
+  border: 2px solid black;
+}
+
+.color-picker-popover-button:active {
+  border: 2px solid white;
+}
+
+.form-inputs-block-list {
+  width: 100%;
 }
 
 ion-modal {

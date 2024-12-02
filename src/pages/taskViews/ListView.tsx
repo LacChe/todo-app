@@ -12,7 +12,7 @@ import {
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { ProjectType } from '../../types';
+import { ProjectType, TaskType } from '../../types';
 import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
@@ -21,7 +21,8 @@ import { Context } from '../../dataManagement/ContextProvider';
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
-  const { loading, getProject } = useContext(Context);
+  const [projectTasks, setProjectTasks] = useState<TaskType[]>();
+  const { loading, getProject, getTasksByProjectId, tasks } = useContext(Context);
 
   function listOptionsPopover() {
     return (
@@ -45,15 +46,16 @@ const ListView: React.FC = () => {
   const [presentListPopover, dismissListPopover] = useIonPopover(listOptionsPopover);
 
   // retrieve project when id changes
-  // retrieve project when id changes
   useEffect(() => {
     if (!loading) {
       if (projectId === 'undefined') return;
       const retrievedProject = getProject(projectId);
-      if (retrievedProject) setProject(retrievedProject);
-      else console.error(`ProjectId: ${projectId} not found`);
+      if (retrievedProject) {
+        setProject(retrievedProject);
+        setProjectTasks(getTasksByProjectId(projectId));
+      } else console.error(`ProjectId: ${projectId} not found`);
     }
-  }, [loading, projectId]);
+  }, [loading, projectId, tasks]);
 
   return (
     <IonPage>
@@ -73,7 +75,14 @@ const ListView: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">UI goes here...</IonContent>
+      <IonContent className="ion-padding">
+        <div>{projectTasks?.length}</div>
+        {projectTasks?.map((task, index) => (
+          <div key={index}>
+            {task.name} {task.createdDate} {task.status} {task.notes}
+          </div>
+        ))}
+      </IonContent>
     </IonPage>
   );
 };

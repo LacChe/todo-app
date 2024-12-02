@@ -2,8 +2,8 @@ import { IonButton, IonInput, IonModal, useIonRouter } from '@ionic/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ProjectType } from '../types';
-import { Context } from '../dataManagement/ContextProvider';
+import { ProjectType } from '../../types';
+import { Context } from '../../dataManagement/ContextProvider';
 
 const AddProjectModal: React.FC = () => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
