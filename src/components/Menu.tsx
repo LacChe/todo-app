@@ -1,4 +1,5 @@
 import {
+  IonBadge,
   IonButton,
   IonContent,
   IonHeader,
@@ -27,12 +28,19 @@ import AddProjectModal from './modals/AddProjectModal';
 import EditProjectModal from './modals/EditProjectModal';
 import AddTaskModal from './modals/AddTaskModal';
 import { Context } from '../dataManagement/ContextProvider';
-import { ProjectType } from '../types';
+import { ProjectType, TaskType } from '../types';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
-  const { loading, currentProjectId, currentTab, projectList, projects, handleSetCurrentProjectId } =
-    useContext(Context);
+  const {
+    loading,
+    currentProjectId,
+    currentTab,
+    projectList,
+    projects,
+    getTasksByProjectId,
+    handleSetCurrentProjectId,
+  } = useContext(Context);
 
   //direct to correct page after loading
   useEffect(() => {
@@ -50,6 +58,10 @@ const Menu: React.FC = () => {
     // redirect to saved link after finishing loading
     router.push(`/app/project/${currentProjectId}/${currentTab}`, 'root', 'replace');
   }, [loading]);
+
+  function getIncompleteTasksCount(projectId: string) {
+    return getTasksByProjectId(projectId).filter((task: TaskType) => task.status !== 'done').length;
+  }
 
   return (
     <IonPage>
@@ -77,14 +89,17 @@ const Menu: React.FC = () => {
               return (
                 <IonMenuToggle key={index} autoHide={false}>
                   <IonItem
+                    className="menu-item"
                     onClick={() => {
                       handleSetCurrentProjectId(projectId);
                     }}
                     routerLink={`/app/project/${projectId}/${currentTab ? currentTab : 'list'}`}
                     routerDirection="none"
                   >
-                    {projects.filter((project: ProjectType) => project.id === projectId)[0].name}
-                    {/* TODO show incomplete task count */}
+                    <div>{projects.filter((project: ProjectType) => project.id === projectId)[0].name}</div>
+                    {getIncompleteTasksCount(projectId) > 0 && (
+                      <IonBadge slot="end">{getIncompleteTasksCount(projectId)}</IonBadge>
+                    )}
                   </IonItem>
                 </IonMenuToggle>
               );

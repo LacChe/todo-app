@@ -36,7 +36,7 @@ const ListView: React.FC = () => {
           >
             Edit
           </IonButton>
-          <IonButton>Hide Completed</IonButton>
+          <IonButton>Hide Done</IonButton>
           <IonButton>Hide Details</IonButton>
           <IonButton>Sort</IonButton>
         </IonButtons>
