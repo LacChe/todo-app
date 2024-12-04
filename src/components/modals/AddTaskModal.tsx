@@ -7,8 +7,7 @@ import { Context } from '../../dataManagement/ContextProvider';
 
 const AddTaskModal: React.FC = () => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
-  const { getProject, getTasksByProjectId, projects, tasks, currentProjectId, handleSetProjects, handleSetTasks } =
-    useContext(Context);
+  const { getProject, projects, tasks, currentProjectId, handleSetProjects, handleSetTasks } = useContext(Context);
 
   const [newTaskName, setNewTaskName] = useState<string>('');
   const [newTaskNotes, setNewTaskNotes] = useState<string>('');

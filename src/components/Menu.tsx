@@ -29,6 +29,7 @@ import EditProjectModal from './modals/EditProjectModal';
 import AddTaskModal from './modals/AddTaskModal';
 import { Context } from '../dataManagement/ContextProvider';
 import { ProjectType, TaskType } from '../types';
+import EditTaskModal from './modals/EditTaskModal';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
@@ -113,6 +114,9 @@ const Menu: React.FC = () => {
             {/* modal to edit project */}
             <div id="open-add-task-modal" />
             <AddTaskModal />
+            {/* modal to edit project */}
+            <div id="open-edit-task-modal" />
+            <EditTaskModal />
           </IonContent>
         </IonMenu>
         <IonRouterOutlet id="main">

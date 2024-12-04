@@ -32,7 +32,6 @@ const EditProjectModal: React.FC = () => {
 
   const editProjectModal = useRef<HTMLIonModalElement>(null);
   const {
-    currentTab,
     projectList,
     handleSetProjectList,
     projects,
@@ -51,6 +50,7 @@ const EditProjectModal: React.FC = () => {
   // const [newProjectBlocks, setNewProjectBlocks] = useState();
 
   function handleEditProject() {
+    console.log('here');
     // TODO check valid values
 
     retrievedProject.name = newProjectName;
@@ -121,7 +121,7 @@ const EditProjectModal: React.FC = () => {
           <IonButton type="button" slot="start" id="present-delete-confirmation">
             <IonIcon icon={close} />
           </IonButton>
-          <IonButton type="submit" slot="end" onClick={handleSubmit}>
+          <IonButton type="submit" slot="end">
             <IonIcon icon={checkmark} />
           </IonButton>
         </IonToolbar>

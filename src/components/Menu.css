@@ -12,7 +12,8 @@
   width: 100%;
 }
 
-.edit-project-modal-form {
+.edit-project-modal-form,
+.edit-task-modal-form {
   width: 100%;
   height: max-content;
 }

@@ -25,6 +25,7 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
   }
 
   function handleEdit(e: any) {
+    document.getElementById('open-edit-task-modal')?.click();
     e.target.parentNode.parentNode.close();
   }
 
