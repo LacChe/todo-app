@@ -14,7 +14,7 @@ import {
   IonAlert,
   useIonRouter,
 } from '@ionic/react';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { checkmark, close, square } from 'ionicons/icons';
 import { Context } from '../../dataManagement/ContextProvider';
@@ -47,7 +47,19 @@ const EditProjectModal: React.FC = () => {
 
   const [newProjectName, setNewProjectName] = useState<string>(retrievedProject?.name);
   const [newProjectColor, setNewProjectColor] = useState<string>(retrievedProject?.color);
+  // TODO set other values
   // const [newProjectBlocks, setNewProjectBlocks] = useState();
+
+  useEffect(() => {
+    loadData();
+  }, [currentProjectId]);
+
+  async function loadData() {
+    retrievedProject = getProject(currentProjectId);
+    setNewProjectName(retrievedProject?.name);
+    setNewProjectColor(retrievedProject?.color);
+    // TODO set other values
+  }
 
   function handleEditProject() {
     console.log('here');
@@ -130,7 +142,7 @@ const EditProjectModal: React.FC = () => {
           <IonInput
             label="Name"
             placeholder="Project Name"
-            value={newProjectName} // TODO value not set on first load
+            value={newProjectName}
             onIonInput={(e) => setNewProjectName(e.detail.value as string)}
           />
           {/* Color Input */}

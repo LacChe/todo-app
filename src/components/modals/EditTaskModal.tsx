@@ -1,17 +1,49 @@
-import { IonAlert, IonButton, IonIcon, IonInput, IonModal, IonToolbar } from '@ionic/react';
-import React, { useContext, useRef } from 'react';
+import { IonAlert, IonButton, IonIcon, IonInput, IonModal, IonTextarea, IonToolbar } from '@ionic/react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { Context } from '../../dataManagement/ContextProvider';
 import { checkmark, close } from 'ionicons/icons';
+import { StatusType, TaskType, TaskTypeDataType } from '../../types';
 
 const EditTaskModal: React.FC = () => {
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const {} = useContext(Context);
+  const { getTask, currentTaskId, handleSetTasks, tasks } = useContext(Context);
 
-  // let retrievedTask: TaskType = getTask(// id);
+  let retrievedTask: TaskType = getTask(currentTaskId);
+  const [newTaskName, setNewTaskName] = useState<string>(retrievedTask?.name);
+  const [newTaskStatus, setNewTaskStatus] = useState<StatusType>(retrievedTask?.status);
+  const [newTaskNotes, setNewTaskNotes] = useState<string>(retrievedTask?.notes);
+  const [newTaskTypeData, setNewTaskTypeData] = useState<TaskTypeDataType>(retrievedTask?.typeData);
+
+  useEffect(() => {
+    loadData();
+  }, [currentTaskId]);
+
+  async function loadData() {
+    retrievedTask = getTask(currentTaskId);
+    setNewTaskName(retrievedTask?.name);
+    setNewTaskStatus(retrievedTask?.status);
+    setNewTaskNotes(retrievedTask?.notes);
+    setNewTaskTypeData(retrievedTask?.typeData);
+  }
 
   function handleEditTask() {
-    console.log('edit');
+    // TODO check values
+    if (!newTaskName || newTaskName === '') return;
+
+    let newTasks = tasks.map((task: TaskType) =>
+      task.id === currentTaskId
+        ? {
+            ...task,
+            name: newTaskName,
+            status: newTaskStatus,
+            notes: newTaskNotes,
+            typeData: newTaskTypeData,
+          }
+        : task,
+    );
+    handleSetTasks(newTasks);
+
     editProjectModal.current?.dismiss();
   }
 
@@ -48,10 +80,22 @@ const EditTaskModal: React.FC = () => {
           <IonInput
             label="Name"
             placeholder="Task Name"
-            // onIonInput={(e) => setNewTaskName(e.detail.value as string)}
+            value={newTaskName}
+            onIonInput={(e) => setNewTaskName(e.detail.value as string)}
           />
+          {/* Status Input temp */}
+          <div>{newTaskStatus}</div>
+          {/* Notes Input */}
+          <IonTextarea
+            label="Notes"
+            placeholder="Task Notes"
+            value={newTaskNotes}
+            onIonInput={(e) => setNewTaskNotes(e.detail.value as string)}
+          />
+          {/* TypeData Input temp */}
+          <div>{JSON.stringify(newTaskTypeData)}</div>
           <IonAlert
-            header={`Delete task ${'"name"' /* TODO task name */} and all its tasks?`}
+            header={`Delete task ${newTaskName}?`}
             trigger="present-delete-confirmation"
             buttons={[
               {

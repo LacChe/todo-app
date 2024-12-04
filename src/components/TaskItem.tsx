@@ -5,7 +5,7 @@ import { Context } from '../dataManagement/ContextProvider';
 import './TaskItem.css';
 
 const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
-  const { tasks, getTaskById, handleSetTasks } = useContext(Context);
+  const { tasks, getTaskById, handleSetTasks, setCurrentTaskId } = useContext(Context);
 
   const task = getTaskById(taskId);
   if (!task) {
@@ -25,6 +25,7 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
   }
 
   function handleEdit(e: any) {
+    setCurrentTaskId(taskId);
     document.getElementById('open-edit-task-modal')?.click();
     e.target.parentNode.parentNode.close();
   }

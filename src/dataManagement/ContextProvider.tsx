@@ -14,6 +14,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   let [loading, setLoading] = useState<boolean>(true);
 
   // preferences
+  let [currentTaskId, setCurrentTaskId] = useState<string>();
   let [currentProjectId, setCurrentProjectId] = useState<string>();
   let [currentTab, setCurrentTab] = useState<TabType>();
 
@@ -67,6 +68,17 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   function getProject(projectId: string): ProjectType | undefined {
     const returnProject = projects.filter((project: ProjectType) => project.id === projectId)[0];
     return returnProject;
+  }
+
+  /**
+   * Retrieve a task by its ID.
+   *
+   * @param {string} taskId - The ID of the task to retrieve.
+   * @returns {TaskType | undefined} The task object if found, otherwise undefined.
+   */
+  function getTask(taskId: string): TaskType | undefined {
+    const returnTask = tasks.filter((task: TaskType) => task.id === taskId)[0];
+    return returnTask;
   }
 
   /**
@@ -141,6 +153,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
    * @param {TaskType[]} newTasks - The array of tasks to set as the current tasks.
    */
   async function handleSetTasks(newTasks: TaskType[]) {
+    console.log('setTasks', newTasks);
     setTasks(newTasks);
     setPreference('localTasks', JSON.stringify(newTasks));
   }
@@ -150,11 +163,14 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
       value={{
         loading,
         getProject,
+        getTask,
         getTasksByProjectId,
         getTaskById,
         currentTab,
         handleSetCurrentTab,
         currentProjectId,
+        setCurrentTaskId,
+        currentTaskId,
         handleSetCurrentProjectId,
         projectList,
         handleSetProjectList,
