@@ -153,7 +153,6 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
    * @param {TaskType[]} newTasks - The array of tasks to set as the current tasks.
    */
   async function handleSetTasks(newTasks: TaskType[]) {
-    console.log('setTasks', newTasks);
     setTasks(newTasks);
     setPreference('localTasks', JSON.stringify(newTasks));
   }

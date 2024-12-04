@@ -1,8 +1,9 @@
-import { IonItem, IonItemOption, IonItemOptions, IonItemSliding } from '@ionic/react';
+import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/react';
 import React, { useContext } from 'react';
 import { Context } from '../dataManagement/ContextProvider';
 
 import './TaskItem.css';
+import { TaskType } from '../types';
 
 const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
   const { tasks, getTaskById, handleSetTasks, setCurrentTaskId } = useContext(Context);
@@ -30,6 +31,18 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
     e.target.parentNode.parentNode.close();
   }
 
+  function toggleShowDetailsOverride() {
+    let newTasks = tasks.map((task: TaskType) =>
+      task.id === taskId
+        ? {
+            ...task,
+            showDetailsOverride: !task.showDetailsOverride,
+          }
+        : task,
+    );
+    handleSetTasks(newTasks);
+  }
+
   return (
     <IonItemSliding>
       {/* start options */}
@@ -40,8 +53,15 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
       </IonItemOptions>
 
       {/* task content */}
-      <IonItem className={`${task?.status === 'done' ? 'done' : ''}`}>
-        {task?.name} {task?.createdDate} {task?.status} {task?.notes}
+      <IonItem onClick={toggleShowDetailsOverride} className={`${task?.status === 'done' ? 'done' : ''}`}>
+        <IonLabel>
+          <div>{task?.name}</div>
+          {task.showDetailsOverride && (
+            <div>
+              {task?.createdDate} {task?.status} {task?.notes}
+            </div>
+          )}
+        </IonLabel>
       </IonItem>
 
       {/* end options */}
