@@ -8,7 +8,10 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
   const { tasks, getTaskById, handleSetTasks } = useContext(Context);
 
   const task = getTaskById(taskId);
-  if (!task) console.error(`Task ID: ${taskId} not found`);
+  if (!task) {
+    // console.error(`Task ID: ${taskId} not found`);
+    return <></>;
+  }
 
   function handleStatusToggle(e: any) {
     task.status = task.status === 'todo' ? 'done' : 'todo';

@@ -46,7 +46,7 @@ const Menu: React.FC = () => {
   useEffect(() => {
     if (loading) return;
     // redirect to new project page if no preferences
-    if (!projectList || !projects) {
+    if (!projectList || !projects || projectList.projectIds.length === 0) {
       router.push('/app/project/new', 'root', 'replace');
       return;
     }

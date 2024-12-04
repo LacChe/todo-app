@@ -2,6 +2,7 @@ import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { getPreference, getProjectList, getProjects, getTasks, getUserId, setPreference } from './dataRetrieval';
 import { ProjectListType, ProjectType, TabType, TaskType } from '../types';
 
+// TODO changing data should be done here, then updated to data retrieval and db
 // TODO set types
 type ContextType = {
   [key: string]: any;

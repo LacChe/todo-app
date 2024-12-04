@@ -11,14 +11,17 @@ import {
   IonItem,
   IonReorder,
   IonPopover,
+  IonAlert,
+  useIonRouter,
 } from '@ionic/react';
 import React, { useContext, useRef, useState } from 'react';
 
 import { checkmark, close, square } from 'ionicons/icons';
 import { Context } from '../../dataManagement/ContextProvider';
-import { ProjectType } from '../../types';
+import { ProjectType, TaskType } from '../../types';
 
 const EditProjectModal: React.FC = () => {
+  const router = useIonRouter();
   // TODO temp selection
   const colors = [
     ['#000000', '#FFFFFF', '#FF0000', '#00FF00'],
@@ -28,7 +31,18 @@ const EditProjectModal: React.FC = () => {
   ];
 
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const { projects, handleSetProjects, getProject, currentProjectId } = useContext(Context);
+  const {
+    currentTab,
+    projectList,
+    handleSetProjectList,
+    projects,
+    handleSetProjects,
+    getProject,
+    tasks,
+    handleSetTasks,
+    currentProjectId,
+    handleSetCurrentProjectId,
+  } = useContext(Context);
 
   let retrievedProject: ProjectType = getProject(currentProjectId);
 
@@ -68,6 +82,32 @@ const EditProjectModal: React.FC = () => {
     editProjectModal.current?.dismiss();
   }
 
+  function handleDeleteProject() {
+    // remove project from project list
+    let newProjectList = { ...projectList };
+
+    newProjectList.projectIds = newProjectList.projectIds.filter((id: string) => id !== currentProjectId);
+    handleSetProjectList(newProjectList);
+
+    // reroute to first project if exists or new project page
+    if (newProjectList.projectIds[0]) {
+      router.push(`/app`, 'root', 'replace');
+    } else {
+      router.push('/app/project/new', 'root', 'replace');
+    }
+    handleSetCurrentProjectId(newProjectList.projectIds[0]);
+
+    // delete project
+    let newProjects = projects.filter((project: ProjectType) => project.id !== currentProjectId);
+    handleSetProjects(newProjects);
+
+    // delete tasks
+    let newTasks = tasks.filter((task: TaskType) => !retrievedProject.taskIds.includes(task.id));
+    handleSetTasks(newTasks);
+
+    editProjectModal.current?.dismiss();
+  }
+
   return (
     <IonModal
       ref={editProjectModal}
@@ -78,14 +118,7 @@ const EditProjectModal: React.FC = () => {
     >
       <form onSubmit={handleSubmit} className="edit-project-modal-form">
         <IonToolbar>
-          <IonButton
-            type="button"
-            slot="start"
-            onClick={() => {
-              console.log('delete');
-              // editProjectModal.current?.dismiss();
-            }}
-          >
+          <IonButton type="button" slot="start" id="present-delete-confirmation">
             <IonIcon icon={close} />
           </IonButton>
           <IonButton type="submit" slot="end" onClick={handleSubmit}>
@@ -143,6 +176,20 @@ const EditProjectModal: React.FC = () => {
               })}
             </IonReorderGroup>
           </IonList>
+          <IonAlert
+            header={`Delete project ${retrievedProject?.name} and all its tasks?`}
+            trigger="present-delete-confirmation"
+            buttons={[
+              {
+                text: 'Cancel',
+              },
+              {
+                text: 'Delete',
+                role: 'confirm',
+                handler: handleDeleteProject,
+              },
+            ]}
+          ></IonAlert>
         </div>
       </form>
     </IonModal>

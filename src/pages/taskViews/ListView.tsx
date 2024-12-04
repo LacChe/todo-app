@@ -53,7 +53,9 @@ const ListView: React.FC = () => {
       const retrievedProject = getProject(projectId);
       if (retrievedProject) {
         setProject(retrievedProject);
-      } else console.error(`ProjectId: ${projectId} not found`);
+      } else {
+        // console.error(`ProjectId: ${projectId} not found`);
+      }
     }
   }, [loading, projectId, tasks]);
 
@@ -78,6 +80,7 @@ const ListView: React.FC = () => {
       <IonContent className="ion-padding">
         {/* list task items */}
         <IonList>
+          {project?.taskIds?.length === 0 && <div>No tasks</div>}
           {project?.taskIds?.map((taskId, index) => (
             <TaskItem taskId={taskId} key={index} />
           ))}
