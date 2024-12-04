@@ -3,11 +3,12 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { Context } from '../../dataManagement/ContextProvider';
 import { checkmark, close } from 'ionicons/icons';
-import { StatusType, TaskType, TaskTypeDataType } from '../../types';
+import { ProjectType, StatusType, TaskType, TaskTypeDataType } from '../../types';
 
 const EditTaskModal: React.FC = () => {
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const { getTask, currentTaskId, handleSetTasks, tasks } = useContext(Context);
+  const { getTask, currentTaskId, handleSetTasks, tasks, currentProjectId, projects, handleSetProjects } =
+    useContext(Context);
 
   let retrievedTask: TaskType = getTask(currentTaskId);
   const [newTaskName, setNewTaskName] = useState<string>(retrievedTask?.name);
@@ -48,7 +49,21 @@ const EditTaskModal: React.FC = () => {
   }
 
   function handleDeleteTask() {
-    console.log('delete');
+    // TODO remove task id from project view settings
+
+    // remove from projects
+    let newProjects = [...projects];
+    projects.map((project: ProjectType) => {
+      if (project.id === currentProjectId) {
+        project.taskIds = project.taskIds.filter((id: string) => id !== currentTaskId);
+      }
+      return project;
+    });
+    handleSetProjects(newProjects);
+
+    // delete task
+    let newTasks = tasks.filter((task: TaskType) => task.id !== currentTaskId);
+    handleSetTasks(newTasks);
     editProjectModal.current?.dismiss();
   }
 
