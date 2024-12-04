@@ -21,7 +21,6 @@ export type ProjectType = {
 };
 
 export type ViewSettingsListType = {
-  taskIds: string[];
   settings: ViewSettingsSettingsType;
 };
 

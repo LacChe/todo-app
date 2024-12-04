@@ -4,9 +4,12 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonItem,
   IonList,
   IonMenuButton,
   IonPage,
+  IonReorder,
+  IonReorderGroup,
   IonTitle,
   IonToolbar,
   useIonPopover,
@@ -23,7 +26,7 @@ import TaskItem from '../../components/TaskItem';
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
-  const { loading, getProject, tasks } = useContext(Context);
+  const { loading, getProject, tasks, handleSetProjects, projects } = useContext(Context);
 
   function listOptionsPopover() {
     return (
@@ -59,6 +62,24 @@ const ListView: React.FC = () => {
     }
   }, [loading, projectId, tasks]);
 
+  function handleListReorder(e: any) {
+    const originalTaskIds = project?.taskIds;
+    if (originalTaskIds === undefined) return;
+
+    let reorderedTaskIds = originalTaskIds?.filter((id: string, index: number) => index !== e.detail.from);
+    reorderedTaskIds.splice(e.detail.to, 0, originalTaskIds[e.detail.from]);
+
+    // save reordered project taskId list
+    let newProjects = projects.map((project: ProjectType) => {
+      if (project.id === projectId) {
+        let retrievedProject = { ...project, taskIds: reorderedTaskIds };
+        return retrievedProject;
+      } else return project;
+    });
+    handleSetProjects(newProjects);
+    e.detail.complete();
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -81,9 +102,16 @@ const ListView: React.FC = () => {
         {/* list task items */}
         <IonList>
           {project?.taskIds?.length === 0 && <div>No tasks</div>}
-          {project?.taskIds?.map((taskId, index) => (
-            <TaskItem taskId={taskId} key={index} />
-          ))}
+          <IonReorderGroup disabled={false} onIonItemReorder={handleListReorder}>
+            {project?.taskIds?.map((taskId, index) => {
+              return (
+                <IonItem key={index}>
+                  <TaskItem taskId={taskId} key={index} />
+                  <IonReorder slot="end"></IonReorder>
+                </IonItem>
+              );
+            })}
+          </IonReorderGroup>
         </IonList>
       </IonContent>
     </IonPage>

@@ -91,7 +91,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     let returnTasks: TaskType[] = [];
     const returnProject = projects.filter((project: ProjectType) => project.id === projectId)[0];
     if (returnProject) {
-      returnTasks = tasks.filter((task) => returnProject.taskIds.includes(task.id));
+      returnProject.taskIds.forEach((id) => returnTasks.push(tasks.filter((task) => task.id === id)[0]));
     }
     return returnTasks;
   }

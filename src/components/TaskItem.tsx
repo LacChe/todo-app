@@ -50,11 +50,13 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
         <IonItemOption onClick={handleStatusToggle} expandable>
           {task.status === 'todo' ? 'Done' : 'To Do'}
         </IonItemOption>
+        <IonItemOption onClick={handleEdit}>Edit</IonItemOption>
       </IonItemOptions>
 
       {/* task content */}
       <IonItem onClick={toggleShowDetailsOverride} className={`${task?.status === 'done' ? 'done' : ''}`}>
         <IonLabel>
+          <div>{taskId}</div>
           <div>{task?.name}</div>
           {task.showDetailsOverride && (
             <div>
@@ -63,13 +65,6 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
           )}
         </IonLabel>
       </IonItem>
-
-      {/* end options */}
-      <IonItemOptions side="end">
-        <IonItemOption onClick={handleEdit} expandable>
-          Edit
-        </IonItemOption>
-      </IonItemOptions>
     </IonItemSliding>
   );
 };
