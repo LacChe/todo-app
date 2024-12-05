@@ -18,7 +18,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { checkmark, close, square } from 'ionicons/icons';
 import { Context } from '../../dataManagement/ContextProvider';
-import { ProjectType, TaskType } from '../../types';
+import { ProjectType } from '../../types';
 
 const EditProjectModal: React.FC = () => {
   const router = useIonRouter();
@@ -31,17 +31,8 @@ const EditProjectModal: React.FC = () => {
   ];
 
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const {
-    projectList,
-    handleSetProjectList,
-    projects,
-    handleSetProjects,
-    getProject,
-    tasks,
-    handleSetTasks,
-    currentProjectId,
-    handleSetCurrentProjectId,
-  } = useContext(Context);
+  const { setProject, deleteProject, projectList, getProject, currentProjectId, handleSetCurrentProjectId } =
+    useContext(Context);
 
   let retrievedProject: ProjectType = getProject(currentProjectId);
 
@@ -62,19 +53,16 @@ const EditProjectModal: React.FC = () => {
   }
 
   function handleEditProject() {
-    console.log('here');
     // TODO check valid values
+    if (!newProjectName || newProjectName === '') return;
 
+    // set input values
     retrievedProject.name = newProjectName;
     retrievedProject.color = newProjectColor;
     // retrievedProject.viewSettings = newProjectBlocks;
 
-    // replace edited project into project list
-    let newProjects = projects.map((project: ProjectType) => {
-      if (project.id === currentProjectId) return retrievedProject;
-      else return project;
-    });
-    handleSetProjects(newProjects);
+    // set to context
+    setProject(retrievedProject);
   }
 
   function handleBlockReorder(e: any) {
@@ -94,28 +82,18 @@ const EditProjectModal: React.FC = () => {
     editProjectModal.current?.dismiss();
   }
 
-  function handleDeleteProject() {
-    // remove project from project list
-    let newProjectList = { ...projectList };
-
-    newProjectList.projectIds = newProjectList.projectIds.filter((id: string) => id !== currentProjectId);
-    handleSetProjectList(newProjectList);
+  async function handleDeleteProject() {
+    await deleteProject(currentProjectId);
 
     // reroute to first project if exists or new project page
+    const newProjectList = { ...projectList };
+    newProjectList.projectIds = newProjectList.projectIds.filter((id: string) => id !== currentProjectId);
+    handleSetCurrentProjectId(newProjectList.projectIds[0]);
     if (newProjectList.projectIds[0]) {
       router.push(`/app`, 'root', 'replace');
     } else {
       router.push('/app/project/new', 'root', 'replace');
     }
-    handleSetCurrentProjectId(newProjectList.projectIds[0]);
-
-    // delete project
-    let newProjects = projects.filter((project: ProjectType) => project.id !== currentProjectId);
-    handleSetProjects(newProjects);
-
-    // delete tasks
-    let newTasks = tasks.filter((task: TaskType) => !retrievedProject.taskIds.includes(task.id));
-    handleSetTasks(newTasks);
 
     editProjectModal.current?.dismiss();
   }

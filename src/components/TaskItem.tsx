@@ -3,12 +3,11 @@ import React, { useContext } from 'react';
 import { Context } from '../dataManagement/ContextProvider';
 
 import './TaskItem.css';
-import { TaskType } from '../types';
 
 const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
-  const { tasks, getTaskById, handleSetTasks, setCurrentTaskId } = useContext(Context);
+  const { getTask, setTask, setCurrentTaskId } = useContext(Context);
 
-  const task = getTaskById(taskId);
+  const task = getTask(taskId);
   if (!task) {
     // console.error(`Task ID: ${taskId} not found`);
     return <></>;
@@ -16,12 +15,7 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
 
   function handleStatusToggle(e: any) {
     task.status = task.status === 'todo' ? 'done' : 'todo';
-    let newTasks = [...tasks];
-    newTasks.map((prevTask) => {
-      if (prevTask.id === taskId) return task;
-      else return prevTask;
-    });
-    handleSetTasks(newTasks);
+    setTask(task);
     e.target.parentNode.parentNode.close();
   }
 
@@ -32,15 +26,8 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
   }
 
   function toggleShowDetailsOverride() {
-    let newTasks = tasks.map((task: TaskType) =>
-      task.id === taskId
-        ? {
-            ...task,
-            showDetailsOverride: !task.showDetailsOverride,
-          }
-        : task,
-    );
-    handleSetTasks(newTasks);
+    task.showDetailsOverride = !task.showDetailsOverride;
+    setTask(task);
   }
 
   return (

@@ -3,12 +3,11 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { Context } from '../../dataManagement/ContextProvider';
 import { checkmark, close } from 'ionicons/icons';
-import { ProjectType, StatusType, TaskType, TaskTypeDataType } from '../../types';
+import { StatusType, TaskType, TaskTypeDataType } from '../../types';
 
 const EditTaskModal: React.FC = () => {
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const { getTask, currentTaskId, handleSetTasks, tasks, currentProjectId, projects, handleSetProjects } =
-    useContext(Context);
+  const { getTask, setTask, deleteTask, currentTaskId } = useContext(Context);
 
   let retrievedTask: TaskType = getTask(currentTaskId);
   const [newTaskName, setNewTaskName] = useState<string>(retrievedTask?.name);
@@ -32,38 +31,17 @@ const EditTaskModal: React.FC = () => {
     // TODO check values
     if (!newTaskName || newTaskName === '') return;
 
-    let newTasks = tasks.map((task: TaskType) =>
-      task.id === currentTaskId
-        ? {
-            ...task,
-            name: newTaskName,
-            status: newTaskStatus,
-            notes: newTaskNotes,
-            typeData: newTaskTypeData,
-          }
-        : task,
-    );
-    handleSetTasks(newTasks);
+    retrievedTask.name = newTaskName;
+    retrievedTask.status = newTaskStatus;
+    retrievedTask.notes = newTaskNotes;
+    retrievedTask.typeData = newTaskTypeData;
+    setTask(retrievedTask);
 
     editProjectModal.current?.dismiss();
   }
 
   function handleDeleteTask() {
-    // TODO remove task id from project view settings
-
-    // remove from projects
-    let newProjects = [...projects];
-    projects.map((project: ProjectType) => {
-      if (project.id === currentProjectId) {
-        project.taskIds = project.taskIds.filter((id: string) => id !== currentTaskId);
-      }
-      return project;
-    });
-    handleSetProjects(newProjects);
-
-    // delete task
-    let newTasks = tasks.filter((task: TaskType) => task.id !== currentTaskId);
-    handleSetTasks(newTasks);
+    deleteTask(currentTaskId);
     editProjectModal.current?.dismiss();
   }
 

@@ -33,15 +33,8 @@ import EditTaskModal from './modals/EditTaskModal';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
-  const {
-    loading,
-    currentProjectId,
-    currentTab,
-    projectList,
-    projects,
-    getTasksByProjectId,
-    handleSetCurrentProjectId,
-  } = useContext(Context);
+  const { loading, currentProjectId, currentTab, projectList, projects, getTask, handleSetCurrentProjectId } =
+    useContext(Context);
 
   //direct to correct page after loading
   useEffect(() => {
@@ -60,8 +53,20 @@ const Menu: React.FC = () => {
     router.push(`/app/project/${currentProjectId}/${currentTab}`, 'root', 'replace');
   }, [loading]);
 
-  function getIncompleteTasksCount(projectId: string) {
-    return getTasksByProjectId(projectId).filter((task: TaskType) => task.status !== 'done').length;
+  /**
+   * Get the count of incomplete tasks for a given project.
+   *
+   * @param {string} projectId - The ID of the project to retrieve tasks from.
+   * @returns {number} The number of tasks that are not marked as 'done'.
+   */
+  function getIncompleteTasksCount(projectId: string): number {
+    if (!projectId) return 0;
+    let project = projects.filter((project: ProjectType) => project.id === projectId)[0];
+    if (!project) return 0;
+    let incompleteTasks = project.taskIds
+      .map((id: string) => getTask(id))
+      .filter((task: TaskType) => task.status === 'todo');
+    return incompleteTasks.length;
   }
 
   return (

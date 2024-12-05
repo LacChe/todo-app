@@ -12,6 +12,7 @@ import {
   IonReorderGroup,
   IonTitle,
   IonToolbar,
+  ItemReorderEventDetail,
   useIonPopover,
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
@@ -25,8 +26,8 @@ import TaskItem from '../../components/TaskItem';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const [project, setProject] = useState<ProjectType>();
-  const { loading, getProject, tasks, handleSetProjects, projects } = useContext(Context);
+  const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
+  const { loading, getProject, setProject, projects } = useContext(Context);
 
   function listOptionsPopover() {
     return (
@@ -53,43 +54,32 @@ const ListView: React.FC = () => {
   useEffect(() => {
     if (!loading) {
       if (projectId === 'undefined') return;
-      const retrievedProject = getProject(projectId);
-      if (retrievedProject) {
-        setProject(retrievedProject);
-      } else {
-        // console.error(`ProjectId: ${projectId} not found`);
-      }
+      setRetrievedProject(getProject(projectId));
     }
-  }, [loading, projectId, tasks]);
+  }, [loading, projectId, projects]);
 
-  function handleListReorder(e: any) {
-    const originalTaskIds = project?.taskIds;
+  function handleListReorder(e: CustomEvent<ItemReorderEventDetail>) {
+    // save data to context
+    const originalTaskIds = retrievedProject?.taskIds;
     if (originalTaskIds === undefined) return;
 
     let reorderedTaskIds = originalTaskIds?.filter((id: string, index: number) => index !== e.detail.from);
     reorderedTaskIds.splice(e.detail.to, 0, originalTaskIds[e.detail.from]);
+    setProject({ ...retrievedProject, taskIds: reorderedTaskIds } as ProjectType);
 
-    // save reordered project taskId list
-    let newProjects = projects.map((project: ProjectType) => {
-      if (project.id === projectId) {
-        let retrievedProject = { ...project, taskIds: reorderedTaskIds };
-        return retrievedProject;
-      } else return project;
-    });
-    handleSetProjects(newProjects);
-    e.detail.complete();
+    e.detail.complete(retrievedProject?.taskIds);
   }
 
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar style={{ '--background': project?.color }}>
+        <IonToolbar style={{ '--background': retrievedProject?.color }}>
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />
           </IonButtons>
           {/* title */}
-          <IonTitle>{project?.name} ListView</IonTitle>
+          <IonTitle>{retrievedProject?.name} ListView</IonTitle>
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
             <IonButton onClick={(e: any) => presentListPopover({ event: e })}>
@@ -101,9 +91,9 @@ const ListView: React.FC = () => {
       <IonContent className="ion-padding">
         {/* list task items */}
         <IonList>
-          {project?.taskIds?.length === 0 && <div>No tasks</div>}
+          {retrievedProject?.taskIds?.length === 0 && <div>No tasks</div>}
           <IonReorderGroup disabled={false} onIonItemReorder={handleListReorder}>
-            {project?.taskIds?.map((taskId, index) => {
+            {retrievedProject?.taskIds?.map((taskId, index) => {
               return (
                 <IonItem key={index}>
                   <TaskItem taskId={taskId} key={index} />

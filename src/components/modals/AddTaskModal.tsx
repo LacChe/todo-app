@@ -2,12 +2,12 @@ import { IonButton, IonInput, IonModal } from '@ionic/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
-import { ProjectType, TaskType } from '../../types';
+import { TaskType } from '../../types';
 import { Context } from '../../dataManagement/ContextProvider';
 
 const AddTaskModal: React.FC = () => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
-  const { getProject, projects, tasks, currentProjectId, handleSetProjects, handleSetTasks } = useContext(Context);
+  const { setTask } = useContext(Context);
 
   const [newTaskName, setNewTaskName] = useState<string>('');
   const [newTaskNotes, setNewTaskNotes] = useState<string>('');
@@ -40,15 +40,10 @@ const AddTaskModal: React.FC = () => {
       notes: newTaskNotes,
     };
 
-    // add new task to project and tasks
-    let newProject = { ...getProject(currentProjectId) };
-    newProject.taskIds.push(newTask.id);
-    handleSetProjects(projects.map((project: ProjectType) => (project.id === currentProjectId ? newProject : project)));
-    handleSetTasks([...tasks, newTask]);
+    setTask(newTask);
 
     setNewTaskName('');
     setNewTaskNotes('');
-    // TODO clear others
   }
 
   /**

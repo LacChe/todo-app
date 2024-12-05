@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { getPreference, getProjectList, getProjects, getTasks, getUserId, setPreference } from './dataRetrieval';
 import { ProjectListType, ProjectType, TabType, TaskType } from '../types';
 
@@ -60,6 +61,25 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   }
 
   /**
+   * Set the current tab preference and save it to storage.
+   * @param {TabType} tabName - The name of the tab to set as the current tab.
+   */
+  async function handleSetCurrentTab(tabName: TabType) {
+    setCurrentTab(tabName);
+    setPreference('currentTab', tabName);
+  }
+
+  /**
+   * Set the current project ID preference and save it to storage.
+   *
+   * @param {string} projectId - The ID of the project to set as the current project.
+   */
+  async function handleSetCurrentProjectId(projectId: string) {
+    setCurrentProjectId(projectId);
+    setPreference('currentProjectId', projectId);
+  }
+
+  /**
    * Retrieve a project by its ID.
    *
    * @param {string} projectId - The ID of the project to retrieve.
@@ -81,51 +101,89 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     return returnTask;
   }
 
-  /**
-   * Retrieve a task by its projects ID.
-   *
-   * @param {string} projectId - The ID of the project to retrieve tasks from.
-   * @returns {TaskType | undefined} The task array.
-   */
-  function getTasksByProjectId(projectId: string): TaskType[] {
-    let returnTasks: TaskType[] = [];
-    const returnProject = projects.filter((project: ProjectType) => project.id === projectId)[0];
-    if (returnProject) {
-      returnProject.taskIds.forEach((id) => returnTasks.push(tasks.filter((task) => task.id === id)[0]));
+  async function setProject(newProject: ProjectType) {
+    // create project list if not exists
+    let newProjectList;
+    if (!projectList) {
+      newProjectList = {
+        id: 'list-' + uuidv4(),
+        projectIds: [],
+      };
+    } else {
+      newProjectList = { ...projectList };
     }
-    return returnTasks;
+    // add project id to project list if not exists
+    if (!newProjectList.projectIds.includes(newProject.id)) {
+      newProjectList.projectIds.push(newProject.id);
+      handleSetProjectList(newProjectList);
+    }
+
+    // add project to projects
+    let newProjects = projects.filter((project: ProjectType) => project.id !== newProject.id);
+    newProjects.push(newProject);
+    handleSetProjects(newProjects);
   }
 
-  /**
-   * Retrieve a task by its ID.
-   *
-   * @param {string} taskId - The ID of the task to retrieve.
-   * @returns {TaskType | undefined} The task object if found, otherwise undefined.
-   */
-  function getTaskById(taskId: string): TaskType | undefined {
-    const returnTask = tasks.filter((task) => {
-      if (task.id === taskId) return task;
-    })[0];
-    return returnTask;
+  async function deleteProject(deletedProjectId: string) {
+    // remove from project list
+    if (!projectList) {
+      console.error('Error: no project list');
+      return 'Error: no project list';
+    }
+    let newProjectList = { ...projectList };
+    newProjectList.projectIds = newProjectList.projectIds.filter((id: string) => id !== deletedProjectId);
+    await handleSetProjectList(newProjectList);
+
+    // delete tasks
+    let retrievedProject = projects.filter((project: ProjectType) => project.id === deletedProjectId)[0];
+    let newTasks = tasks.filter((task: TaskType) => !retrievedProject.taskIds.includes(task.id));
+    await handleSetTasks(newTasks);
+
+    // delete project
+    let newProjects = projects.filter((project: ProjectType) => project.id !== deletedProjectId);
+    await handleSetProjects(newProjects);
+
+    return 'deleted';
   }
 
-  /**
-   * Set the current tab preference and save it to storage.
-   * @param {TabType} tabName - The name of the tab to set as the current tab.
-   */
-  async function handleSetCurrentTab(tabName: TabType) {
-    setCurrentTab(tabName);
-    setPreference('currentTab', tabName);
+  async function setTask(newTask: TaskType) {
+    if (!currentProjectId) {
+      console.error('Error: no current project');
+      return;
+    }
+    // add project id to project list if not exists
+    let newProject = { ...getProject(currentProjectId) } as ProjectType;
+    if (!newProject.taskIds?.includes(newTask.id)) {
+      newProject.taskIds?.push(newTask.id);
+      setProject(newProject);
+    }
+
+    // add task to tasks
+    let newTasks = tasks.filter((task: TaskType) => task.id !== newTask.id);
+    newTasks.push(newTask);
+    handleSetTasks(newTasks);
   }
 
-  /**
-   * Set the current project ID preference and save it to storage.
-   *
-   * @param {string} projectId - The ID of the project to set as the current project.
-   */
-  async function handleSetCurrentProjectId(projectId: string) {
-    setCurrentProjectId(projectId);
-    setPreference('currentProjectId', projectId);
+  async function deleteTask(deletedTaskId: string) {
+    // remove from parent project
+    if (!tasks) {
+      console.error('Error: no task list');
+      return 'Error: no task list';
+    }
+    let newProject = projects.filter((project: ProjectType) => project.taskIds.includes(deletedTaskId))[0];
+    if (!newProject) {
+      console.error('Error: no parent project found');
+      return 'Error: no parent project found';
+    }
+    newProject.taskIds = newProject.taskIds.filter((id: string) => id !== deletedTaskId);
+    // TODO remove from parent project task views (matrix, calendar)
+    await setProject(newProject);
+
+    // remove from task list
+    let newTasks = tasks.filter((task: TaskType) => task.id !== deletedTaskId);
+    await handleSetTasks(newTasks);
+
+    return 'deleted';
   }
 
   /**
@@ -161,22 +219,26 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     <Context.Provider
       value={{
         loading,
-        getProject,
-        getTask,
-        getTasksByProjectId,
-        getTaskById,
+        //
         currentTab,
         handleSetCurrentTab,
         currentProjectId,
-        setCurrentTaskId,
-        currentTaskId,
         handleSetCurrentProjectId,
+        currentTaskId,
+        setCurrentTaskId,
+        //
         projectList,
-        handleSetProjectList,
+        //
         projects,
-        handleSetProjects,
+        getProject,
+        setProject,
+        deleteProject,
+        //
         tasks,
-        handleSetTasks,
+        getTask,
+        setTask,
+        deleteTask,
+        //
       }}
     >
       {children}

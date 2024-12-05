@@ -8,14 +8,7 @@ import { Context } from '../../dataManagement/ContextProvider';
 const AddProjectModal: React.FC = () => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
   const router = useIonRouter();
-  const {
-    projects,
-    projectList,
-    handleSetProjects,
-    handleSetProjectList,
-    handleSetCurrentProjectId,
-    handleSetCurrentTab,
-  } = useContext(Context);
+  const { setProject, handleSetCurrentProjectId, handleSetCurrentTab } = useContext(Context);
 
   const [newProjectName, setNewProjectName] = useState<string>('');
 
@@ -44,7 +37,6 @@ const AddProjectModal: React.FC = () => {
       taskIds: [],
       viewSettings: {
         listSettings: {
-          taskIds: [],
           settings: {
             showDetails: false,
             showDone: false,
@@ -75,26 +67,13 @@ const AddProjectModal: React.FC = () => {
       },
     };
 
-    // add new project to project list
-    let newProjects = [...projects];
-    newProjects.push(newProject);
-    handleSetProjects(newProjects);
+    // set in context
+    setProject(newProject);
 
-    // add new id to project list
-    let newProjectList;
-    if (!projectList) {
-      newProjectList = {
-        id: 'list-' + uuidv4(),
-        projectIds: [],
-      };
-    } else {
-      newProjectList = { ...projectList };
-    }
-    // this set state is running twice, check duplicate before push
-    if (!newProjectList.projectIds.includes(newProject.id)) newProjectList.projectIds.push(newProject.id);
-    handleSetProjectList(newProjectList);
-
+    // clear input states
     setNewProjectName('');
+
+    // set preferences and reroute
     handleSetCurrentProjectId(newProject.id);
     handleSetCurrentTab('list');
     router.push(`/app/project/${newProject.id}/list`, 'root', 'replace');
@@ -106,7 +85,7 @@ const AddProjectModal: React.FC = () => {
    *
    * @param {any} e - The form submission event.
    */
-  function handleSubmit(e: any) {
+  async function handleSubmit(e: any) {
     e.preventDefault();
     handleCreateNewProject();
     addProjectModal.current?.dismiss();
