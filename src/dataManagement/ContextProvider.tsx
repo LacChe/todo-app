@@ -282,6 +282,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
         setCurrentTaskId,
         //
         projectList,
+        handleSetProjectList,
         //
         projects,
         getProject,

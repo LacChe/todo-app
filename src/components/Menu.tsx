@@ -8,11 +8,14 @@ import {
   IonMenu,
   IonMenuToggle,
   IonPage,
+  IonReorder,
+  IonReorderGroup,
   IonRouterOutlet,
   IonRow,
   IonSplitPane,
   IonTitle,
   IonToolbar,
+  ItemReorderEventDetail,
   useIonRouter,
 } from '@ionic/react';
 import { add, settings } from 'ionicons/icons';
@@ -28,13 +31,21 @@ import AddProjectModal from './modals/AddProjectModal';
 import EditProjectModal from './modals/EditProjectModal';
 import AddTaskModal from './modals/AddTaskModal';
 import { Context } from '../dataManagement/ContextProvider';
-import { ProjectType, TaskType } from '../types';
+import { ProjectListType, ProjectType, TaskType } from '../types';
 import EditTaskModal from './modals/EditTaskModal';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
-  const { loading, currentProjectId, currentTab, projectList, projects, getTask, handleSetCurrentProjectId } =
-    useContext(Context);
+  const {
+    loading,
+    currentProjectId,
+    currentTab,
+    projectList,
+    projects,
+    getTask,
+    handleSetCurrentProjectId,
+    handleSetProjectList,
+  } = useContext(Context);
 
   //direct to correct page after loading
   useEffect(() => {
@@ -69,6 +80,18 @@ const Menu: React.FC = () => {
     return incompleteTasks.length;
   }
 
+  function handleListReorder(e: CustomEvent<ItemReorderEventDetail>) {
+    // save data to context
+    const originalProjectIds = projectList.projectIds;
+    if (originalProjectIds === undefined) return;
+
+    let reorderedProjectIds = originalProjectIds?.filter((id: string, index: number) => index !== e.detail.from);
+    reorderedProjectIds.splice(e.detail.to, 0, originalProjectIds[e.detail.from]);
+    handleSetProjectList({ ...projectList, projectIds: reorderedProjectIds });
+
+    e.detail.complete(projectList?.projectIds);
+  }
+
   return (
     <IonPage>
       <IonSplitPane contentId="main">
@@ -91,25 +114,28 @@ const Menu: React.FC = () => {
           </IonHeader>
           <IonContent>
             {/* list all project names */}
-            {projectList?.projectIds.map((projectId: string, index: number) => {
-              return (
-                <IonMenuToggle key={index} autoHide={false}>
-                  <IonItem
-                    className="menu-item"
-                    onClick={() => {
-                      handleSetCurrentProjectId(projectId);
-                    }}
-                    routerLink={`/app/project/${projectId}/${currentTab ? currentTab : 'list'}`}
-                    routerDirection="none"
-                  >
-                    <div>{projects.filter((project: ProjectType) => project.id === projectId)[0].name}</div>
-                    {getIncompleteTasksCount(projectId) > 0 && (
-                      <IonBadge slot="end">{getIncompleteTasksCount(projectId)}</IonBadge>
-                    )}
-                  </IonItem>
-                </IonMenuToggle>
-              );
-            })}
+            <IonReorderGroup disabled={false} onIonItemReorder={handleListReorder}>
+              {projectList?.projectIds.map((projectId: string, index: number) => {
+                return (
+                  <IonMenuToggle key={index} autoHide={false}>
+                    <IonItem
+                      className="menu-item"
+                      onClick={() => {
+                        handleSetCurrentProjectId(projectId);
+                      }}
+                      routerLink={`/app/project/${projectId}/${currentTab ? currentTab : 'list'}`}
+                      routerDirection="none"
+                    >
+                      <div>{projects.filter((project: ProjectType) => project.id === projectId)[0].name}</div>
+                      {getIncompleteTasksCount(projectId) > 0 && (
+                        <IonBadge slot="end">{getIncompleteTasksCount(projectId)}</IonBadge>
+                      )}
+                      <IonReorder slot="end"></IonReorder>
+                    </IonItem>
+                  </IonMenuToggle>
+                );
+              })}
+            </IonReorderGroup>
 
             {/* modal to add project */}
             <AddProjectModal />
