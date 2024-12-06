@@ -13,47 +13,44 @@ import {
   IonTextarea,
   IonToolbar,
 } from '@ionic/react';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
 
 import { Context } from '../../dataManagement/ContextProvider';
 import { checkmark, close } from 'ionicons/icons';
 import { StatusType, TaskType, TaskTypeDataTypeNameType, TaskTypeDataTypeValueType } from '../../types';
 
-const EditTaskModal: React.FC = () => {
+type EditTaskModalProps = {
+  basicTaskInfo: TaskType | undefined;
+  setBasicTaskInfo: Dispatch<SetStateAction<TaskType | undefined>>;
+};
+
+const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTaskInfo }) => {
   const editProjectModal = useRef<HTMLIonModalElement>(null);
   const { getTask, setTask, tasks, deleteTask, currentTaskId } = useContext(Context);
 
-  let retrievedTask: TaskType = getTask(currentTaskId);
-  const [newTaskName, setNewTaskName] = useState<string>(retrievedTask?.name);
-  const [newTaskStatus, setNewTaskStatus] = useState<StatusType>(retrievedTask?.status);
-  const [newTaskNotes, setNewTaskNotes] = useState<string>(retrievedTask?.notes);
-  const [newTaskTypeDataName, setNewTaskTypeDataName] = useState<TaskTypeDataTypeNameType>(
-    retrievedTask?.typeData.name,
-  );
-  const [everyNumDaysValue, setEveryNumDaysValue] = useState<number | null>();
-  const [everyDaysOfWeekValue, setEveryDaysOfWeekValue] = useState<string[] | null>();
-  const [everyDaysOfMonthValue, setEveryDaysOfMonthValue] = useState<number[] | null>();
-  const [onDatesValue, setOnDatesValue] = useState<string[] | null>();
+  let retrievedTask: TaskType;
+  const [newTaskName, setNewTaskName] = useState<string | undefined>();
+  const [newTaskStatus, setNewTaskStatus] = useState<StatusType | undefined>();
+  const [newTaskNotes, setNewTaskNotes] = useState<string | undefined>();
+  const [newTaskTypeDataName, setNewTaskTypeDataName] = useState<TaskTypeDataTypeNameType | undefined>();
+  const [everyNumDaysValue, setEveryNumDaysValue] = useState<number | undefined>();
+  const [everyDaysOfWeekValue, setEveryDaysOfWeekValue] = useState<string[] | undefined>();
+  const [everyDaysOfMonthValue, setEveryDaysOfMonthValue] = useState<number[] | undefined>();
+  const [onDatesValue, setOnDatesValue] = useState<string[] | undefined>();
 
   useEffect(() => {
     loadData();
-  }, [currentTaskId, tasks]);
+  }, [currentTaskId, tasks, basicTaskInfo]);
 
-  /**
-   * Retrieves the task with the given ID and updates the state
-   * with the task's name, status, notes, and typeData.
-   * Called when the modal is opened and when the task ID changes.
-   */
+  // TODO
   async function loadData() {
-    retrievedTask = getTask(currentTaskId);
+    if (basicTaskInfo) retrievedTask = basicTaskInfo;
+    else retrievedTask = getTask(currentTaskId);
+
     setNewTaskName(retrievedTask?.name);
     setNewTaskStatus(retrievedTask?.status);
     setNewTaskNotes(retrievedTask?.notes);
     setNewTaskTypeDataName(retrievedTask?.typeData.name);
-    setEveryNumDaysValue(null);
-    setEveryDaysOfWeekValue(null);
-    setEveryDaysOfMonthValue(null);
-    setOnDatesValue(null);
     switch (retrievedTask?.typeData.name) {
       case 'everyNumDays':
         setEveryNumDaysValue(retrievedTask?.typeData.value as number);
@@ -79,9 +76,12 @@ const EditTaskModal: React.FC = () => {
     // TODO check values
     if (!newTaskName || newTaskName === '') return;
 
+    if (basicTaskInfo) retrievedTask = basicTaskInfo;
+    else retrievedTask = getTask(currentTaskId);
+
     retrievedTask.name = newTaskName;
-    retrievedTask.status = newTaskStatus;
-    retrievedTask.notes = newTaskNotes;
+    retrievedTask.status = newTaskStatus as StatusType;
+    retrievedTask.notes = newTaskNotes as string;
     switch (newTaskTypeDataName) {
       case 'everyNumDays':
         retrievedTask.typeData = { name: newTaskTypeDataName, value: everyNumDaysValue as TaskTypeDataTypeValueType };
@@ -104,10 +104,15 @@ const EditTaskModal: React.FC = () => {
     }
 
     setTask(retrievedTask);
-    setEveryNumDaysValue(null);
-    setEveryDaysOfWeekValue(null);
-    setEveryDaysOfMonthValue(null);
-    setOnDatesValue(null);
+
+    setNewTaskName(undefined);
+    setNewTaskStatus(undefined);
+    setNewTaskNotes(undefined);
+    setNewTaskTypeDataName(undefined);
+    setEveryNumDaysValue(undefined);
+    setEveryDaysOfWeekValue(undefined);
+    setEveryDaysOfMonthValue(undefined);
+    setOnDatesValue(undefined);
 
     editProjectModal.current?.dismiss();
   }
@@ -132,6 +137,13 @@ const EditTaskModal: React.FC = () => {
     editProjectModal.current?.dismiss();
   }
 
+  /**
+   * Handles the dismissal of the modal by setting the basicTaskInfo to undefined.
+   */
+  function handleDismiss() {
+    setBasicTaskInfo(undefined);
+  }
+
   return (
     <IonModal
       ref={editProjectModal}
@@ -139,6 +151,7 @@ const EditTaskModal: React.FC = () => {
       trigger="open-edit-task-modal"
       initialBreakpoint={1}
       breakpoints={[0, 1]}
+      onDidDismiss={handleDismiss}
     >
       <form onSubmit={handleSubmit} className="edit-task-modal-form">
         <IonToolbar>

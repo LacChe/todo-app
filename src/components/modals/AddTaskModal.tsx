@@ -1,11 +1,16 @@
-import { IonButton, IonInput, IonModal } from '@ionic/react';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { IonButton, IonIcon, IonInput, IonModal } from '@ionic/react';
+import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import { TaskType } from '../../types';
 import { Context } from '../../dataManagement/ContextProvider';
+import { add } from 'ionicons/icons';
 
-const AddTaskModal: React.FC = () => {
+type AddTaskModalProps = {
+  setBasicTaskInfo: Dispatch<SetStateAction<TaskType | undefined>>;
+};
+
+const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
   const { setTask } = useContext(Context);
 
@@ -41,10 +46,10 @@ const AddTaskModal: React.FC = () => {
       notes: newTaskNotes,
     };
 
-    setTask(newTask);
-
     setNewTaskName('');
     setNewTaskNotes('');
+
+    setTask(newTask);
   }
 
   /**
@@ -71,11 +76,28 @@ const AddTaskModal: React.FC = () => {
         <div>
           <IonInput placeholder="What needs doing..." onIonInput={(e) => setNewTaskName(e.detail.value as string)} />
           <IonInput placeholder="Notes" onIonInput={(e) => setNewTaskNotes(e.detail.value as string)} />
+          {/* button to change to detailed creation mode */}
+          <IonButton
+            onClick={() => {
+              setBasicTaskInfo({
+                id: 'task-' + uuidv4(),
+                createdDate: JSON.stringify(new Date()).split('T')[0].slice(1),
+                name: newTaskName,
+                status: 'todo',
+                typeData: { name: 'single' },
+                showDetailsOverride: false,
+                notes: newTaskNotes,
+              });
+              addProjectModal.current?.dismiss();
+              document.getElementById('open-edit-task-modal')?.click();
+            }}
+          >
+            <IonIcon icon={add}></IonIcon>
+          </IonButton>
         </div>
         <IonButton type="submit" onClick={handleSubmit}>
           Save
         </IonButton>
-        {/* add button to change to detailed creation mode */}
       </form>
     </IonModal>
   );

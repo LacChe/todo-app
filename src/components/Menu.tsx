@@ -19,7 +19,7 @@ import {
   useIonRouter,
 } from '@ionic/react';
 import { add, settings } from 'ionicons/icons';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router';
 
 import Project from './Project';
@@ -31,7 +31,7 @@ import AddProjectModal from './modals/AddProjectModal';
 import EditProjectModal from './modals/EditProjectModal';
 import AddTaskModal from './modals/AddTaskModal';
 import { Context } from '../dataManagement/ContextProvider';
-import { ProjectListType, ProjectType, TaskType } from '../types';
+import { ProjectType, TaskType } from '../types';
 import EditTaskModal from './modals/EditTaskModal';
 
 const Menu: React.FC = () => {
@@ -46,6 +46,8 @@ const Menu: React.FC = () => {
     handleSetCurrentProjectId,
     handleSetProjectList,
   } = useContext(Context);
+
+  const [basicTaskInfo, setBasicTaskInfo] = useState<TaskType | undefined>();
 
   //direct to correct page after loading
   useEffect(() => {
@@ -144,10 +146,10 @@ const Menu: React.FC = () => {
             <EditProjectModal />
             {/* modal to edit project */}
             <div id="open-add-task-modal" />
-            <AddTaskModal />
+            <AddTaskModal setBasicTaskInfo={setBasicTaskInfo} />
             {/* modal to edit project */}
             <div id="open-edit-task-modal" />
-            <EditTaskModal />
+            <EditTaskModal basicTaskInfo={basicTaskInfo} setBasicTaskInfo={setBasicTaskInfo} />
           </IonContent>
         </IonMenu>
         <IonRouterOutlet id="main">
