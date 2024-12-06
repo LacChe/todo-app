@@ -22,8 +22,9 @@ const AddTaskModal: React.FC = () => {
   }, []);
 
   /**
-   * Create a new project, add it to the project list, save to preferences.
-   * It also clears the new project name input after creation.
+   * Creates a new task with the given name and notes, assigns it a unique ID,
+   * and sets default properties like status and typeData. The new task is then
+   * added to the context and input states are cleared.
    */
   function handleCreateNewTask() {
     // TODO check values

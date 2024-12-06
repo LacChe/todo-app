@@ -45,6 +45,11 @@ const EditProjectModal: React.FC = () => {
     loadData();
   }, [currentProjectId]);
 
+  /**
+   * Retrieve the current project and set the input values to the retrieved project values.
+   *
+   * This is called whenever the current project ID changes.
+   */
   async function loadData() {
     retrievedProject = getProject(currentProjectId);
     setNewProjectName(retrievedProject?.name);
@@ -52,6 +57,11 @@ const EditProjectModal: React.FC = () => {
     // TODO set other values
   }
 
+  /**
+   * Edit the current project with the input values, then update the context.
+   *
+   * If the new project name is empty, do nothing.
+   */
   function handleEditProject() {
     // TODO check valid values
     if (!newProjectName || newProjectName === '') return;
@@ -66,14 +76,14 @@ const EditProjectModal: React.FC = () => {
   }
 
   function handleBlockReorder(e: any) {
+    // TODO
     console.log('reorder', e);
     e.detail.complete();
   }
 
   /**
-   * Handle the submission of the edit project form by creating a new project
-   * and then dismissing the modal.
-   *
+   * Handle the submission of the edit project form by calling
+   * the handleEditProject function and then dismissing the modal.
    * @param {any} e - The form submission event.
    */
   function handleSubmit(e: any) {
@@ -82,6 +92,12 @@ const EditProjectModal: React.FC = () => {
     editProjectModal.current?.dismiss();
   }
 
+  /**
+   * Deletes the current project and updates the project list.
+   * If the current project is deleted, reroutes to the first project if available,
+   * otherwise redirects to the new project creation page.
+   * Finally, dismisses the edit project modal.
+   */
   async function handleDeleteProject() {
     await deleteProject(currentProjectId);
 

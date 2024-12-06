@@ -1,6 +1,3 @@
-import mockProjectLists from '../mockData/projectLists.json';
-import mockProjects from '../mockData/projects.json';
-
 import { Preferences } from '@capacitor/preferences';
 import { PreferenceKeyType, ProjectListType, ProjectType, TaskType } from '../types';
 

@@ -23,7 +23,11 @@ const CalendarView: React.FC = () => {
   const [project, setProject] = useState<ProjectType>();
   const { loading, getProject } = useContext(Context);
 
-  function calendarOptionsPopover() {
+  /**
+   * Popover for options specific to the calendar view
+   * @returns {JSX.Element}
+   */
+  function calendarOptionsPopover(): JSX.Element {
     return (
       <IonContent class="ion-padding">
         <IonButtons>

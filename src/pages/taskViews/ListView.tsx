@@ -29,7 +29,11 @@ const ListView: React.FC = () => {
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
   const { loading, getProject, setProject, projects } = useContext(Context);
 
-  function listOptionsPopover() {
+  /**
+   * Popover for options specific to the list view
+   * @returns {JSX.Element}
+   */
+  function listOptionsPopover(): JSX.Element {
     return (
       <IonContent class="ion-padding">
         <IonButtons>
@@ -58,6 +62,13 @@ const ListView: React.FC = () => {
     }
   }, [loading, projectId, projects]);
 
+  /**
+   * Handle the task reorder event from the ion-reorder group.
+   * This function takes the event, filters out the moved task id from the current task ids,
+   * and inserts the moved task id at the correct position in the task ids array.
+   * It then updates the context with the new task ids array.
+   * @param {CustomEvent<ItemReorderEventDetail>} e - The event emitted by the ion-reorder group.
+   */
   function handleListReorder(e: CustomEvent<ItemReorderEventDetail>) {
     // save data to context
     const originalTaskIds = retrievedProject?.taskIds;

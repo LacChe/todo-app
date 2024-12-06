@@ -22,8 +22,9 @@ const AddProjectModal: React.FC = () => {
   }, []);
 
   /**
-   * Create a new project, add it to the project list, save to preferences.
-   * It also clears the new project name input after creation.
+   * Creates a new project with default settings and adds it to the context.
+   * Clears the input state and sets the current project and tab preferences.
+   * Redirects the user to the new project's list view.
    */
   function handleCreateNewProject() {
     // TODO check valid name
@@ -85,7 +86,7 @@ const AddProjectModal: React.FC = () => {
    *
    * @param {any} e - The form submission event.
    */
-  async function handleSubmit(e: any) {
+  function handleSubmit(e: any) {
     e.preventDefault();
     handleCreateNewProject();
     addProjectModal.current?.dismiss();

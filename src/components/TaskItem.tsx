@@ -13,18 +13,42 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
     return <></>;
   }
 
+  /**
+   * Handles the status toggle event.
+   *
+   * When the status toggle button is clicked, it toggles the task's status
+   * between 'todo' and 'done', then updates the task in the context.
+   * Finally, it closes the sliding item.
+   *
+   * @param {any} e - The click event.
+   */
   function handleStatusToggle(e: any) {
     task.status = task.status === 'todo' ? 'done' : 'todo';
     setTask(task);
     e.target.parentNode.parentNode.close();
   }
 
+  /**
+   * Handle the edit button click event.
+   *
+   * This function sets the currentTaskId in the context to the ID of the
+   * task that was clicked, then opens the edit task modal. It also closes the
+   * sliding item.
+   *
+   * @param {any} e - The click event.
+   */
   function handleEdit(e: any) {
     setCurrentTaskId(taskId);
     document.getElementById('open-edit-task-modal')?.click();
     e.target.parentNode.parentNode.close();
   }
 
+  /**
+   * Toggles the showDetailsOverride flag on the task.
+   *
+   * If this flag is set to true, the task's details will be shown
+   * regardless of the view settings.
+   */
   function toggleShowDetailsOverride() {
     task.showDetailsOverride = !task.showDetailsOverride;
     setTask(task);

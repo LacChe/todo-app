@@ -19,6 +19,11 @@ const EditTaskModal: React.FC = () => {
     loadData();
   }, [currentTaskId]);
 
+  /**
+   * Retrieves the task with the given ID and updates the state
+   * with the task's name, status, notes, and typeData.
+   * Called when the modal is opened and when the task ID changes.
+   */
   async function loadData() {
     retrievedTask = getTask(currentTaskId);
     setNewTaskName(retrievedTask?.name);
@@ -27,6 +32,11 @@ const EditTaskModal: React.FC = () => {
     setNewTaskTypeData(retrievedTask?.typeData);
   }
 
+  /**
+   * Edits the task with the given ID with the given name, status, notes, and typeData.
+   * If the new task name is empty, does nothing.
+   * After editing, dismisses the modal.
+   */
   function handleEditTask() {
     // TODO check values
     if (!newTaskName || newTaskName === '') return;
@@ -40,11 +50,20 @@ const EditTaskModal: React.FC = () => {
     editProjectModal.current?.dismiss();
   }
 
+  /**
+   * Deletes the task with the given ID and then dismisses the modal.
+   */
   function handleDeleteTask() {
     deleteTask(currentTaskId);
     editProjectModal.current?.dismiss();
   }
 
+  /**
+   * Handles the submission of the edit task form by calling handleEditTask()
+   * and then dismissing the modal.
+   *
+   * @param {any} e - The form submission event.
+   */
   function handleSubmit(e: any) {
     e.preventDefault();
     handleEditTask();

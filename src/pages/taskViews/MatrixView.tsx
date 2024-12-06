@@ -23,7 +23,11 @@ const MatrixView: React.FC = () => {
   const [project, setProject] = useState<ProjectType>();
   const { loading, getProject } = useContext(Context);
 
-  function matrixOptionsPopover() {
+  /**
+   * Popover for options specific to the matrix view
+   * @returns {JSX.Element}
+   */
+  function matrixOptionsPopover(): JSX.Element {
     return (
       <IonContent class="ion-padding">
         <IonButtons>
