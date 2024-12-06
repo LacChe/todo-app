@@ -2,6 +2,8 @@ export type TabType = 'list' | 'matrix' | 'calendar';
 export type StatusType = 'todo' | 'done';
 
 export type PreferenceKeyType = 'localProjectList' | 'localProjects' | 'localTasks' | 'currentTab' | 'currentProjectId';
+export type TaskTypeDataTypeNameType = 'single' | 'everyNumDays' | 'everyDaysOfWeek' | 'everyDaysOfMonth' | 'onDates';
+export type TaskTypeDataTypeValueType = undefined | number | number[] | string[];
 
 export type ProjectListType = {
   id: string;
@@ -62,6 +64,6 @@ export type TaskType = {
 };
 
 export type TaskTypeDataType = {
-  name: 'single' | 'everyNumDays' | 'everyDaysOfWeek' | 'everyDaysOfMonth' | 'onDates';
-  value?: number | number[] | string[];
+  name: TaskTypeDataTypeNameType;
+  value?: TaskTypeDataTypeValueType;
 };

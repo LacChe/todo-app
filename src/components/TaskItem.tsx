@@ -67,11 +67,10 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
       {/* task content */}
       <IonItem onClick={toggleShowDetailsOverride} className={`${task?.status === 'done' ? 'done' : ''}`}>
         <IonLabel>
-          <div>{taskId}</div>
           <div>{task?.name}</div>
           {task.showDetailsOverride && (
             <div>
-              {task?.createdDate} {task?.status} {task?.notes}
+              {task?.createdDate} {task?.status} {task?.typeData.name} {task?.typeData.value}
             </div>
           )}
         </IonLabel>

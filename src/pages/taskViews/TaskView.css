@@ -2,3 +2,7 @@ ion-buttons {
   display: flex;
   flex-direction: column;
 }
+
+ion-reorder {
+  height: 100%;
+}

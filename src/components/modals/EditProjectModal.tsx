@@ -31,7 +31,7 @@ const EditProjectModal: React.FC = () => {
   ];
 
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const { setProject, deleteProject, projectList, getProject, currentProjectId, handleSetCurrentProjectId } =
+  const { projects, setProject, deleteProject, projectList, getProject, currentProjectId, handleSetCurrentProjectId } =
     useContext(Context);
 
   let retrievedProject: ProjectType = getProject(currentProjectId);
@@ -43,7 +43,7 @@ const EditProjectModal: React.FC = () => {
 
   useEffect(() => {
     loadData();
-  }, [currentProjectId]);
+  }, [currentProjectId, projects]);
 
   /**
    * Retrieve the current project and set the input values to the retrieved project values.
@@ -182,6 +182,7 @@ const EditProjectModal: React.FC = () => {
               })}
             </IonReorderGroup>
           </IonList>
+          {/* Confirmation Alert for Deleting */}
           <IonAlert
             header={`Delete project ${retrievedProject?.name} and all its tasks?`}
             trigger="present-delete-confirmation"
