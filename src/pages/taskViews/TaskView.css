@@ -22,3 +22,24 @@ ion-reorder {
   height: 100%;
   margin: 0px;
 }
+
+.calendar-view-date-slider {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  padding: 5px;
+}
+
+.calendar-view-date-slider > button {
+  padding: 5px;
+  border-radius: 10px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-view-date-slider > button.selected {
+  background-color: blue;
+}
