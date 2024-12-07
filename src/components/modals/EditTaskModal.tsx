@@ -30,7 +30,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
 
   let retrievedTask: TaskType;
   const [newTaskName, setNewTaskName] = useState<string | undefined>();
-  const [newTaskStatus, setNewTaskStatus] = useState<StatusType | undefined>();
   const [newTaskNotes, setNewTaskNotes] = useState<string | undefined>();
   const [newTaskTypeDataName, setNewTaskTypeDataName] = useState<TaskTypeDataTypeNameType | undefined>();
   const [everyNumDaysValue, setEveryNumDaysValue] = useState<number | undefined>();
@@ -48,7 +47,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
     else retrievedTask = getTask(currentTaskId);
 
     setNewTaskName(retrievedTask?.name);
-    setNewTaskStatus(retrievedTask?.status);
     setNewTaskNotes(retrievedTask?.notes);
     setNewTaskTypeDataName(retrievedTask?.typeData.name);
     switch (retrievedTask?.typeData.name) {
@@ -69,44 +67,45 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
 
   /**
    * Edits the task with the given ID with the given name, status, notes, and typeData.
-   * If the new task name is empty, does nothing.
+   * If doesn't pass data checks, does nothing.
    * After editing, dismisses the modal.
    */
   function handleEditTask() {
     // TODO check values
     if (!newTaskName || newTaskName === '') return;
+    if (!newTaskTypeDataName) return;
 
     if (basicTaskInfo) retrievedTask = basicTaskInfo;
     else retrievedTask = getTask(currentTaskId);
 
     retrievedTask.name = newTaskName;
-    retrievedTask.status = newTaskStatus as StatusType;
     retrievedTask.notes = newTaskNotes as string;
+    // clear completed dates if task type is changed
+    const completedOnDates = retrievedTask.typeData.completedOnDates;
+    if (retrievedTask.typeData.name !== newTaskTypeDataName) retrievedTask.typeData.completedOnDates = [];
+
+    retrievedTask.typeData = {
+      name: newTaskTypeDataName,
+      completedOnDates: completedOnDates,
+    };
     switch (newTaskTypeDataName) {
       case 'everyNumDays':
-        retrievedTask.typeData = { name: newTaskTypeDataName, value: everyNumDaysValue as TaskTypeDataTypeValueType };
+        retrievedTask.typeData.value = everyNumDaysValue as TaskTypeDataTypeValueType;
         break;
       case 'everyDaysOfWeek':
-        retrievedTask.typeData = {
-          name: newTaskTypeDataName,
-          value: everyDaysOfWeekValue as TaskTypeDataTypeValueType,
-        };
+        retrievedTask.typeData.value = everyDaysOfWeekValue as TaskTypeDataTypeValueType;
         break;
       case 'everyDaysOfMonth':
-        retrievedTask.typeData = {
-          name: newTaskTypeDataName,
-          value: everyDaysOfMonthValue as TaskTypeDataTypeValueType,
-        };
+        retrievedTask.typeData.value = everyDaysOfMonthValue as TaskTypeDataTypeValueType;
         break;
       case 'onDates':
-        retrievedTask.typeData = { name: newTaskTypeDataName, value: onDatesValue as TaskTypeDataTypeValueType };
+        retrievedTask.typeData.value = onDatesValue as TaskTypeDataTypeValueType;
         break;
     }
 
     setTask(retrievedTask);
 
     setNewTaskName(undefined);
-    setNewTaskStatus(undefined);
     setNewTaskNotes(undefined);
     setNewTaskTypeDataName(undefined);
     setEveryNumDaysValue(undefined);
@@ -170,15 +169,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
             value={newTaskName}
             onIonInput={(e) => setNewTaskName(e.detail.value as string)}
           />
-          {/* Status Input */}
-          <IonSegment value={newTaskStatus} onIonChange={(e) => setNewTaskStatus(e.detail.value as StatusType)}>
-            <IonSegmentButton value="todo">
-              <IonLabel>Todo</IonLabel>
-            </IonSegmentButton>
-            <IonSegmentButton value="done">
-              <IonLabel>Done</IonLabel>
-            </IonSegmentButton>
-          </IonSegment>
           {/* Notes Input */}
           <IonTextarea
             label="Notes"

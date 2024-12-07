@@ -57,7 +57,6 @@ export type TaskType = {
   id: string;
   name: string;
   createdDate: string;
-  status: StatusType;
   typeData: TaskTypeDataType;
   showDetailsOverride: boolean;
   notes: string;
@@ -66,4 +65,5 @@ export type TaskType = {
 export type TaskTypeDataType = {
   name: TaskTypeDataTypeNameType;
   value?: TaskTypeDataTypeValueType;
+  completedOnDates: StatusType[];
 };

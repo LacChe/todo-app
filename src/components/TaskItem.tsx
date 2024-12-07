@@ -1,29 +1,64 @@
 import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/react';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Context } from '../dataManagement/ContextProvider';
 
 import './TaskItem.css';
 
 const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
-  const { getTask, setTask, setCurrentTaskId } = useContext(Context);
+  const { getTask, setTask, setCurrentTaskId, tasks } = useContext(Context);
+  const today = new Date().toISOString().split('T')[0];
+  const [done, setDone] = useState(false);
 
-  const task = getTask(taskId);
-  if (!task) {
-    // console.error(`Task ID: ${taskId} not found`);
-    return <></>;
-  }
+  let task = getTask(taskId);
+
+  // init data when tasks change
+  useEffect(() => {
+    task = getTask(taskId);
+    setDone(false);
+    if (!task) {
+      // console.error(`Task ID: ${taskId} not found`);
+      return;
+    }
+    if (task.typeData.name === 'single') {
+      if (task.typeData.completedOnDates.length > 0) {
+        setDone(true);
+      } else {
+        if (task.typeData.completedOnDates.includes(today)) {
+          setDone(true);
+        }
+      }
+    }
+    console.log(task.typeData.completedOnDates);
+  }, [tasks]);
 
   /**
-   * Handles the status toggle event.
+   * Toggles the completion status of a task for the current day.
    *
-   * When the status toggle button is clicked, it toggles the task's status
-   * between 'todo' and 'done', then updates the task in the context.
-   * Finally, it closes the sliding item.
+   * If the task type is 'single', it will clear the completion dates if
+   * there are any, or mark it as completed for today if it's not completed.
+   * For other task types, it adds or removes today's date from the
+   * completedOnDates array.
    *
-   * @param {any} e - The click event.
+   * After updating the task's completion status, it updates the task
+   * in the context and closes the sliding item.
+   *
+   * @param {any} e - The event triggered by the status toggle action.
    */
   function handleStatusToggle(e: any) {
-    task.status = task.status === 'todo' ? 'done' : 'todo';
+    if (task.typeData.name === 'single') {
+      if (task.typeData.completedOnDates.length > 0) {
+        task.typeData.completedOnDates = [];
+      } else {
+        task.typeData.completedOnDates.push(today);
+      }
+    } else {
+      if (task.typeData.completedOnDates.includes(today)) {
+        task.typeData.completedOnDates = task.typeData.completedOnDates.filter((date: string) => date !== today);
+      } else {
+        task.typeData.completedOnDates.push(today);
+      }
+    }
+
     setTask(task);
     e.target.parentNode.parentNode.close();
   }
@@ -59,18 +94,18 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
       {/* start options */}
       <IonItemOptions side="start">
         <IonItemOption onClick={handleStatusToggle} expandable>
-          {task.status === 'todo' ? 'Done' : 'To Do'}
+          {done !== true ? 'Done' : 'To Do'}
         </IonItemOption>
         <IonItemOption onClick={handleEdit}>Edit</IonItemOption>
       </IonItemOptions>
-
       {/* task content */}
-      <IonItem onClick={toggleShowDetailsOverride} className={`${task?.status === 'done' ? 'done' : ''}`}>
+      <IonItem onClick={toggleShowDetailsOverride} className={done === true ? 'done' : ''}>
         <IonLabel>
+          {/* TODO these two divs swap places wen swiped*/}
           <div>{task?.name}</div>
           {task.showDetailsOverride && (
             <div>
-              {task?.createdDate} {task?.status} {task?.typeData.name} {task?.typeData.value}
+              {task?.createdDate} {task?.typeData.name} {task?.typeData.value}
             </div>
           )}
         </IonLabel>

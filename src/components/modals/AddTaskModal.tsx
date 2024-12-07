@@ -40,8 +40,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
       id: 'task-' + uuidv4(),
       createdDate: JSON.stringify(new Date()).split('T')[0].slice(1),
       name: newTaskName,
-      status: 'todo',
-      typeData: { name: 'single' },
+      typeData: { name: 'single', completedOnDates: [] },
       showDetailsOverride: false,
       notes: newTaskNotes,
     };
@@ -83,8 +82,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
                 id: 'task-' + uuidv4(),
                 createdDate: JSON.stringify(new Date()).split('T')[0].slice(1),
                 name: newTaskName,
-                status: 'todo',
-                typeData: { name: 'single' },
+                typeData: { name: 'single', completedOnDates: [] },
                 showDetailsOverride: false,
                 notes: newTaskNotes,
               });
