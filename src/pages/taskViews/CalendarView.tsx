@@ -19,6 +19,7 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
+import { taskDue } from '../../dataManagement/utils';
 
 const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
@@ -47,6 +48,17 @@ const CalendarView: React.FC = () => {
     }
   }, [loading, projectId, tasks, dateRowOffset, dateColOffset]);
 
+  /**
+   * Finds and sets task IDs for a specific date within the current project.
+   *
+   * This function calculates the date to check based on the current date,
+   * column offset, and row offset. It iterates through the task IDs of the
+   * given project, retrieves each task, and checks if the task is due on
+   * the calculated date. If the task is due, it is added to the list of
+   * found task IDs. The state is then updated with the found task IDs.
+   *
+   * @param {ProjectType} retrievedProject - The project containing the tasks to check.
+   */
   function findTasksForThisDate(retrievedProject: ProjectType) {
     let checkDate = new Date(today);
     checkDate.setDate(checkDate.getDate() - today.getDay() + dateColOffset + dateRowOffset * 7);
@@ -55,27 +67,7 @@ const CalendarView: React.FC = () => {
     retrievedProject.taskIds.forEach((taskId: string) => {
       const task = getTask(taskId);
       if (!task) return;
-      let matchDate = false;
-      switch (task.typeData.name) {
-        case 'single':
-          matchDate = true;
-          break;
-        case 'everyNumDays':
-          const startDate = new Date(task.createdDate);
-          const dayDifference = Math.floor((checkDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
-          if (dayDifference % task.typeData.value === 0) matchDate = true;
-          break;
-        case 'everyDaysOfWeek':
-          if (task.typeData.value.includes(checkDate.getDay())) matchDate = true;
-          break;
-        case 'everyDaysOfMonth':
-          if (task.typeData.value.includes(checkDate.getDate())) matchDate = true;
-          break;
-        case 'onDates':
-          if (task.typeData.value.includes(checkDate.toISOString().split('T')[0])) matchDate = true;
-          break;
-      }
-      if (matchDate === true) foundTaskIds.push(taskId);
+      if (taskDue(task, checkDate)) foundTaskIds.push(taskId);
     });
     setTaskIdsForDate(foundTaskIds);
   }

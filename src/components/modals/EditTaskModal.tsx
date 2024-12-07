@@ -41,7 +41,11 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
     loadData();
   }, [currentTaskId, tasks, basicTaskInfo]);
 
-  // TODO add comments
+  /**
+   * Loads the data for the task being edited from either the context or the passed
+   * basicTaskInfo. This data is then used to update the state variables for the
+   * input fields.
+   */
   async function loadData() {
     if (basicTaskInfo) retrievedTask = basicTaskInfo;
     else retrievedTask = getTask(currentTaskId);

@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Context } from '../dataManagement/ContextProvider';
 
 import './TaskItem.css';
+import { taskDue } from '../dataManagement/utils';
 
 const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, offsetDays }) => {
   const { getTask, setTask, setCurrentTaskId, tasks } = useContext(Context);
@@ -17,7 +18,10 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, o
     task = getTask(taskId);
 
     if (offsetDays) shownDate.setDate(new Date().getDate() + offsetDays);
-    // set done state // TODO set done for recurring projects as true unless today and not completed
+
+    // set done state
+    // TODO if single, check has any date
+    // TODO if recurring, check if last date that needed completion is complete
     setDone(false);
     if (!task) {
       // console.error(`Task ID: ${taskId} not found`);
@@ -99,15 +103,19 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, o
     <IonItemSliding>
       {/* start options */}
       <IonItemOptions side="start">
-        <IonItemOption onClick={handleStatusToggle} expandable>
-          {done !== true ? 'Done' : 'To Do'}
-        </IonItemOption>
+        {/* only allow toggle if task is due */}
+        {taskDue(task, shownDate) && (
+          <IonItemOption onClick={handleStatusToggle} expandable>
+            {done !== true ? 'Done' : 'To Do'}
+          </IonItemOption>
+        )}
+
         <IonItemOption onClick={handleEdit}>Edit</IonItemOption>
       </IonItemOptions>
       {/* task content */}
       <IonItem onClick={toggleShowDetailsOverride} className={done === true ? 'done' : ''}>
         <IonLabel>
-          {/* TODO these two divs swap places wen swiped*/}
+          {/* TODO these two divs swap places when swiped*/}
           <div>{task?.name}</div>
           {task?.showDetailsOverride && (
             <div>
