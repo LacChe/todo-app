@@ -6,3 +6,13 @@ ion-buttons {
 ion-reorder {
   height: 100%;
 }
+
+.matrix-grid {
+  --ion-grid-columns: 2;
+  --ion-grid-padding: 2px;
+  --ion-grid-column-padding: 2px;
+}
+
+.matrix-grid ion-card {
+  margin: 0px;
+}

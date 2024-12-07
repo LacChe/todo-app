@@ -1,11 +1,17 @@
 import {
   IonButton,
   IonButtons,
+  IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
   IonIcon,
   IonMenuButton,
   IonPage,
+  IonRow,
   IonTitle,
   IonToolbar,
   useIonPopover,
@@ -22,6 +28,8 @@ const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
   const { loading, getProject } = useContext(Context);
+  let contentHeight = document.querySelector('.matrix-view-content')?.clientHeight;
+  contentHeight = contentHeight ? contentHeight / 2 - 6 : 0;
 
   /**
    * Popover for options specific to the matrix view
@@ -75,7 +83,21 @@ const MatrixView: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">UI goes here...</IonContent>
+      <IonContent className="matrix-view-content">
+        <IonGrid className="matrix-grid">
+          <IonRow>
+            {project?.viewSettings.matrixSettings.blocks.map((block, index) => (
+              <IonCol size="1" key={index}>
+                <IonCard style={{ height: `${contentHeight}px` }}>
+                  <IonCardHeader>
+                    <IonCardSubtitle style={{ fontSize: '0.65rem', color: block?.color }}>{block.name}</IonCardSubtitle>
+                  </IonCardHeader>
+                </IonCard>
+              </IonCol>
+            ))}
+          </IonRow>
+        </IonGrid>
+      </IonContent>
     </IonPage>
   );
 };
