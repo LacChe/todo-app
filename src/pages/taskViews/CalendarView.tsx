@@ -19,7 +19,7 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
-import { taskDue } from '../../dataManagement/utils';
+import { taskDue, taskOverdue } from '../../dataManagement/utils';
 
 const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
@@ -67,6 +67,8 @@ const CalendarView: React.FC = () => {
     retrievedProject.taskIds.forEach((taskId: string) => {
       const task = getTask(taskId);
       if (!task) return;
+      if (new Date(task.createdDate) > new Date(checkDate)) return;
+
       if (taskDue(task, checkDate)) foundTaskIds.push(taskId);
     });
     setTaskIdsForDate(foundTaskIds);
@@ -90,6 +92,7 @@ const CalendarView: React.FC = () => {
           </IonButton>
           <IonButton>Hide Done</IonButton>
           <IonButton>Hide Details</IonButton>
+          {/* add ootion for hiding singular tasks */}
         </IonButtons>
       </IonContent>
     );
@@ -111,15 +114,26 @@ const CalendarView: React.FC = () => {
       <div>
         <div>
           {/* year and month */}
+          {/* TODO wrap months */}
           {today.getFullYear()} {monthsOfYearAbbr[today.getMonth()]}
         </div>
         <div className="calendar-view-date-slider">
           {/* last week TODO change to swipe gesture */}
-          <button onClick={() => setDateRowOffset((prev) => prev - 1)}>{'<'}</button>
+          <button
+            onClick={() => {
+              setTaskIdsForDate([]);
+              setDateRowOffset((prev) => prev - 1);
+            }}
+          >
+            {'<'}
+          </button>
           {/* this weeks dates */}
           {dates.map((date, index) => (
             <button
-              onClick={() => setDateColOffset(index)}
+              onClick={() => {
+                setTaskIdsForDate([]);
+                setDateColOffset(index);
+              }}
               className={dateColOffset === index ? 'selected' : ''}
               key={date}
             >
@@ -128,7 +142,14 @@ const CalendarView: React.FC = () => {
             </button>
           ))}
           {/* next week TODO change to swipe gesture */}
-          <button onClick={() => setDateRowOffset((prev) => prev + 1)}>{'>'}</button>
+          <button
+            onClick={() => {
+              setTaskIdsForDate([]);
+              setDateRowOffset((prev) => prev + 1);
+            }}
+          >
+            {'>'}
+          </button>
         </div>
       </div>
     );

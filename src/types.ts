@@ -1,5 +1,4 @@
 export type TabType = 'list' | 'matrix' | 'calendar';
-export type StatusType = 'todo' | 'done';
 
 export type PreferenceKeyType = 'localProjectList' | 'localProjects' | 'localTasks' | 'currentTab' | 'currentProjectId';
 export type TaskTypeDataTypeNameType = 'single' | 'everyNumDays' | 'everyDaysOfWeek' | 'everyDaysOfMonth' | 'onDates';
@@ -65,5 +64,5 @@ export type TaskType = {
 export type TaskTypeDataType = {
   name: TaskTypeDataTypeNameType;
   value?: TaskTypeDataTypeValueType;
-  completedOnDates: StatusType[];
+  completedOnDates: string[];
 };

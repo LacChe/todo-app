@@ -3,12 +3,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Context } from '../dataManagement/ContextProvider';
 
 import './TaskItem.css';
-import { taskDue } from '../dataManagement/utils';
+import { taskDue, taskOverdue } from '../dataManagement/utils';
 
 const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, offsetDays }) => {
   const { getTask, setTask, setCurrentTaskId, tasks } = useContext(Context);
 
-  const [done, setDone] = useState(false);
+  const [taskDueBool, setTaskDueBool] = useState<boolean>(true);
+  const [taskOverdueBool, setTaskOverdueBool] = useState<boolean>(true);
 
   let task = getTask(taskId);
   let shownDate = new Date();
@@ -18,24 +19,8 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, o
     task = getTask(taskId);
 
     if (offsetDays) shownDate.setDate(new Date().getDate() + offsetDays);
-
-    // set done state
-    // TODO if single, check has any date
-    // TODO if recurring, check if last date that needed completion is complete
-    setDone(false);
-    if (!task) {
-      // console.error(`Task ID: ${taskId} not found`);
-      return;
-    }
-    if (task.typeData.name === 'single') {
-      if (task.typeData.completedOnDates.length > 0) {
-        setDone(true);
-      }
-    } else {
-      if (task.typeData.completedOnDates.includes(shownDate.toISOString().split('T')[0])) {
-        setDone(true);
-      }
-    }
+    setTaskDueBool(taskDue(task, shownDate));
+    setTaskOverdueBool(taskOverdue(task, shownDate));
   }, [tasks, offsetDays]);
 
   /**
@@ -104,19 +89,19 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, o
       {/* start options */}
       <IonItemOptions side="start">
         {/* only allow toggle if task is due */}
-        {taskDue(task, shownDate) && (
-          <IonItemOption onClick={handleStatusToggle} expandable>
-            {done !== true ? 'Done' : 'To Do'}
-          </IonItemOption>
+        {taskDueBool && (
+          <IonItemOption onClick={handleStatusToggle}>{taskOverdueBool === true ? 'Done' : 'To Do'}</IonItemOption>
         )}
 
         <IonItemOption onClick={handleEdit}>Edit</IonItemOption>
       </IonItemOptions>
       {/* task content */}
-      <IonItem onClick={toggleShowDetailsOverride} className={done === true ? 'done' : ''}>
+      <IonItem onClick={toggleShowDetailsOverride} className={taskOverdueBool !== true ? 'done' : ''}>
         <IonLabel>
           {/* TODO these two divs swap places when swiped*/}
-          <div>{task?.name}</div>
+          <div>
+            {task?.name} {JSON.stringify(taskDueBool)}
+          </div>
           {task?.showDetailsOverride && (
             <div>
               {task?.createdDate} {task?.typeData.name} {task?.typeData.value}
