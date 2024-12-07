@@ -17,7 +17,7 @@ import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useStat
 
 import { Context } from '../../dataManagement/ContextProvider';
 import { checkmark, close } from 'ionicons/icons';
-import { StatusType, TaskType, TaskTypeDataTypeNameType, TaskTypeDataTypeValueType } from '../../types';
+import { TaskType, TaskTypeDataTypeNameType, TaskTypeDataTypeValueType } from '../../types';
 
 type EditTaskModalProps = {
   basicTaskInfo: TaskType | undefined;
@@ -33,7 +33,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
   const [newTaskNotes, setNewTaskNotes] = useState<string | undefined>();
   const [newTaskTypeDataName, setNewTaskTypeDataName] = useState<TaskTypeDataTypeNameType | undefined>();
   const [everyNumDaysValue, setEveryNumDaysValue] = useState<number | undefined>();
-  const [everyDaysOfWeekValue, setEveryDaysOfWeekValue] = useState<string[] | undefined>();
+  const [everyDaysOfWeekValue, setEveryDaysOfWeekValue] = useState<number[] | undefined>();
   const [everyDaysOfMonthValue, setEveryDaysOfMonthValue] = useState<number[] | undefined>();
   const [onDatesValue, setOnDatesValue] = useState<string[] | undefined>();
 
@@ -41,7 +41,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
     loadData();
   }, [currentTaskId, tasks, basicTaskInfo]);
 
-  // TODO
+  // TODO add comments
   async function loadData() {
     if (basicTaskInfo) retrievedTask = basicTaskInfo;
     else retrievedTask = getTask(currentTaskId);
@@ -54,7 +54,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
         setEveryNumDaysValue(retrievedTask?.typeData.value as number);
         break;
       case 'everyDaysOfWeek':
-        setEveryDaysOfWeekValue(retrievedTask?.typeData.value as string[]);
+        setEveryDaysOfWeekValue(retrievedTask?.typeData.value as number[]);
         break;
       case 'everyDaysOfMonth':
         setEveryDaysOfMonthValue(retrievedTask?.typeData.value as number[]);
@@ -205,18 +205,18 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           {newTaskTypeDataName === 'everyDaysOfWeek' && (
             <IonSelect
               value={everyDaysOfWeekValue}
-              onIonChange={(e) => setEveryDaysOfWeekValue(e.detail.value)}
+              onIonChange={(e) => setEveryDaysOfWeekValue(e.detail.value as number[])}
               interface="popover"
               multiple={true}
               placeholder="Choose days of the week"
             >
-              <IonSelectOption value="sun">Sunday</IonSelectOption>
-              <IonSelectOption value="mon">Monday</IonSelectOption>
-              <IonSelectOption value="tue">Tuesday</IonSelectOption>
-              <IonSelectOption value="wed">Wednesday</IonSelectOption>
-              <IonSelectOption value="thu">Thursday</IonSelectOption>
-              <IonSelectOption value="fri">Friday</IonSelectOption>
-              <IonSelectOption value="sat">Saturday</IonSelectOption>
+              <IonSelectOption value={0}>Sunday</IonSelectOption>
+              <IonSelectOption value={1}>Monday</IonSelectOption>
+              <IonSelectOption value={2}>Tuesday</IonSelectOption>
+              <IonSelectOption value={3}>Wednesday</IonSelectOption>
+              <IonSelectOption value={4}>Thursday</IonSelectOption>
+              <IonSelectOption value={5}>Friday</IonSelectOption>
+              <IonSelectOption value={6}>Saturday</IonSelectOption>
             </IonSelect>
           )}
           {/* TypeData Value Input everyDaysOfMonth */}

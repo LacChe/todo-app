@@ -4,16 +4,20 @@ import { Context } from '../dataManagement/ContextProvider';
 
 import './TaskItem.css';
 
-const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
+const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, offsetDays }) => {
   const { getTask, setTask, setCurrentTaskId, tasks } = useContext(Context);
-  const today = new Date().toISOString().split('T')[0];
+
   const [done, setDone] = useState(false);
 
   let task = getTask(taskId);
+  let shownDate = new Date();
 
   // init data when tasks change
   useEffect(() => {
     task = getTask(taskId);
+
+    if (offsetDays) shownDate.setDate(new Date().getDate() + offsetDays);
+    // set done state // TODO set done for recurring projects as true unless today and not completed
     setDone(false);
     if (!task) {
       // console.error(`Task ID: ${taskId} not found`);
@@ -22,14 +26,13 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
     if (task.typeData.name === 'single') {
       if (task.typeData.completedOnDates.length > 0) {
         setDone(true);
-      } else {
-        if (task.typeData.completedOnDates.includes(today)) {
-          setDone(true);
-        }
+      }
+    } else {
+      if (task.typeData.completedOnDates.includes(shownDate.toISOString().split('T')[0])) {
+        setDone(true);
       }
     }
-    console.log(task.typeData.completedOnDates);
-  }, [tasks]);
+  }, [tasks, offsetDays]);
 
   /**
    * Toggles the completion status of a task for the current day.
@@ -45,17 +48,20 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
    * @param {any} e - The event triggered by the status toggle action.
    */
   function handleStatusToggle(e: any) {
+    if (offsetDays) shownDate.setDate(new Date().getDate() + offsetDays);
     if (task.typeData.name === 'single') {
       if (task.typeData.completedOnDates.length > 0) {
         task.typeData.completedOnDates = [];
       } else {
-        task.typeData.completedOnDates.push(today);
+        task.typeData.completedOnDates.push(shownDate.toISOString().split('T')[0]);
       }
     } else {
-      if (task.typeData.completedOnDates.includes(today)) {
-        task.typeData.completedOnDates = task.typeData.completedOnDates.filter((date: string) => date !== today);
+      if (task.typeData.completedOnDates.includes(shownDate.toISOString().split('T')[0])) {
+        task.typeData.completedOnDates = task.typeData.completedOnDates.filter(
+          (date: string) => date !== shownDate.toISOString().split('T')[0],
+        );
       } else {
-        task.typeData.completedOnDates.push(today);
+        task.typeData.completedOnDates.push(shownDate.toISOString().split('T')[0]);
       }
     }
 
@@ -103,7 +109,7 @@ const TaskItem: React.FC<{ taskId: string }> = ({ taskId }) => {
         <IonLabel>
           {/* TODO these two divs swap places wen swiped*/}
           <div>{task?.name}</div>
-          {task.showDetailsOverride && (
+          {task?.showDetailsOverride && (
             <div>
               {task?.createdDate} {task?.typeData.name} {task?.typeData.value}
             </div>

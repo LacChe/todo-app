@@ -27,7 +27,7 @@ import { Context } from '../../dataManagement/ContextProvider';
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
-  const { loading, getProject } = useContext(Context);
+  const { loading, getProject, tasks } = useContext(Context);
 
   /**
    * Popover for options specific to the matrix view
@@ -61,7 +61,7 @@ const MatrixView: React.FC = () => {
       if (retrievedProject) setProject(retrievedProject);
       else console.error(`ProjectId: ${projectId} not found`);
     }
-  }, [loading, projectId]);
+  }, [loading, projectId, tasks]);
 
   return (
     <IonPage>

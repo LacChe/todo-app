@@ -27,7 +27,7 @@ import TaskItem from '../../components/TaskItem';
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
-  const { loading, getProject, setProject, projects } = useContext(Context);
+  const { loading, getProject, setProject, projects, tasks } = useContext(Context);
 
   /**
    * Popover for options specific to the list view
@@ -60,7 +60,7 @@ const ListView: React.FC = () => {
       if (projectId === 'undefined') return;
       setRetrievedProject(getProject(projectId));
     }
-  }, [loading, projectId, projects]);
+  }, [loading, projectId, projects, tasks]);
 
   /**
    * Handle the task reorder event from the ion-reorder group.

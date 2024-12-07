@@ -4,6 +4,8 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonItem,
+  IonList,
   IonMenuButton,
   IonPage,
   IonToolbar,
@@ -16,28 +18,67 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
+import TaskItem from '../../components/TaskItem';
 
 const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const [project, setProject] = useState<ProjectType>();
-  const { loading, getProject } = useContext(Context);
+  const { loading, getProject, getTask, tasks } = useContext(Context);
 
   const [dateRowOffset, setDateRowOffset] = useState<number>(0);
-  const [dateColOffset, setDateColOffset] = useState<number>(0);
+  const [dateColOffset, setDateColOffset] = useState<number>(new Date().getDay());
+  const [taskIdsForDate, setTaskIdsForDate] = useState<string[]>([]);
 
+  const today = new Date();
   const dayOfWeekInitials = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
   const monthsOfYearAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // retrieve project when id changes
   useEffect(() => {
     if (!loading) {
+      // init project
       if (projectId === 'undefined') return;
       const retrievedProject = getProject(projectId);
       if (retrievedProject) setProject(retrievedProject);
       else console.error(`ProjectId: ${projectId} not found`);
-      setDateColOffset(new Date().getDay());
+
+      // init taskIdsForDate
+      findTasksForThisDate(retrievedProject);
     }
-  }, [loading, projectId]);
+  }, [loading, projectId, tasks, dateRowOffset, dateColOffset]);
+
+  function findTasksForThisDate(retrievedProject: ProjectType) {
+    let checkDate = new Date(today);
+    checkDate.setDate(checkDate.getDate() - today.getDay() + dateColOffset + dateRowOffset * 7);
+
+    let foundTaskIds: string[] = [];
+    retrievedProject.taskIds.forEach((taskId: string) => {
+      const task = getTask(taskId);
+      if (!task) return;
+      let matchDate = false;
+      switch (task.typeData.name) {
+        case 'single':
+          matchDate = true;
+          break;
+        case 'everyNumDays':
+          const startDate = new Date(task.createdDate);
+          const dayDifference = Math.floor((checkDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+          if (dayDifference % task.typeData.value === 0) matchDate = true;
+          break;
+        case 'everyDaysOfWeek':
+          if (task.typeData.value.includes(checkDate.getDay())) matchDate = true;
+          break;
+        case 'everyDaysOfMonth':
+          if (task.typeData.value.includes(checkDate.getDate())) matchDate = true;
+          break;
+        case 'onDates':
+          if (task.typeData.value.includes(checkDate.toISOString().split('T')[0])) matchDate = true;
+          break;
+      }
+      if (matchDate === true) foundTaskIds.push(taskId);
+    });
+    setTaskIdsForDate(foundTaskIds);
+  }
 
   /**
    * Popover for options specific to the calendar view
@@ -68,10 +109,9 @@ const CalendarView: React.FC = () => {
    * @returns {JSX.Element}
    */
   function dateSlider(): JSX.Element {
-    const today = new Date();
     let dates = [];
     for (let i = 0; i < 7; i++) {
-      var date = new Date(today);
+      let date = new Date(today);
       date.setDate(date.getDate() + i - today.getDay() + dateRowOffset * 7);
       dates.push(date.toISOString().split('T')[0] + ' ' + date.getDay());
     }
@@ -86,7 +126,11 @@ const CalendarView: React.FC = () => {
           <button onClick={() => setDateRowOffset((prev) => prev - 1)}>{'<'}</button>
           {/* this weeks dates */}
           {dates.map((date, index) => (
-            <button className={dateColOffset === index ? 'selected' : ''} key={date}>
+            <button
+              onClick={() => setDateColOffset(index)}
+              className={dateColOffset === index ? 'selected' : ''}
+              key={date}
+            >
               <div>{dayOfWeekInitials[index]}</div>
               <div>{date.substring(8, 10).replace(/^0+/, '')}</div>
             </button>
@@ -116,7 +160,16 @@ const CalendarView: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">UI goes here...</IonContent>
+      <IonContent className="ion-padding">
+        <IonList>
+          {taskIdsForDate?.length === 0 && <div>No tasks</div>}
+          {taskIdsForDate.map((taskId: string, index: number) => (
+            <IonItem key={index}>
+              <TaskItem offsetDays={dateRowOffset * 7 - today.getDay() + dateColOffset} taskId={taskId} key={index} />
+            </IonItem>
+          ))}
+        </IonList>
+      </IonContent>
     </IonPage>
   );
 };
