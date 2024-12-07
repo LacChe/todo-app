@@ -16,9 +16,9 @@ import {
 } from '@ionic/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { checkmark, close, square } from 'ionicons/icons';
+import { checkmark, close } from 'ionicons/icons';
 import { Context } from '../../dataManagement/ContextProvider';
-import { ProjectType } from '../../types';
+import { BlockType, ProjectType } from '../../types';
 
 const EditProjectModal: React.FC = () => {
   const router = useIonRouter();
@@ -38,8 +38,9 @@ const EditProjectModal: React.FC = () => {
 
   const [newProjectName, setNewProjectName] = useState<string>(retrievedProject?.name);
   const [newProjectColor, setNewProjectColor] = useState<string>(retrievedProject?.color);
-  // TODO set other values
-  // const [newProjectBlocks, setNewProjectBlocks] = useState();
+  const [newProjectBlocks, setNewProjectBlocks] = useState<[BlockType, BlockType, BlockType, BlockType]>(
+    retrievedProject?.viewSettings.matrixSettings.blocks,
+  );
 
   useEffect(() => {
     loadData();
@@ -54,7 +55,7 @@ const EditProjectModal: React.FC = () => {
     retrievedProject = getProject(currentProjectId);
     setNewProjectName(retrievedProject?.name);
     setNewProjectColor(retrievedProject?.color);
-    // TODO set other values
+    setNewProjectBlocks(retrievedProject?.viewSettings.matrixSettings.blocks);
   }
 
   /**
@@ -69,16 +70,22 @@ const EditProjectModal: React.FC = () => {
     // set input values
     retrievedProject.name = newProjectName;
     retrievedProject.color = newProjectColor;
-    // retrievedProject.viewSettings = newProjectBlocks;
+    retrievedProject.viewSettings.matrixSettings.blocks = newProjectBlocks;
 
     // set to context
     setProject(retrievedProject);
   }
 
   function handleBlockReorder(e: any) {
-    // TODO
-    console.log('reorder', e);
-    e.detail.complete();
+    // save data to context
+    const originalBlocks = [...newProjectBlocks];
+    if (originalBlocks === undefined || originalBlocks.length === 0) return;
+
+    let reorderedBlocks = originalBlocks?.filter((_, index: number) => index !== e.detail.from);
+    reorderedBlocks.splice(e.detail.to, 0, originalBlocks[e.detail.from]);
+    setNewProjectBlocks(reorderedBlocks as [BlockType, BlockType, BlockType, BlockType]);
+
+    e.detail.complete(newProjectBlocks);
   }
 
   /**
@@ -114,6 +121,18 @@ const EditProjectModal: React.FC = () => {
     editProjectModal.current?.dismiss();
   }
 
+  function handleBlockNameChange(index: number, value: string) {
+    const newBlocks: [BlockType, BlockType, BlockType, BlockType] = [...newProjectBlocks];
+    newBlocks[index].name = value;
+    setNewProjectBlocks(newBlocks);
+  }
+
+  function handleBlockColorChange(index: number, value: string) {
+    const newBlocks: [BlockType, BlockType, BlockType, BlockType] = [...newProjectBlocks];
+    newBlocks[index].color = value;
+    setNewProjectBlocks(newBlocks);
+  }
+
   return (
     <IonModal
       ref={editProjectModal}
@@ -143,9 +162,16 @@ const EditProjectModal: React.FC = () => {
           <div className="form-inputs-color-picker">
             <IonLabel>Color</IonLabel>
             <IonButton id="color-trigger">
-              <IonIcon icon={square} />
+              <div className="color-picker-popover-button" style={{ backgroundColor: newProjectColor }} />
             </IonButton>
-            <IonPopover dismissOnSelect={true} trigger="color-trigger" triggerAction="click">
+            <IonPopover
+              side="left"
+              alignment="end"
+              dismissOnSelect={true}
+              reference="trigger"
+              trigger="color-trigger"
+              triggerAction="click"
+            >
               <IonContent class="ion-padding color-picker-popover">
                 {colors.map((row, index) => {
                   return (
@@ -172,14 +198,48 @@ const EditProjectModal: React.FC = () => {
           <IonLabel>Blocks</IonLabel>
           <IonList className="form-inputs-block-list">
             <IonReorderGroup disabled={false} onIonItemReorder={handleBlockReorder}>
-              {[1, 2, 3, 4].map((block, index) => {
-                return (
-                  <IonItem key={index}>
-                    <IonLabel>Item {block}</IonLabel>
-                    <IonReorder slot="end"></IonReorder>
-                  </IonItem>
-                );
-              })}
+              {newProjectBlocks?.map((block, blockIndex) => (
+                <IonItem key={blockIndex}>
+                  <IonInput
+                    value={block.name}
+                    onIonChange={(e) => handleBlockNameChange(blockIndex, e.detail.value as string)}
+                  />
+
+                  <IonButton id={`color-trigger-${blockIndex}`}>
+                    <div className="color-picker-popover-button" style={{ backgroundColor: block.color }} />
+                  </IonButton>
+                  <IonPopover
+                    side="top"
+                    alignment="end"
+                    dismissOnSelect={true}
+                    reference="trigger"
+                    trigger={`color-trigger-${blockIndex}`}
+                    triggerAction="click"
+                  >
+                    <IonContent class="ion-padding color-picker-popover">
+                      {colors.map((row, colorIndex) => {
+                        return (
+                          <div key={colorIndex}>
+                            {row.map((color, rowIndex) => {
+                              return (
+                                <button
+                                  key={rowIndex}
+                                  className="color-picker-popover-button"
+                                  style={{ backgroundColor: color }}
+                                  onClick={() => {
+                                    handleBlockColorChange(blockIndex, color);
+                                  }}
+                                />
+                              );
+                            })}
+                          </div>
+                        );
+                      })}
+                    </IonContent>
+                  </IonPopover>
+                  <IonReorder slot="end"></IonReorder>
+                </IonItem>
+              ))}
             </IonReorderGroup>
           </IonList>
           {/* Confirmation Alert for Deleting */}

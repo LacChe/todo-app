@@ -47,11 +47,11 @@ const AddProjectModal: React.FC = () => {
         },
         matrixSettings: {
           blocks: [
-            // TODO setup default names and colors
-            { name: 'block-1', taskIds: [], color: '#E12330' },
-            { name: 'block-2', taskIds: [], color: '#1D2A90' },
-            { name: 'block-3', taskIds: [], color: '#CB69BC' },
-            { name: 'block-4', taskIds: [], color: '#1E8351' },
+            // TODO setup colors
+            { name: 'Urgent & Important', taskIds: [], color: '#E12330' },
+            { name: 'Not Urgent & Important', taskIds: [], color: '#1D2A90' },
+            { name: 'Urgent & Not Important', taskIds: [], color: '#CB69BC' },
+            { name: 'Not Urgent & Not Important', taskIds: [], color: '#1E8351' },
           ],
           settings: {
             showDetails: false,
