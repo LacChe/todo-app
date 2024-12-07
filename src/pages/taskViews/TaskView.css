@@ -11,8 +11,14 @@ ion-reorder {
   --ion-grid-columns: 2;
   --ion-grid-padding: 2px;
   --ion-grid-column-padding: 2px;
+  height: 100%;
+}
+
+.matrix-grid ion-row {
+  height: 100%;
 }
 
 .matrix-grid ion-card {
+  height: 100%;
   margin: 0px;
 }
