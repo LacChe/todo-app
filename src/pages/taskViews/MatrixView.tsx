@@ -26,8 +26,9 @@ import { Context } from '../../dataManagement/ContextProvider';
 
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const [project, setProject] = useState<ProjectType>();
   const { loading, getProject, tasks } = useContext(Context);
+
+  const [project, setProject] = useState<ProjectType>();
 
   /**
    * Popover for options specific to the matrix view
@@ -53,7 +54,7 @@ const MatrixView: React.FC = () => {
   }
   const [presentMatrixPopover, dismissMatrixPopover] = useIonPopover(matrixOptionsPopover);
 
-  // retrieve project when id changes
+  // retrieve project when data changes
   useEffect(() => {
     if (!loading) {
       if (projectId === 'undefined') return;

@@ -26,8 +26,9 @@ import TaskItem from '../../components/TaskItem';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
   const { loading, getProject, setProject, projects, tasks } = useContext(Context);
+
+  const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
   /**
    * Popover for options specific to the list view
@@ -54,7 +55,7 @@ const ListView: React.FC = () => {
   }
   const [presentListPopover, dismissListPopover] = useIonPopover(listOptionsPopover);
 
-  // retrieve project when id changes
+  // retrieve project when data changes
   useEffect(() => {
     if (!loading) {
       if (projectId === 'undefined') return;

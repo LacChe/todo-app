@@ -33,6 +33,7 @@ import AddTaskModal from './modals/AddTaskModal';
 import { Context } from '../dataManagement/ContextProvider';
 import { ProjectType, TaskType } from '../types';
 import EditTaskModal from './modals/EditTaskModal';
+import { taskOverdue } from '../dataManagement/utils';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
@@ -70,7 +71,7 @@ const Menu: React.FC = () => {
    * Get the count of incomplete tasks for a given project.
    *
    * @param {string} projectId - The ID of the project to retrieve tasks from.
-   * @returns {number} The number of tasks that are not marked as 'done'.
+   * @returns {number} The number of tasks that are overdue.
    */
   function getIncompleteTasksCount(projectId: string): number {
     if (!projectId) return 0;
@@ -78,10 +79,17 @@ const Menu: React.FC = () => {
     if (!project) return 0;
     let incompleteTasks = project.taskIds
       .map((id: string) => getTask(id))
-      .filter((task: TaskType) => task.status === 'todo');
+      .filter((task: TaskType) => taskOverdue(task, new Date()));
     return incompleteTasks.length;
   }
 
+  /**
+   * Handle the project reorder event from the ion-reorder group.
+   * This function takes the event, filters out the moved project id from the current project ids,
+   * and inserts the moved project id at the correct position in the project ids array.
+   * It then updates the context with the new project ids array.
+   * @param {CustomEvent<ItemReorderEventDetail>} e - The event emitted by the ion-reorder group.
+   */
   function handleListReorder(e: CustomEvent<ItemReorderEventDetail>) {
     // save data to context
     const originalProjectIds = projectList.projectIds;

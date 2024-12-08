@@ -76,6 +76,13 @@ const EditProjectModal: React.FC = () => {
     setProject(retrievedProject);
   }
 
+  /**
+   * Handles the block reorder event from the ion-reorder group.
+   * This function takes the event, filters out the moved block from the current blocks,
+   * and inserts the moved block at the correct position in the blocks array.
+   * It then updates the context with the new blocks array.
+   * @param {any} e - The event emitted by the ion-reorder group.
+   */
   function handleBlockReorder(e: any) {
     // save data to context
     const originalBlocks = [...newProjectBlocks];
@@ -121,12 +128,30 @@ const EditProjectModal: React.FC = () => {
     editProjectModal.current?.dismiss();
   }
 
+  /**
+   * Updates the name of a block at a specified index in the newProjectBlocks state.
+   *
+   * This function takes an index and a new name value, updates the block at the specified
+   * index with the new name, and then updates the state with the modified blocks array.
+   *
+   * @param {number} index - The index of the block to update.
+   * @param {string} value - The new name to assign to the block.
+   */
   function handleBlockNameChange(index: number, value: string) {
     const newBlocks: [BlockType, BlockType, BlockType, BlockType] = [...newProjectBlocks];
     newBlocks[index].name = value;
     setNewProjectBlocks(newBlocks);
   }
 
+  /**
+   * Updates the color of a block at a specified index in the newProjectBlocks state.
+   *
+   * This function takes an index and a new color value, updates the block at the specified
+   * index with the new color, and then updates the state with the modified blocks array.
+   *
+   * @param {number} index - The index of the block to update.
+   * @param {string} value - The new color to assign to the block.
+   */
   function handleBlockColorChange(index: number, value: string) {
     const newBlocks: [BlockType, BlockType, BlockType, BlockType] = [...newProjectBlocks];
     newBlocks[index].color = value;

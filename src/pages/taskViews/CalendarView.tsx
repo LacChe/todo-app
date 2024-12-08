@@ -19,12 +19,13 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
-import { taskDue, taskOverdue } from '../../dataManagement/utils';
+import { taskDue } from '../../dataManagement/utils';
 
 const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const [project, setProject] = useState<ProjectType>();
   const { loading, getProject, getTask, tasks } = useContext(Context);
+
+  const [project, setProject] = useState<ProjectType>();
 
   const [dateRowOffset, setDateRowOffset] = useState<number>(0);
   const [dateColOffset, setDateColOffset] = useState<number>(new Date().getDay());
@@ -49,15 +50,15 @@ const CalendarView: React.FC = () => {
   }, [loading, projectId, tasks, dateRowOffset, dateColOffset]);
 
   /**
-   * Finds and sets task IDs for a specific date within the current project.
+   * Finds and sets task IDs that are due on a specific date for a given project.
    *
-   * This function calculates the date to check based on the current date,
-   * column offset, and row offset. It iterates through the task IDs of the
-   * given project, retrieves each task, and checks if the task is due on
-   * the calculated date. If the task is due, it is added to the list of
-   * found task IDs. The state is then updated with the found task IDs.
+   * This function calculates the date based on the current day of the week and
+   * the specified row and column offsets. It then iterates over the task IDs
+   * in the provided project, checks if each task is due on the calculated date
+   * using the taskDue utility function, and updates the state with the IDs of
+   * the tasks that are due.
    *
-   * @param {ProjectType} retrievedProject - The project containing the tasks to check.
+   * @param {ProjectType} retrievedProject - The project to find tasks for.
    */
   function findTasksForThisDate(retrievedProject: ProjectType) {
     let checkDate = new Date(today);
