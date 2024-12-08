@@ -105,17 +105,19 @@ const CalendarView: React.FC = () => {
    */
   function dateSlider(): JSX.Element {
     let dates = [];
+    let date = new Date(today);
     for (let i = 0; i < 7; i++) {
-      let date = new Date(today);
+      date = new Date(today);
       date.setDate(date.getDate() + i - today.getDay() + dateRowOffset * 7);
       dates.push(date.toISOString().split('T')[0] + ' ' + date.getDay());
     }
+    date = new Date(today);
+    date.setDate(today.getDate() - today.getDay() + dateColOffset + dateRowOffset * 7);
     return (
       <div>
         <div>
           {/* year and month */}
-          {/* TODO wrap months */}
-          {today.getFullYear()} {monthsOfYearAbbr[today.getMonth()]}
+          {date.getFullYear()} {monthsOfYearAbbr[date.getMonth()]}
         </div>
         <div className="calendar-view-date-slider">
           {/* last week TODO change to swipe gesture */}
