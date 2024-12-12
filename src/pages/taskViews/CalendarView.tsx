@@ -1,4 +1,5 @@
 import {
+  GestureDetail,
   IonButton,
   IonButtons,
   IonContent,
@@ -10,6 +11,7 @@ import {
   IonPage,
   IonToolbar,
   useIonPopover,
+  createGesture,
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -46,6 +48,50 @@ const CalendarView: React.FC = () => {
 
       // init taskIdsForDate
       findTasksForThisDate(retrievedProject);
+
+      // setup swipe gesture to change dates
+      const changeDateColSwiperTarget = document.querySelector('.calendar-content');
+      if (changeDateColSwiperTarget) {
+        const changeDateColSwiperGesture = createGesture({
+          el: changeDateColSwiperTarget,
+          onEnd: function onContentSwipeEnd(detail: GestureDetail) {
+            if (detail.deltaX > 100) {
+              setDateColOffset((prev) => {
+                let newColOffset = prev + 1;
+                if (newColOffset > 6) {
+                  newColOffset -= 7;
+                  setDateRowOffset((prev) => prev + 1);
+                }
+                return newColOffset;
+              });
+            }
+            if (detail.deltaX < -100) {
+              setDateColOffset((prev) => {
+                let newColOffset = prev - 1;
+                if (newColOffset < 0) {
+                  newColOffset += 7;
+                  setDateRowOffset((prev) => prev - 1);
+                }
+                return newColOffset;
+              });
+            }
+          },
+          gestureName: 'changeDateColSwiperGesture',
+        });
+        changeDateColSwiperGesture.enable();
+      }
+      const changeDateRowSwiperTarget = document.querySelector('.calendar-view-date-slider');
+      if (changeDateRowSwiperTarget) {
+        const changeDateRowSwiperGesture = createGesture({
+          el: changeDateRowSwiperTarget,
+          onEnd: function onSliderSwipeEnd(detail: GestureDetail) {
+            if (detail.deltaX > 100) setDateRowOffset((prev) => prev + 1);
+            if (detail.deltaX < -100) setDateRowOffset((prev) => prev - 1);
+          },
+          gestureName: 'changeDateRowSwiperGesture',
+        });
+        changeDateRowSwiperGesture.enable();
+      }
     }
   }, [loading, projectId, tasks, dateRowOffset, dateColOffset]);
 
@@ -143,7 +189,6 @@ const CalendarView: React.FC = () => {
           {date.getFullYear()} {monthsOfYearAbbr[date.getMonth()]}
         </div>
         <div className="calendar-view-date-slider">
-          {/* last week TODO change to swipe gesture */}
           <button
             onClick={() => {
               setTaskIdsForDate([]);
@@ -166,7 +211,6 @@ const CalendarView: React.FC = () => {
               <div>{date.substring(8, 10).replace(/^0+/, '')}</div>
             </button>
           ))}
-          {/* next week TODO change to swipe gesture */}
           <button
             onClick={() => {
               setTaskIdsForDate([]);
@@ -198,7 +242,7 @@ const CalendarView: React.FC = () => {
           </IonButtons>
         </IonToolbar>
       </IonHeader>
-      <IonContent className="ion-padding">
+      <IonContent className="ion-padding calendar-content">
         <IonList>
           {taskIdsForDate?.length === 0 && <div>No tasks</div>}
           {taskIdsForDate.map((taskId: string, index: number) => {
