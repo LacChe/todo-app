@@ -29,23 +29,32 @@ export function taskDue(task: TaskType, checkDate: Date): boolean {
   if (!task) return false;
   if (!task.typeData) return false;
   if (!task.typeData.name) return false;
-  if (!task.typeData.value) return false;
+  console.log(task.typeData.name, task.name);
   switch (task.typeData.name) {
     case 'single':
       return true;
     case 'everyNumDays':
       const startDate = new Date(task.createdDate);
-      const dayDifference = Math.floor((checkDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      const dayDifference = Math.floor(
+        (checkDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24),
+      );
       if (dayDifference % (task.typeData.value as number) === 0) return true;
       break;
     case 'everyDaysOfWeek':
-      if ((task.typeData.value as number[]).includes(checkDate.getDay())) return true;
+      if ((task.typeData.value as number[]).includes(checkDate.getDay()))
+        return true;
       break;
     case 'everyDaysOfMonth':
-      if ((task.typeData.value as number[]).includes(checkDate.getDate())) return true;
+      if ((task.typeData.value as number[]).includes(checkDate.getDate()))
+        return true;
       break;
     case 'onDates':
-      if ((task.typeData.value as string[]).includes(checkDate.toISOString().split('T')[0])) return true;
+      if (
+        (task.typeData.value as string[]).includes(
+          checkDate.toISOString().split('T')[0],
+        )
+      )
+        return true;
       break;
   }
   return false;
@@ -81,20 +90,20 @@ export function taskOverdue(task: TaskType, checkDate: Date): boolean {
   if (!task) return false;
   if (!task.typeData) return false;
   if (!task.typeData.name) return false;
-  if (!task.typeData.value) return false;
   let lastDate;
   switch (task.typeData.name) {
     /* CHECK SINGLE */
     case 'single':
-      return task.typeData.completedOnDates.length > 0;
+      return task.typeData.completedOnDates.length === 0;
 
     /* CHECK EVERY NUM DAYS */
     case 'everyNumDays':
       // keep checking until found most recent date
       lastDate = new Date(task.createdDate);
       while (
-        Math.floor((checkDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)) >=
-        (task.typeData.value as number)
+        Math.floor(
+          (checkDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24),
+        ) >= (task.typeData.value as number)
       ) {
         lastDate.setDate(lastDate.getDate() + (task.typeData.value as number));
         console.log('checking', lastDate.toISOString().split('T')[0]);
@@ -124,7 +133,9 @@ export function taskOverdue(task: TaskType, checkDate: Date): boolean {
         let dayDiff = checkDate.getDay() - lastDay;
         if (dayDiff < 0) dayDiff += 7;
 
-        lastDate = new Date(checkDate.getDate() - dayDiff).toISOString().split('T')[0];
+        lastDate = new Date(checkDate.getDate() - dayDiff)
+          .toISOString()
+          .split('T')[0];
       }
       // check if last date is complete
       return !task.typeData.completedOnDates.includes(lastDate);
@@ -152,15 +163,28 @@ export function taskOverdue(task: TaskType, checkDate: Date): boolean {
         let checkingMonth = checkDate.getMonth();
         let checkingDate = orderedDaysOfMonth[checkIndex];
         while (
-          new Date(checkingYear, checkingMonth - 1, checkingDate + 1).getTime() >= new Date(task.createdDate).getTime()
+          new Date(
+            checkingYear,
+            checkingMonth - 1,
+            checkingDate + 1,
+          ).getTime() >= new Date(task.createdDate).getTime()
         ) {
           checkingDate = orderedDaysOfMonth[checkIndex];
           // check if date valid, date is not in future and month as date
           if (
             !(checkingDate > daysInMonth(checkingYear, checkingMonth)) &&
-            !(new Date(checkingYear, checkingMonth, checkingDate).getTime() > checkDate.getTime())
+            !(
+              new Date(checkingYear, checkingMonth, checkingDate).getTime() >
+              checkDate.getTime()
+            )
           ) {
-            lastDate = new Date(checkingYear, checkingMonth - 1, checkingDate + 1).toISOString().split('T')[0];
+            lastDate = new Date(
+              checkingYear,
+              checkingMonth - 1,
+              checkingDate + 1,
+            )
+              .toISOString()
+              .split('T')[0];
             break;
           } else {
             // check next day
@@ -189,7 +213,9 @@ export function taskOverdue(task: TaskType, checkDate: Date): boolean {
       // order dates
       let orderedDates = task.typeData.value as string[];
       if (orderedDates.length === 0) return true;
-      orderedDates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime());
+      orderedDates.sort(
+        (a, b) => new Date(a).getTime() - new Date(b).getTime(),
+      );
 
       // find last date
       lastDate = orderedDates[0];

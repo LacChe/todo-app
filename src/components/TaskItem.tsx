@@ -1,11 +1,20 @@
-import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/react';
+import {
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonLabel,
+} from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { Context } from '../dataManagement/ContextProvider';
 
 import './TaskItem.css';
 import { taskDue, taskOverdue } from '../dataManagement/utils';
 
-const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, offsetDays }) => {
+const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({
+  taskId,
+  offsetDays,
+}) => {
   const { getTask, setTask, setCurrentTaskId, tasks } = useContext(Context);
 
   const [taskDueBool, setTaskDueBool] = useState<boolean>(true);
@@ -43,15 +52,23 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, o
       if (task.typeData.completedOnDates.length > 0) {
         task.typeData.completedOnDates = [];
       } else {
-        task.typeData.completedOnDates.push(shownDate.toISOString().split('T')[0]);
+        task.typeData.completedOnDates.push(
+          shownDate.toISOString().split('T')[0],
+        );
       }
     } else {
-      if (task.typeData.completedOnDates.includes(shownDate.toISOString().split('T')[0])) {
+      if (
+        task.typeData.completedOnDates.includes(
+          shownDate.toISOString().split('T')[0],
+        )
+      ) {
         task.typeData.completedOnDates = task.typeData.completedOnDates.filter(
           (date: string) => date !== shownDate.toISOString().split('T')[0],
         );
       } else {
-        task.typeData.completedOnDates.push(shownDate.toISOString().split('T')[0]);
+        task.typeData.completedOnDates.push(
+          shownDate.toISOString().split('T')[0],
+        );
       }
     }
 
@@ -91,17 +108,23 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, o
       <IonItemOptions side="start">
         {/* only allow toggle if task is due */}
         {taskDueBool && (
-          <IonItemOption onClick={handleStatusToggle}>{taskOverdueBool === true ? 'Done' : 'To Do'}</IonItemOption>
+          <IonItemOption onClick={handleStatusToggle}>
+            {taskOverdueBool === true ? 'Done' : 'To Do'}
+          </IonItemOption>
         )}
 
         <IonItemOption onClick={handleEdit}>Edit</IonItemOption>
       </IonItemOptions>
       {/* task content */}
-      <IonItem onClick={toggleShowDetailsOverride} className={taskOverdueBool !== true ? 'done' : ''}>
+      <IonItem
+        onClick={toggleShowDetailsOverride}
+        className={taskOverdueBool !== true ? 'done' : ''}
+      >
         <IonLabel>
           {/* TODO these two divs swap places when swiped*/}
           <div>
-            {task?.name} {JSON.stringify(taskDueBool)}
+            {task?.name} {JSON.stringify(taskDueBool)}{' '}
+            {JSON.stringify(taskOverdueBool)}
           </div>
           {task?.showDetailsOverride && (
             <div>
