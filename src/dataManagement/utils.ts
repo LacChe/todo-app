@@ -29,7 +29,6 @@ export function taskDue(task: TaskType, checkDate: Date): boolean {
   if (!task) return false;
   if (!task.typeData) return false;
   if (!task.typeData.name) return false;
-  console.log(task.typeData.name, task.name);
   switch (task.typeData.name) {
     case 'single':
       return true;

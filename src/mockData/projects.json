@@ -1,23 +1,110 @@
 [
   {
-    "id": "proj-0001",
-    "name": "Project 1",
-    "color": "#0000ff",
-    "taskIds": ["task-0001", "task-0002", "task-0003"],
-    "viewSettings": {}
+    "id": "proj-c618ca0a-0b2d-4b8b-a51d-2315157b7248",
+    "name": "123",
+    "color": "#00FF00",
+    "taskIds": [
+      "task-74126476-f758-4aa8-abf0-76c43c234849",
+      "task-67bf42a1-e1f9-4305-ac53-3f25deeceecb",
+      "task-4e7a1fce-f4d8-40f5-97c4-0a4dd16f6ee7",
+      "task-072bb56c-68e8-4389-a0eb-133901ce831c",
+      "task-e3201a69-c222-439d-8c2d-d6268064e175"
+    ],
+    "viewSettings": {
+      "listSettings": {
+        "settings": {
+          "showDetails": false,
+          "showDone": false,
+          "sort": "",
+          "group": ""
+        }
+      },
+      "matrixSettings": {
+        "blocks": [
+          {
+            "name": "Not Urgent & Not Important",
+            "taskIds": [],
+            "color": "#1E8351"
+          },
+          {
+            "name": "Urgent & Important",
+            "taskIds": [],
+            "color": "#E12330"
+          },
+          {
+            "name": "Not Urgent & Important",
+            "taskIds": [],
+            "color": "#1D2A90"
+          },
+          {
+            "name": "Urgent & Not Important",
+            "taskIds": [],
+            "color": "#CB69BC"
+          }
+        ],
+        "settings": {
+          "showDetails": false,
+          "showDone": false
+        }
+      },
+      "calendarSettings": {
+        "dateContainer": {},
+        "settings": {
+          "showDetails": false,
+          "showDone": false
+        }
+      }
+    }
   },
   {
-    "id": "proj-0002",
-    "name": "Project 2",
-    "color": "#00ff00",
-    "taskIds": ["task-0004", "task-0005"],
-    "viewSettings": {}
-  },
-  {
-    "id": "proj-0003",
-    "name": "Project 3",
-    "color": "#ff0000",
-    "taskIds": ["task-0006", "task-0007"],
-    "viewSettings": {}
+    "id": "proj-0c532c7d-c7ea-4b26-a066-5d78f4f9196f",
+    "name": "qwe",
+    "color": "#000000",
+    "taskIds": [],
+    "viewSettings": {
+      "listSettings": {
+        "settings": {
+          "showDetails": false,
+          "showDone": false,
+          "sort": "",
+          "group": ""
+        }
+      },
+      "matrixSettings": {
+        "blocks": [
+          {
+            "name": "Urgent & Important",
+            "taskIds": [],
+            "color": "#E12330"
+          },
+          {
+            "name": "Not Urgent & Important",
+            "taskIds": [],
+            "color": "#1D2A90"
+          },
+          {
+            "name": "Urgent & Not Important",
+            "taskIds": [],
+            "color": "#CB69BC"
+          },
+          {
+            "name": "Not Urgent & Not Important",
+            "taskIds": [],
+            "color": "#1E8351"
+          }
+        ],
+        "settings": {
+          "showDetails": false,
+          "showDone": false
+        }
+      },
+      "calendarSettings": {
+        "dateContainer": {},
+        "settings": {
+          "showDetails": false,
+          "showDone": false
+        }
+      }
+    }
   }
 ]

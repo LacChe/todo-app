@@ -1,5 +1,6 @@
 import { Preferences } from '@capacitor/preferences';
 import { PreferenceKeyType, ProjectListType, ProjectType, TaskType } from '../types';
+import { mockProjectList, mockProjects, mockTasks } from '../mockData/index';
 
 /**
  * Retrieve the ID of the user.
@@ -90,8 +91,23 @@ export const setPreference = async (key: PreferenceKeyType, value: string): Prom
  * A promise that resolves to the value of the preference, or null if not found.
  */
 export const getPreference = async (key: PreferenceKeyType): Promise<string | null> => {
-  const { value } = await Preferences.get({ key });
-  return value;
+  // get mock data
+  if (import.meta.env.VITE_MOCK_DATA_MODE) {
+    console.log(typeof import.meta.env.VITE_MOCK_DATA_MODE, import.meta.env.VITE_MOCK_DATA_MODE, 123);
+    switch (key) {
+      case 'localProjectList':
+        return JSON.stringify(mockProjectList);
+      case 'localProjects':
+        return JSON.stringify(mockProjects);
+      case 'localTasks':
+        return JSON.stringify(mockTasks);
+    }
+    const { value } = await Preferences.get({ key });
+    return value;
+  } else {
+    const { value } = await Preferences.get({ key });
+    return value;
+  }
 };
 
 /**

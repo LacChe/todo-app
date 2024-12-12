@@ -1,0 +1,73 @@
+[
+  {
+      "id": "task-072bb56c-68e8-4389-a0eb-133901ce831c",
+      "createdDate": "2024-12-12",
+      "name": "4",
+      "typeData": {
+          "name": "everyDaysOfMonth",
+          "completedOnDates": [],
+          "value": [
+              16,
+              10
+          ]
+      },
+      "showDetailsOverride": true,
+      "notes": "notes4"
+  },
+  {
+      "id": "task-4e7a1fce-f4d8-40f5-97c4-0a4dd16f6ee7",
+      "createdDate": "2024-12-12",
+      "name": "3",
+      "typeData": {
+          "name": "everyDaysOfWeek",
+          "completedOnDates": [],
+          "value": [
+              2,
+              4
+          ]
+      },
+      "showDetailsOverride": true,
+      "notes": "notes3"
+  },
+  {
+      "id": "task-67bf42a1-e1f9-4305-ac53-3f25deeceecb",
+      "createdDate": "2024-12-12",
+      "name": "2",
+      "typeData": {
+          "name": "everyNumDays",
+          "completedOnDates": [],
+          "value": 2
+      },
+      "showDetailsOverride": true,
+      "notes": "notes2"
+  },
+  {
+      "id": "task-e3201a69-c222-439d-8c2d-d6268064e175",
+      "createdDate": "2024-12-12",
+      "name": "5",
+      "typeData": {
+          "name": "onDates",
+          "completedOnDates": [],
+          "value": [
+              "2024-11-13",
+              "2024-12-04",
+              "2024-12-16",
+              "2024-12-21",
+              "2025-01-31"
+          ]
+      },
+      "showDetailsOverride": true,
+      "notes": "notes5"
+  },
+  {
+      "id": "task-74126476-f758-4aa8-abf0-76c43c234849",
+      "createdDate": "2024-12-12",
+      "name": "1",
+      "typeData": {
+          "name": "single",
+          "completedOnDates": []
+      },
+      "showDetailsOverride": true,
+      "notes": "notes1"
+  }
+]

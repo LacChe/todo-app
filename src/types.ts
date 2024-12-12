@@ -37,12 +37,7 @@ export type BlockType = {
 };
 
 export type ViewSettingsCalendarType = {
-  dateContainer: DateContainerType;
   settings: ViewSettingsSettingsType;
-};
-
-export type DateContainerType = {
-  [key: string]: string[];
 };
 
 export type ViewSettingsSettingsType = {
