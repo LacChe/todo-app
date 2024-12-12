@@ -23,12 +23,36 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
+import TaskItem from '../../components/TaskItem';
 
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const { loading, getProject, setProject, tasks, getTask } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
+  const [looseTasks, setFindLooseTasks] = useState<string[]>();
+
+  /**
+   * Find tasks that are not part of any block in the current project's matrix view.
+   * This is done by combining the task IDs of all blocks and then filtering out
+   * the task IDs that are not in the combined list from the project's task IDs.
+   *
+   * @param {ProjectType} project - The project in which to find loose tasks.
+   * @returns {string[]} An array of task IDs that are not part of any block.
+   */
+  function findLooseTasks(project: ProjectType): string[] {
+    if (!project) return [];
+    let combinedBlocksTaskIds: string[] = [];
+    let block0 = project?.viewSettings.matrixSettings.blocks[0].taskIds;
+    let block1 = project?.viewSettings.matrixSettings.blocks[1].taskIds;
+    let block2 = project?.viewSettings.matrixSettings.blocks[2].taskIds;
+    let block3 = project?.viewSettings.matrixSettings.blocks[3].taskIds;
+    if (block0) combinedBlocksTaskIds = combinedBlocksTaskIds.concat(block0);
+    if (block1) combinedBlocksTaskIds = combinedBlocksTaskIds.concat(block1);
+    if (block2) combinedBlocksTaskIds = combinedBlocksTaskIds.concat(block2);
+    if (block3) combinedBlocksTaskIds = combinedBlocksTaskIds.concat(block3);
+    return project?.taskIds.filter((id: string) => !combinedBlocksTaskIds.includes(id));
+  }
 
   /**
    * Popover for options specific to the matrix view
@@ -83,6 +107,8 @@ const MatrixView: React.FC = () => {
       const retrievedProject = getProject(projectId);
       if (retrievedProject) setRetrievedProject(retrievedProject);
       else console.error(`ProjectId: ${projectId} not found`);
+
+      setFindLooseTasks(findLooseTasks(retrievedProject));
     }
   }, [loading, projectId, tasks]);
 
@@ -116,6 +142,23 @@ const MatrixView: React.FC = () => {
                         {block.name}
                       </IonCardSubtitle>
                     </IonCardHeader>
+                    {block.taskIds.map((taskId) => (
+                      <TaskItem
+                        taskId={taskId}
+                        key={index}
+                        showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
+                      />
+                    ))}
+                    {index === 3 &&
+                      looseTasks &&
+                      looseTasks.length > 0 &&
+                      looseTasks.map((looseTaskId) => (
+                        <TaskItem
+                          taskId={looseTaskId}
+                          key={index}
+                          showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
+                        />
+                      ))}
                   </IonCard>
                 </IonCol>
               );
