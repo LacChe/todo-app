@@ -23,10 +23,11 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
+import { taskOverdue } from '../../dataManagement/utils';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, setProject, projects, tasks } = useContext(Context);
+  const { loading, getProject, setProject, projects, tasks, getTask } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
@@ -46,8 +47,30 @@ const ListView: React.FC = () => {
           >
             Edit
           </IonButton>
-          <IonButton>Hide Done</IonButton>
-          <IonButton>Hide Details</IonButton>
+          <IonButton
+            onClick={() => {
+              let newProject = { ...retrievedProject } as ProjectType;
+              newProject.viewSettings.listSettings.settings.showDone =
+                !newProject.viewSettings.listSettings.settings.showDone;
+              setRetrievedProject(newProject);
+              setProject(newProject);
+              dismissListPopover();
+            }}
+          >
+            {!retrievedProject?.viewSettings.listSettings.settings.showDone ? 'Show ' : 'Hide '} Done
+          </IonButton>
+          <IonButton
+            onClick={() => {
+              let newProject = { ...retrievedProject } as ProjectType;
+              newProject.viewSettings.listSettings.settings.showDetails =
+                !newProject.viewSettings.listSettings.settings.showDetails;
+              setRetrievedProject(newProject);
+              setProject(newProject);
+              dismissListPopover();
+            }}
+          >
+            {!retrievedProject?.viewSettings.listSettings.settings.showDetails ? 'Show ' : 'Hide '} Details
+          </IonButton>
           <IonButton>Sort</IonButton>
         </IonButtons>
       </IonContent>
@@ -106,12 +129,21 @@ const ListView: React.FC = () => {
           {retrievedProject?.taskIds?.length === 0 && <div>No tasks</div>}
           <IonReorderGroup disabled={false} onIonItemReorder={handleListReorder}>
             {retrievedProject?.taskIds?.map((taskId, index) => {
-              return (
-                <IonItem key={index}>
-                  <TaskItem taskId={taskId} key={index} />
-                  <IonReorder slot="end"></IonReorder>
-                </IonItem>
-              );
+              if (
+                retrievedProject?.viewSettings.listSettings.settings.showDone ||
+                (!retrievedProject?.viewSettings.listSettings.settings.showDone &&
+                  taskOverdue(getTask(taskId), new Date()))
+              )
+                return (
+                  <IonItem key={index}>
+                    <TaskItem
+                      taskId={taskId}
+                      key={index}
+                      showDetails={retrievedProject?.viewSettings.listSettings.settings.showDetails}
+                    />
+                    <IonReorder slot="end"></IonReorder>
+                  </IonItem>
+                );
             })}
           </IonReorderGroup>
         </IonList>

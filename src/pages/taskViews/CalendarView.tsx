@@ -19,13 +19,13 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
-import { taskDue } from '../../dataManagement/utils';
+import { taskDue, taskOverdue } from '../../dataManagement/utils';
 
 const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, getTask, tasks } = useContext(Context);
+  const { loading, getProject, setProject, getTask, tasks } = useContext(Context);
 
-  const [project, setProject] = useState<ProjectType>();
+  const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
   const [dateRowOffset, setDateRowOffset] = useState<number>(0);
   const [dateColOffset, setDateColOffset] = useState<number>(new Date().getDay());
@@ -41,7 +41,7 @@ const CalendarView: React.FC = () => {
       // init project
       if (projectId === 'undefined') return;
       const retrievedProject = getProject(projectId);
-      if (retrievedProject) setProject(retrievedProject);
+      if (retrievedProject) setRetrievedProject(retrievedProject);
       else console.error(`ProjectId: ${projectId} not found`);
 
       // init taskIdsForDate
@@ -91,9 +91,31 @@ const CalendarView: React.FC = () => {
           >
             Edit
           </IonButton>
-          <IonButton>Hide Done</IonButton>
-          <IonButton>Hide Details</IonButton>
-          {/* add ootion for hiding singular tasks */}
+          <IonButton
+            onClick={() => {
+              let newProject = { ...retrievedProject } as ProjectType;
+              newProject.viewSettings.calendarSettings.settings.showDone =
+                !newProject.viewSettings.calendarSettings.settings.showDone;
+              setRetrievedProject(newProject);
+              setProject(newProject);
+              dismissCalendarPopover();
+            }}
+          >
+            {!retrievedProject?.viewSettings.calendarSettings.settings.showDone ? 'Show ' : 'Hide '} Done
+          </IonButton>
+          <IonButton
+            onClick={() => {
+              let newProject = { ...retrievedProject } as ProjectType;
+              newProject.viewSettings.calendarSettings.settings.showDetails =
+                !newProject.viewSettings.calendarSettings.settings.showDetails;
+              setRetrievedProject(newProject);
+              setProject(newProject);
+              dismissCalendarPopover();
+            }}
+          >
+            {!retrievedProject?.viewSettings.calendarSettings.settings.showDetails ? 'Show ' : 'Hide '} Details
+          </IonButton>
+          {/* add option for hiding singular tasks */}
         </IonButtons>
       </IonContent>
     );
@@ -161,7 +183,7 @@ const CalendarView: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar style={{ '--background': project?.color }}>
+        <IonToolbar style={{ '--background': retrievedProject?.color }}>
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />
@@ -179,11 +201,23 @@ const CalendarView: React.FC = () => {
       <IonContent className="ion-padding">
         <IonList>
           {taskIdsForDate?.length === 0 && <div>No tasks</div>}
-          {taskIdsForDate.map((taskId: string, index: number) => (
-            <IonItem key={index}>
-              <TaskItem offsetDays={dateRowOffset * 7 - today.getDay() + dateColOffset} taskId={taskId} key={index} />
-            </IonItem>
-          ))}
+          {taskIdsForDate.map((taskId: string, index: number) => {
+            if (
+              retrievedProject?.viewSettings.calendarSettings.settings.showDone ||
+              (!retrievedProject?.viewSettings.calendarSettings.settings.showDone &&
+                taskOverdue(getTask(taskId), new Date()))
+            )
+              return (
+                <IonItem key={index}>
+                  <TaskItem
+                    offsetDays={dateRowOffset * 7 - today.getDay() + dateColOffset}
+                    taskId={taskId}
+                    key={index}
+                    showDetails={retrievedProject?.viewSettings.calendarSettings.settings.showDetails}
+                  />
+                </IonItem>
+              );
+          })}
         </IonList>
       </IonContent>
     </IonPage>

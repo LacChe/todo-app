@@ -5,7 +5,11 @@ import { Context } from '../dataManagement/ContextProvider';
 import './TaskItem.css';
 import { taskDue, taskOverdue } from '../dataManagement/utils';
 
-const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, offsetDays }) => {
+const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: boolean }> = ({
+  taskId,
+  offsetDays,
+  showDetails = false,
+}) => {
   const { getTask, setTask, setCurrentTaskId, tasks } = useContext(Context);
 
   const [taskDueBool, setTaskDueBool] = useState<boolean>(true);
@@ -100,10 +104,8 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number }> = ({ taskId, o
       <IonItem onClick={toggleShowDetailsOverride} className={taskOverdueBool !== true ? 'done' : ''}>
         <IonLabel>
           {/* TODO these two divs swap places when swiped*/}
-          <div>
-            {task?.name} {JSON.stringify(taskDueBool)} {JSON.stringify(taskOverdueBool)}
-          </div>
-          {task?.showDetailsOverride && (
+          <div>{task?.name}</div>
+          {(task?.showDetailsOverride || showDetails) && (
             <div>
               {task?.createdDate} {task?.typeData.name}
             </div>

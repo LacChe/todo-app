@@ -26,9 +26,9 @@ import { Context } from '../../dataManagement/ContextProvider';
 
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, tasks } = useContext(Context);
+  const { loading, getProject, setProject, tasks, getTask } = useContext(Context);
 
-  const [project, setProject] = useState<ProjectType>();
+  const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
   /**
    * Popover for options specific to the matrix view
@@ -46,8 +46,30 @@ const MatrixView: React.FC = () => {
           >
             Edit
           </IonButton>
-          <IonButton>Hide Done</IonButton>
-          <IonButton>Hide Details</IonButton>
+          <IonButton
+            onClick={() => {
+              let newProject = { ...retrievedProject } as ProjectType;
+              newProject.viewSettings.matrixSettings.settings.showDone =
+                !newProject.viewSettings.matrixSettings.settings.showDone;
+              setRetrievedProject(newProject);
+              setProject(newProject);
+              dismissMatrixPopover();
+            }}
+          >
+            {!retrievedProject?.viewSettings.matrixSettings.settings.showDone ? 'Show ' : 'Hide '} Done
+          </IonButton>
+          <IonButton
+            onClick={() => {
+              let newProject = { ...retrievedProject } as ProjectType;
+              newProject.viewSettings.matrixSettings.settings.showDetails =
+                !newProject.viewSettings.matrixSettings.settings.showDetails;
+              setRetrievedProject(newProject);
+              setProject(newProject);
+              dismissMatrixPopover();
+            }}
+          >
+            {!retrievedProject?.viewSettings.matrixSettings.settings.showDetails ? 'Show ' : 'Hide '} Details
+          </IonButton>
         </IonButtons>
       </IonContent>
     );
@@ -59,7 +81,7 @@ const MatrixView: React.FC = () => {
     if (!loading) {
       if (projectId === 'undefined') return;
       const retrievedProject = getProject(projectId);
-      if (retrievedProject) setProject(retrievedProject);
+      if (retrievedProject) setRetrievedProject(retrievedProject);
       else console.error(`ProjectId: ${projectId} not found`);
     }
   }, [loading, projectId, tasks]);
@@ -67,13 +89,13 @@ const MatrixView: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar style={{ '--background': project?.color }}>
+        <IonToolbar style={{ '--background': retrievedProject?.color }}>
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />
           </IonButtons>
           {/* title */}
-          <IonTitle>{project?.name} MatrixView</IonTitle>
+          <IonTitle>{retrievedProject?.name} MatrixView</IonTitle>
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
             <IonButton onClick={(e: any) => presentMatrixPopover({ event: e })}>
@@ -85,7 +107,7 @@ const MatrixView: React.FC = () => {
       <IonContent className="matrix-view-content">
         <IonGrid className="matrix-grid">
           <IonRow>
-            {project?.viewSettings.matrixSettings.blocks.map((block, index) => {
+            {retrievedProject?.viewSettings.matrixSettings.blocks.map((block, index) => {
               return (
                 <IonCol size="1" key={index}>
                   <IonCard>
