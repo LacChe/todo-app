@@ -116,12 +116,11 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
         <IonLabel>
           {/* TODO these two divs swap places when swiped*/}
           <div>{task?.name}</div>
-          {(task?.showDetailsOverride || showDetails) &&
-            !matrixView && ( // TODO remove matrixView check
-              <div>
-                {task?.createdDate} {task?.typeData.name}
-              </div>
-            )}
+          {((task?.showDetailsOverride && !matrixView) || showDetails) && (
+            <div>
+              {task?.createdDate} {task?.typeData.name}
+            </div>
+          )}
         </IonLabel>
       </IonItem>
     </IonItemSliding>

@@ -17,6 +17,7 @@ import {
   IonToolbar,
   useIonPopover,
   createGesture,
+  IonItem,
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
@@ -26,10 +27,12 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
+import { taskOverdue } from '../../dataManagement/utils';
+import { getTasks } from '../../dataManagement/dataRetrieval';
 
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, setProject, tasks } = useContext(Context);
+  const { loading, getProject, setProject, tasks, getTask } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
@@ -260,14 +263,22 @@ const MatrixView: React.FC = () => {
                         {block.name}
                       </IonCardSubtitle>
                     </IonCardHeader>
-                    {block.taskIds.map((taskId) => (
-                      <TaskItem
-                        taskId={taskId}
-                        key={taskId}
-                        showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
-                        matrixView={true}
-                      />
-                    ))}
+                    {block.taskIds.map((taskId) => {
+                      if (
+                        retrievedProject?.viewSettings.matrixSettings.settings.showDone ||
+                        (!retrievedProject?.viewSettings.matrixSettings.settings.showDone &&
+                          taskOverdue(getTask(taskId), new Date()))
+                      )
+                        return (
+                          <IonItem key={taskId}>
+                            <TaskItem
+                              taskId={taskId}
+                              showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
+                              matrixView={true}
+                            />
+                          </IonItem>
+                        );
+                    })}
                   </IonCard>
                 </IonCol>
               );
