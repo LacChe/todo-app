@@ -5,10 +5,11 @@ import { Context } from '../dataManagement/ContextProvider';
 import './TaskItem.css';
 import { taskDue, taskOverdue } from '../dataManagement/utils';
 
-const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: boolean }> = ({
+const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: boolean; matrixView?: boolean }> = ({
   taskId,
   offsetDays,
   showDetails = false,
+  matrixView = false,
 }) => {
   const { getTask, setTask, setCurrentTaskId, tasks } = useContext(Context);
 
@@ -90,7 +91,7 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
   }
 
   return (
-    <IonItemSliding>
+    <IonItemSliding id={taskId} className="task-item">
       {/* start options */}
       <IonItemOptions side="start">
         {/* only allow toggle if task is due */}
@@ -105,7 +106,7 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
         <IonLabel>
           {/* TODO these two divs swap places when swiped*/}
           <div>{task?.name}</div>
-          {(task?.showDetailsOverride || showDetails) && (
+          {(task?.showDetailsOverride || showDetails) && !matrixView && (
             <div>
               {task?.createdDate} {task?.typeData.name}
             </div>

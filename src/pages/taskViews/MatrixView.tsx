@@ -1,4 +1,5 @@
 import {
+  GestureDetail,
   IonButton,
   IonButtons,
   IonCard,
@@ -15,10 +16,11 @@ import {
   IonTitle,
   IonToolbar,
   useIonPopover,
+  createGesture,
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { ProjectType } from '../../types';
+import { BlockType, ProjectType } from '../../types';
 import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
@@ -108,9 +110,124 @@ const MatrixView: React.FC = () => {
       if (retrievedProject) setRetrievedProject(retrievedProject);
       else console.error(`ProjectId: ${projectId} not found`);
 
+      // find loose tasks
       setFindLooseTasks(findLooseTasks(retrievedProject));
     }
   }, [loading, projectId, tasks]);
+
+  // add drag gestures to all task items
+  useEffect(() => {
+    // find blocks sizes on every resize
+    let blockBoundingBoxes: [
+      { x: number; y: number; w: number; h: number },
+      { x: number; y: number; w: number; h: number },
+      { x: number; y: number; w: number; h: number },
+      { x: number; y: number; w: number; h: number },
+    ] = [
+      { x: 0, y: 0, w: 0, h: 0 },
+      { x: 0, y: 0, w: 0, h: 0 },
+      { x: 0, y: 0, w: 0, h: 0 },
+      { x: 0, y: 0, w: 0, h: 0 },
+    ];
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    // find blocks bounding boxes
+    function handleResize() {
+      [0, 1, 2, 3].forEach((index) => {
+        const blockBox = document.getElementsByClassName(`matrix-block-${index}`)[0]?.getBoundingClientRect();
+        blockBoundingBoxes[index] = {
+          x: blockBox?.left,
+          y: blockBox?.top,
+          w: blockBox?.width,
+          h: blockBox?.height,
+        };
+      });
+    }
+
+    // add gestures to task items
+    const matrixGridElem = document.getElementsByClassName('matrix-grid')[0];
+    const taskItems = Array.from(document.getElementsByClassName('task-item')) as HTMLElement[];
+    taskItems.forEach((taskItemElem) => {
+      const style = taskItemElem.style;
+      const clonedTaskItemElem = taskItemElem.cloneNode(true) as HTMLElement;
+      const cloneStyle = clonedTaskItemElem.style;
+
+      const gesture = createGesture({
+        el: taskItemElem,
+        threshold: 0,
+        passive: false,
+        onStart: () => onStart(),
+        onMove: (detail: GestureDetail) => onMove(detail),
+        onEnd: (detail: GestureDetail) => onEnd(detail),
+        gestureName: 'draggable',
+      });
+      gesture.enable();
+
+      const onStart = () => {
+        // add clone to grid
+        matrixGridElem.appendChild(clonedTaskItemElem);
+        cloneStyle.position = 'fixed';
+        cloneStyle.width = taskItemElem.getBoundingClientRect().width + 'px';
+        cloneStyle.left = taskItemElem.getBoundingClientRect().left + 'px';
+        cloneStyle.top = taskItemElem.getBoundingClientRect().top + 'px';
+        cloneStyle.transform = 'translate(0px, 0px)';
+        cloneStyle.zIndex = '9999';
+        // set original to low opacity
+        style.opacity = '0.5';
+      };
+      const onMove = (detail: GestureDetail) => {
+        cloneStyle.transform = `translate(${detail.deltaX}px, ${detail.deltaY}px)`;
+      };
+      const onEnd = (detail: GestureDetail) => {
+        // remove clone
+        matrixGridElem.removeChild(clonedTaskItemElem);
+        // return original to full opacity
+        style.opacity = '1';
+        // find dest block
+        let destBoxIndex = 3;
+        blockBoundingBoxes.forEach((box, index) => {
+          if (
+            detail.currentX >= box.x &&
+            detail.currentX <= box.x + box.w &&
+            detail.currentY >= box.y &&
+            detail.currentY <= box.y + box.h
+          ) {
+            destBoxIndex = index;
+          }
+        });
+        // move task to dest block
+        const taskToMove = taskItemElem.id;
+        setRetrievedProject((prev) => {
+          let newProject = { ...prev } as ProjectType;
+          newProject.viewSettings.matrixSettings.blocks = newProject.viewSettings.matrixSettings.blocks.map(
+            (block, index) => {
+              let newBlock = { ...block };
+              if (index === destBoxIndex) {
+                // only move task if not original block
+                if (!newBlock.taskIds.includes(taskToMove)) {
+                  newBlock.taskIds.push(taskToMove);
+                }
+              } else {
+                if (newBlock.taskIds.includes(taskToMove)) {
+                  newBlock.taskIds = newBlock.taskIds.filter((id) => id !== taskToMove);
+                }
+              }
+              return newBlock;
+            },
+          ) as [BlockType, BlockType, BlockType, BlockType];
+          // find new loose tasks if moved task caused changes
+          setFindLooseTasks(findLooseTasks(newProject));
+          // recalc sizes when blocks change size due to moving tasks
+          handleResize();
+          return newProject;
+        });
+      };
+    });
+
+    // clean listener
+    return () => window.removeEventListener('resize', handleResize);
+  }, [retrievedProject]);
 
   return (
     <IonPage>
@@ -135,7 +252,7 @@ const MatrixView: React.FC = () => {
           <IonRow>
             {retrievedProject?.viewSettings.matrixSettings.blocks.map((block, blockIndex) => {
               return (
-                <IonCol size="1" key={blockIndex}>
+                <IonCol size="1" key={blockIndex} className={`matrix-block-${blockIndex}`}>
                   <IonCard>
                     <IonCardHeader>
                       <IonCardSubtitle style={{ fontSize: '0.65rem', color: block?.color }}>
@@ -147,6 +264,7 @@ const MatrixView: React.FC = () => {
                         taskId={taskId}
                         key={taskId}
                         showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
+                        matrixView={true}
                       />
                     ))}
                     {blockIndex === 3 &&
@@ -157,6 +275,7 @@ const MatrixView: React.FC = () => {
                           taskId={looseTaskId}
                           key={looseTaskId}
                           showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
+                          matrixView={true}
                         />
                       ))}
                   </IonCard>
