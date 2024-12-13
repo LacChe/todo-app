@@ -105,6 +105,7 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
       <IonItem onClick={toggleShowDetailsOverride} className={taskOverdueBool !== true ? 'done' : ''}>
         {matrixView && (
           <IonCheckbox
+            disabled={taskDueBool !== true}
             slot="start"
             checked={taskOverdueBool !== true}
             onClick={(e) => {
