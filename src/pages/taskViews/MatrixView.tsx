@@ -29,10 +29,9 @@ import TaskItem from '../../components/TaskItem';
 
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, setProject, tasks, getTask } = useContext(Context);
+  const { loading, getProject, setProject, tasks } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
-  const [looseTasks, setFindLooseTasks] = useState<string[]>();
 
   /**
    * Find tasks that are not part of any block in the current project's matrix view.
@@ -106,12 +105,14 @@ const MatrixView: React.FC = () => {
   useEffect(() => {
     if (!loading) {
       if (projectId === 'undefined') return;
-      const retrievedProject = getProject(projectId);
+      const retrievedProject = getProject(projectId) as ProjectType;
+
+      // add loose tasks to last block
+      const looseTasks = findLooseTasks(retrievedProject);
+      retrievedProject.viewSettings.matrixSettings.blocks[3].taskIds.push(...looseTasks);
+
       if (retrievedProject) setRetrievedProject(retrievedProject);
       else console.error(`ProjectId: ${projectId} not found`);
-
-      // find loose tasks
-      setFindLooseTasks(findLooseTasks(retrievedProject));
     }
   }, [loading, projectId, tasks]);
 
@@ -148,15 +149,17 @@ const MatrixView: React.FC = () => {
     // add gestures to task items
     const matrixGridElem = document.getElementsByClassName('matrix-grid')[0];
     const taskItems = Array.from(document.getElementsByClassName('task-item')) as HTMLElement[];
+    if (!taskItems) return;
     taskItems.forEach((taskItemElem) => {
       const style = taskItemElem.style;
       const clonedTaskItemElem = taskItemElem.cloneNode(true) as HTMLElement;
       const cloneStyle = clonedTaskItemElem.style;
 
+      // only make child label draggable
+      if (!taskItemElem.children[1].children[1]) return;
       const gesture = createGesture({
-        el: taskItemElem,
+        el: taskItemElem.children[1].children[1],
         threshold: 0,
-        passive: false,
         onStart: () => onStart(),
         onMove: (detail: GestureDetail) => onMove(detail),
         onEnd: (detail: GestureDetail) => onEnd(detail),
@@ -216,8 +219,6 @@ const MatrixView: React.FC = () => {
               return newBlock;
             },
           ) as [BlockType, BlockType, BlockType, BlockType];
-          // find new loose tasks if moved task caused changes
-          setFindLooseTasks(findLooseTasks(newProject));
           // recalc sizes when blocks change size due to moving tasks
           handleResize();
           return newProject;
@@ -227,7 +228,7 @@ const MatrixView: React.FC = () => {
 
     // clean listener
     return () => window.removeEventListener('resize', handleResize);
-  }, [retrievedProject]);
+  });
 
   return (
     <IonPage>
@@ -267,17 +268,6 @@ const MatrixView: React.FC = () => {
                         matrixView={true}
                       />
                     ))}
-                    {blockIndex === 3 &&
-                      looseTasks &&
-                      looseTasks.length > 0 &&
-                      looseTasks.map((looseTaskId) => (
-                        <TaskItem
-                          taskId={looseTaskId}
-                          key={looseTaskId}
-                          showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
-                          matrixView={true}
-                        />
-                      ))}
                   </IonCard>
                 </IonCol>
               );

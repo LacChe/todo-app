@@ -1,4 +1,4 @@
-import { IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/react';
+import { IonCheckbox, IonItem, IonItemOption, IonItemOptions, IonItemSliding, IonLabel } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { Context } from '../dataManagement/ContextProvider';
 
@@ -103,14 +103,25 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
       </IonItemOptions>
       {/* task content */}
       <IonItem onClick={toggleShowDetailsOverride} className={taskOverdueBool !== true ? 'done' : ''}>
+        {matrixView && (
+          <IonCheckbox
+            slot="start"
+            checked={taskOverdueBool !== true}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+            onIonChange={handleStatusToggle}
+          />
+        )}
         <IonLabel>
           {/* TODO these two divs swap places when swiped*/}
           <div>{task?.name}</div>
-          {(task?.showDetailsOverride || showDetails) && !matrixView && (
-            <div>
-              {task?.createdDate} {task?.typeData.name}
-            </div>
-          )}
+          {(task?.showDetailsOverride || showDetails) &&
+            !matrixView && ( // TODO remove matrixView check
+              <div>
+                {task?.createdDate} {task?.typeData.name}
+              </div>
+            )}
         </IonLabel>
       </IonItem>
     </IonItemSliding>
