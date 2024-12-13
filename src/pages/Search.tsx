@@ -4,11 +4,11 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
+  IonInput,
   IonItem,
   IonList,
   IonMenuButton,
   IonPage,
-  IonTitle,
   IonToolbar,
   useIonPopover,
 } from '@ionic/react';
@@ -18,22 +18,32 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './taskViews/TaskView.css';
 import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
-import { taskOverdue } from '../dataManagement/utils';
-import { ProjectType } from '../types';
+import { TaskType } from '../types';
 
 const Search: React.FC = () => {
-  const { projects, tasks, getTask } = useContext(Context);
+  const { tasks } = useContext(Context);
 
-  // TODO temp list
-  const [taskIds, setTaskIds] = useState<string[]>([]);
+  const [searchInput, setSearchInput] = useState<string>('');
+  const [filteredTasks, setfilteredTasks] = useState<TaskType[]>([]);
 
+  // TODO sort by date by default
+  // filter tasks by keywords everytime search term changes
   useEffect(() => {
-    let combinedTasks: string[] = [];
-    projects.forEach((project: ProjectType) => {
-      combinedTasks.push(...project.taskIds);
+    let combinedTasks: TaskType[] = [];
+
+    const searchArray = searchInput.split(' ').filter((term) => term !== ' ' && term !== '');
+    console.log(searchArray);
+    tasks.forEach((task: TaskType) => {
+      let match = false;
+      searchArray.forEach((term) => {
+        if (task.name.indexOf(term) !== -1 || task.notes.indexOf(term) !== -1) {
+          match = true;
+        }
+      });
+      if (match) combinedTasks.push(task);
     });
-    setTaskIds(combinedTasks);
-  }, [projects]);
+    setfilteredTasks(combinedTasks);
+  }, [tasks, searchInput]);
 
   /**
    * Popover for options specific to the list view
@@ -74,8 +84,8 @@ const Search: React.FC = () => {
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />
           </IonButtons>
-          {/* title */}
-          <IonTitle>Search</IonTitle>
+          {/* search bar */}
+          <IonInput placeholder="Search" onIonInput={(e) => setSearchInput(e.target.value as string)} />
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
             <IonButton onClick={(e: any) => presentListPopover({ event: e })}>
@@ -87,8 +97,8 @@ const Search: React.FC = () => {
       <IonContent className="ion-padding">
         {/* list task items */}
         <IonList>
-          {taskIds?.length === 0 && <div>No tasks</div>}
-          {taskIds?.map((taskId, index) => {
+          {filteredTasks?.length === 0 && <div>No tasks</div>}
+          {filteredTasks?.map((task, index) => {
             /*
             if (
               retrievedProject?.viewSettings.listSettings.settings.showDone ||
@@ -99,7 +109,7 @@ const Search: React.FC = () => {
             return (
               <IonItem key={index}>
                 <TaskItem
-                  taskId={taskId}
+                  taskId={task.id}
                   key={index}
                   // showDetails={retrievedProject?.viewSettings.listSettings.settings.showDetails}
                 />
