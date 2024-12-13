@@ -133,9 +133,9 @@ const MatrixView: React.FC = () => {
       <IonContent className="matrix-view-content">
         <IonGrid className="matrix-grid">
           <IonRow>
-            {retrievedProject?.viewSettings.matrixSettings.blocks.map((block, index) => {
+            {retrievedProject?.viewSettings.matrixSettings.blocks.map((block, blockIndex) => {
               return (
-                <IonCol size="1" key={index}>
+                <IonCol size="1" key={blockIndex}>
                   <IonCard>
                     <IonCardHeader>
                       <IonCardSubtitle style={{ fontSize: '0.65rem', color: block?.color }}>
@@ -145,17 +145,17 @@ const MatrixView: React.FC = () => {
                     {block.taskIds.map((taskId) => (
                       <TaskItem
                         taskId={taskId}
-                        key={index}
+                        key={taskId}
                         showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
                       />
                     ))}
-                    {index === 3 &&
+                    {blockIndex === 3 &&
                       looseTasks &&
                       looseTasks.length > 0 &&
                       looseTasks.map((looseTaskId) => (
                         <TaskItem
                           taskId={looseTaskId}
-                          key={index}
+                          key={looseTaskId}
                           showDetails={retrievedProject?.viewSettings.matrixSettings.settings.showDetails}
                         />
                       ))}
