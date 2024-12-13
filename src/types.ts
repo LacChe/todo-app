@@ -25,6 +25,10 @@ export type ViewSettingsListType = {
   settings: ViewSettingsSettingsType;
 };
 
+export type ViewSettingsCalendarType = {
+  settings: ViewSettingsSettingsType;
+};
+
 export type ViewSettingsMatrixType = {
   blocks: [BlockType, BlockType, BlockType, BlockType];
   settings: ViewSettingsSettingsType;
@@ -36,14 +40,11 @@ export type BlockType = {
   color: string;
 };
 
-export type ViewSettingsCalendarType = {
-  settings: ViewSettingsSettingsType;
-};
-
 export type ViewSettingsSettingsType = {
   showDetails: boolean;
   showDone: boolean;
   sort?: string; // TODO change to sort types
+  desc?: boolean;
   group?: string; // TODO change to group types
 };
 

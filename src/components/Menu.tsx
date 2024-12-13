@@ -18,7 +18,7 @@ import {
   ItemReorderEventDetail,
   useIonRouter,
 } from '@ionic/react';
-import { add, settings } from 'ionicons/icons';
+import { add, search, settings } from 'ionicons/icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router';
 
@@ -34,6 +34,7 @@ import { Context } from '../dataManagement/ContextProvider';
 import { ProjectType, TaskType } from '../types';
 import EditTaskModal from './modals/EditTaskModal';
 import { taskOverdue } from '../dataManagement/utils';
+import Search from '../pages/Search';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
@@ -119,6 +120,11 @@ const Menu: React.FC = () => {
                     <IonIcon icon={settings}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
+                <IonMenuToggle autoHide={false}>
+                  <IonButton routerLink="/app/search" routerDirection="none">
+                    <IonIcon icon={search}></IonIcon>
+                  </IonButton>
+                </IonMenuToggle>
               </IonRow>
             </IonToolbar>
           </IonHeader>
@@ -162,11 +168,12 @@ const Menu: React.FC = () => {
         </IonMenu>
         <IonRouterOutlet id="main">
           {/* routes for direct connections */}
-          <Route exact path={`/app/project/:projectId/list`} component={Project} />
-          <Route exact path={`/app/project/:projectId/matrix`} component={Project} />
-          <Route exact path={`/app/project/:projectId/calendar`} component={Project} />
+          <Route exact path="/app/project/:projectId/list" component={Project} />
+          <Route exact path="/app/project/:projectId/matrix" component={Project} />
+          <Route exact path="/app/project/:projectId/calendar" component={Project} />
           <Route exact path="/app/project/new" component={NewProject} />
           <Route exact path="/app/settings" component={Settings} />
+          <Route exact path="/app/search" component={Search} />
 
           {/* routes for variable connections */}
           <Route path={`/app/project/:projectId/${currentTab ? currentTab : 'list'}`} component={Project} />

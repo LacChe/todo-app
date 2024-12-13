@@ -28,7 +28,6 @@ import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
 import { taskOverdue } from '../../dataManagement/utils';
-import { getTasks } from '../../dataManagement/dataRetrieval';
 
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
@@ -120,6 +119,8 @@ const MatrixView: React.FC = () => {
   }, [loading, projectId, tasks]);
 
   // add drag gestures to all task items
+
+  // TODO check why gestures arent working on first load of webpage
   useEffect(() => {
     // find blocks sizes on every resize
     let blockBoundingBoxes: [
