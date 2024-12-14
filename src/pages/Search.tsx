@@ -21,11 +21,11 @@ import './taskViews/TaskView.css';
 import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
 import { ProjectListType, TaskType, ViewSettingsSettingsType } from '../types';
-import { groupTasks, sortTaskGroups, sortTasks } from '../dataManagement/utils';
+import { groupTasks, sortTaskGroups, sortTasks, taskOverdue } from '../dataManagement/utils';
 import SortOptionsModal from '../components/modals/SortOptionsModal';
 
 const Search: React.FC = () => {
-  const { tasks, projects, handleSetCurrentProjectId, currentProjectId, projectList, handleSetProjectList } =
+  const { tasks, projects, handleSetCurrentProjectId, currentProjectId, projectList, handleSetProjectList, getTask } =
     useContext(Context);
 
   const [searchInput, setSearchInput] = useState<string>('');
@@ -145,11 +145,15 @@ const Search: React.FC = () => {
                 <IonCard key={groupIndex}>
                   {key !== 'default' && <div>{key}</div>}
                   {filteredTasks[key].map((task, taskIndex) => {
-                    return (
-                      <IonItem key={taskIndex}>
-                        <TaskItem taskId={task.id} key={taskIndex} showDetails={searchSettings.showDetails} />
-                      </IonItem>
-                    );
+                    if (
+                      searchSettings.showDone ||
+                      (!searchSettings.showDone && taskOverdue(getTask(task.id), new Date()))
+                    )
+                      return (
+                        <IonItem key={taskIndex}>
+                          <TaskItem taskId={task.id} key={taskIndex} showDetails={searchSettings.showDetails} />
+                        </IonItem>
+                      );
                   })}
                 </IonCard>
               );
