@@ -23,7 +23,7 @@ import './Project.css';
 
 const Project: React.FC = (): JSX.Element => {
   let { projectId } = useParams() as any;
-  const { handleSetCurrentTab, handleSetCurrentProjectId } = useContext(Context);
+  const { handleSetCurrentTab, handleSetCurrentProjectId, currentProjectId } = useContext(Context);
 
   useEffect(() => {
     handleSetCurrentProjectId(projectId);
@@ -31,7 +31,11 @@ const Project: React.FC = (): JSX.Element => {
 
   return (
     <>
-      <IonFab vertical="bottom" horizontal="end">
+      <IonFab
+        className={['settings', 'search'].includes(currentProjectId) ? 'hidden' : ''}
+        vertical="bottom"
+        horizontal="end"
+      >
         <IonFabButton onClick={() => document.getElementById('open-add-task-modal')?.click()}>
           <IonIcon icon={add}></IonIcon>
         </IonFabButton>

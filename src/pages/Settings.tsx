@@ -7,7 +7,7 @@ const Settings: React.FC = () => {
 
   // clear current project id
   useEffect(() => {
-    handleSetCurrentProjectId();
+    handleSetCurrentProjectId('settings');
   });
 
   return (
