@@ -1,6 +1,7 @@
 import {
   IonButton,
   IonButtons,
+  IonCard,
   IonContent,
   IonHeader,
   IonIcon,
@@ -18,21 +19,25 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './taskViews/TaskView.css';
 import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
-import { TaskType } from '../types';
+import { GroupParamsType, SortParamsType, TaskType } from '../types';
+import { groupTasks, sortTaskGroups, sortTasks } from '../dataManagement/utils';
 
 const Search: React.FC = () => {
-  const { tasks } = useContext(Context);
+  const { tasks, projects } = useContext(Context);
 
   const [searchInput, setSearchInput] = useState<string>('');
-  const [filteredTasks, setfilteredTasks] = useState<TaskType[]>([]);
+  const [filteredTasks, setfilteredTasks] = useState<{ [key: string]: TaskType[] }>({});
+  const [sortParam, setSortParam] = useState<SortParamsType>('name');
+  const [groupParam, setGroupParam] = useState<GroupParamsType>('projectName');
 
-  // TODO sort by date by default
+  const [showDone, setShowDone] = useState<boolean>(true);
+  const [showDetails, setShowDetails] = useState<boolean>(true);
+
   // filter tasks by keywords everytime search term changes
   useEffect(() => {
-    let combinedTasks: TaskType[] = [];
+    let filteredTasks: TaskType[] = [];
 
     const searchArray = searchInput.split(' ').filter((term) => term !== ' ' && term !== '');
-    console.log(searchArray);
     tasks.forEach((task: TaskType) => {
       let match = false;
       searchArray.forEach((term) => {
@@ -40,9 +45,14 @@ const Search: React.FC = () => {
           match = true;
         }
       });
-      if (match) combinedTasks.push(task);
+      if (match) filteredTasks.push(task);
     });
-    setfilteredTasks(combinedTasks);
+
+    if (!groupParam || (groupParam as string) === '') {
+      setfilteredTasks({ default: sortTasks(filteredTasks, sortParam) });
+    } else {
+      setfilteredTasks(sortTaskGroups(groupTasks(filteredTasks, groupParam, projects), sortParam));
+    }
   }, [tasks, searchInput]);
 
   /**
@@ -56,18 +66,19 @@ const Search: React.FC = () => {
           <IonButton
             onClick={() => {
               // TODO update settings
+              setShowDone(!showDone);
               dismissListPopover();
             }}
           >
-            Done
+            {showDone ? 'Hide' : 'Show'} Done
           </IonButton>
           <IonButton
             onClick={() => {
-              // TODO update settings
+              setShowDetails(!showDetails);
               dismissListPopover();
             }}
           >
-            Details
+            {showDetails ? 'Hide' : 'Show'} Details
           </IonButton>
           <IonButton>Sort</IonButton>
         </IonButtons>
@@ -97,23 +108,19 @@ const Search: React.FC = () => {
       <IonContent className="ion-padding">
         {/* list task items */}
         <IonList>
-          {filteredTasks?.length === 0 && <div>No tasks</div>}
-          {filteredTasks?.map((task, index) => {
-            /*
-            if (
-              retrievedProject?.viewSettings.listSettings.settings.showDone ||
-              (!retrievedProject?.viewSettings.listSettings.settings.showDone &&
-                taskOverdue(getTask(taskId), new Date()))
-            )
-             */
+          {Object.keys(filteredTasks)?.length === 0 && <div>No tasks</div>}
+          {Object.keys(filteredTasks).map((key, groupIndex) => {
             return (
-              <IonItem key={index}>
-                <TaskItem
-                  taskId={task.id}
-                  key={index}
-                  // showDetails={retrievedProject?.viewSettings.listSettings.settings.showDetails}
-                />
-              </IonItem>
+              <IonCard key={groupIndex}>
+                {key !== 'default' && <div>{key}</div>}
+                {filteredTasks[key].map((task, taskIndex) => {
+                  return (
+                    <IonItem key={taskIndex}>
+                      <TaskItem taskId={task.id} key={taskIndex} showDetails={showDetails} />
+                    </IonItem>
+                  );
+                })}
+              </IonCard>
             );
           })}
         </IonList>

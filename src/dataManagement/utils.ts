@@ -1,4 +1,4 @@
-import { TaskType } from '../types';
+import { GroupParamsType, ProjectType, SortParamsType, TaskType } from '../types';
 
 function daysInMonth(month: number, year: number) {
   const daysInMonths = [
@@ -198,4 +198,91 @@ export function taskOverdue(task: TaskType, checkDate: Date): boolean {
       // check if last date is complete
       return !task.typeData.completedOnDates.includes(lastDate);
   }
+}
+
+/**
+ * Sorts a list of tasks based on a given sort parameter.
+ *
+ * @param {TaskType[]} tasks - The list of tasks to sort.
+ * @param {SortParamsType} sortParam - The sort parameter. It must be a valid key of the TaskType interface.
+ * @returns {TaskType[]} The sorted list of tasks.
+ */
+export function sortTasks(tasks: TaskType[], sortParam: SortParamsType): TaskType[] {
+  const sortParamKey = sortParam as keyof TaskType;
+  let sortedTasks = tasks.sort((a: TaskType, b: TaskType) => {
+    if (a[sortParamKey] < b[sortParamKey]) return -1;
+    if (a[sortParamKey] > b[sortParamKey]) return 1;
+    return 0;
+  });
+  return sortedTasks;
+}
+
+/**
+ * Sort tasks within each group of a grouped task object.
+ *
+ * @param {Object} groupedTasks - The grouped task object.
+ * @param {SortParamsType} sortParam - The sort parameter.
+ * @returns {[key: string]: TaskType[]} The sorted grouped task object.
+ */
+export function sortTaskGroups(
+  groupedTasks: { [key: string]: TaskType[] },
+  sortParam: SortParamsType,
+): { [key: string]: TaskType[] } {
+  const sortParamKey = sortParam as keyof TaskType;
+  const keys = Object.keys(groupedTasks);
+  keys.forEach((key) => {
+    groupedTasks[key] = groupedTasks[key].sort((a: TaskType, b: TaskType) => {
+      if (a[sortParamKey] < b[sortParamKey]) return -1;
+      if (a[sortParamKey] > b[sortParamKey]) return 1;
+      return 0;
+    });
+  });
+  return groupedTasks;
+}
+
+/**
+ * Group tasks by a given parameter.
+ *
+ * @param {TaskType[]} tasks - The array of tasks to group.
+ * @param {GroupParamsType} groupParam - The parameter to group tasks by.
+ * @param {ProjectType[]} [projects] - The array of projects to check for task
+ *   associations with.
+ *
+ * @returns {{ [key: string]: TaskType[] }} - An object where the keys are the
+ *   group values and the values are arrays of tasks in that group.
+ */
+export function groupTasks(
+  tasks: TaskType[],
+  groupParam: GroupParamsType,
+  projects?: ProjectType[],
+): { [key: string]: TaskType[] } {
+  const groupedTasks = tasks.reduce((acc: { [key: string]: TaskType[] }, task) => {
+    let groupValue;
+    switch (groupParam) {
+      case 'createdDate':
+        groupValue = task.createdDate;
+        break;
+      case 'typeData':
+        groupValue = task.typeData.name;
+        break;
+      case 'projectName':
+        if (!projects) groupValue = task.createdDate;
+        else {
+          groupValue = task.createdDate;
+          projects.forEach((project) => {
+            if (project.taskIds.includes(task.id)) groupValue = project.name;
+          });
+        }
+        break;
+      default:
+        groupValue = task.createdDate;
+        break;
+    }
+    if (!acc[groupValue]) {
+      acc[groupValue] = [];
+    }
+    acc[groupValue].push(task);
+    return acc;
+  }, {});
+  return groupedTasks;
 }

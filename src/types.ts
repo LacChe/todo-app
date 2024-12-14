@@ -4,6 +4,9 @@ export type PreferenceKeyType = 'localProjectList' | 'localProjects' | 'localTas
 export type TaskTypeDataTypeNameType = 'single' | 'everyNumDays' | 'everyDaysOfWeek' | 'everyDaysOfMonth' | 'onDates';
 export type TaskTypeDataTypeValueType = undefined | number | number[] | string[];
 
+export type SortParamsType = 'name' | 'notes' | 'createdDate';
+export type GroupParamsType = '' | 'createdDate' | 'projectName' | 'typeData';
+
 export type ProjectListType = {
   id: string;
   projectIds: string[];
@@ -43,9 +46,10 @@ export type BlockType = {
 export type ViewSettingsSettingsType = {
   showDetails: boolean;
   showDone: boolean;
-  sort?: string; // TODO change to sort types
-  desc?: boolean;
-  group?: string; // TODO change to group types
+  sort?: SortParamsType;
+  sortDesc?: boolean;
+  group?: GroupParamsType;
+  groupDesc?: boolean;
 };
 
 export type TaskType = {
