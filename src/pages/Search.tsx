@@ -25,10 +25,14 @@ import { groupTasks, sortTaskGroups, sortTasks } from '../dataManagement/utils';
 const Search: React.FC = () => {
   const { tasks, projects } = useContext(Context);
 
+  // TODO move settings to storage
+
   const [searchInput, setSearchInput] = useState<string>('');
   const [filteredTasks, setfilteredTasks] = useState<{ [key: string]: TaskType[] }>({});
   const [sortParam, setSortParam] = useState<SortParamsType>('name');
+  const [sortDesc, setSortDesc] = useState<boolean>();
   const [groupParam, setGroupParam] = useState<GroupParamsType>('projectName');
+  const [groupDesc, setGroupDesc] = useState<boolean>();
 
   const [showDone, setShowDone] = useState<boolean>(true);
   const [showDetails, setShowDetails] = useState<boolean>(true);
@@ -49,9 +53,9 @@ const Search: React.FC = () => {
     });
 
     if (!groupParam || (groupParam as string) === '') {
-      setfilteredTasks({ default: sortTasks(filteredTasks, sortParam) });
+      setfilteredTasks({ default: sortTasks(filteredTasks, sortParam, sortDesc) });
     } else {
-      setfilteredTasks(sortTaskGroups(groupTasks(filteredTasks, groupParam, projects), sortParam));
+      setfilteredTasks(sortTaskGroups(groupTasks(filteredTasks, groupParam, projects), sortParam, sortDesc));
     }
   }, [tasks, searchInput]);
 
@@ -65,7 +69,6 @@ const Search: React.FC = () => {
         <IonButtons>
           <IonButton
             onClick={() => {
-              // TODO update settings
               setShowDone(!showDone);
               dismissListPopover();
             }}
@@ -109,20 +112,26 @@ const Search: React.FC = () => {
         {/* list task items */}
         <IonList>
           {Object.keys(filteredTasks)?.length === 0 && <div>No tasks</div>}
-          {Object.keys(filteredTasks).map((key, groupIndex) => {
-            return (
-              <IonCard key={groupIndex}>
-                {key !== 'default' && <div>{key}</div>}
-                {filteredTasks[key].map((task, taskIndex) => {
-                  return (
-                    <IonItem key={taskIndex}>
-                      <TaskItem taskId={task.id} key={taskIndex} showDetails={showDetails} />
-                    </IonItem>
-                  );
-                })}
-              </IonCard>
-            );
-          })}
+          {Object.keys(filteredTasks)
+            .sort((a, b) => {
+              if (a < b) return -1 * (groupDesc ? -1 : 1);
+              if (a > b) return 1 * (groupDesc ? -1 : 1);
+              return 0;
+            })
+            .map((key, groupIndex) => {
+              return (
+                <IonCard key={groupIndex}>
+                  {key !== 'default' && <div>{key}</div>}
+                  {filteredTasks[key].map((task, taskIndex) => {
+                    return (
+                      <IonItem key={taskIndex}>
+                        <TaskItem taskId={task.id} key={taskIndex} showDetails={showDetails} />
+                      </IonItem>
+                    );
+                  })}
+                </IonCard>
+              );
+            })}
         </IonList>
       </IonContent>
     </IonPage>

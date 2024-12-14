@@ -200,40 +200,27 @@ export function taskOverdue(task: TaskType, checkDate: Date): boolean {
   }
 }
 
-/**
- * Sorts a list of tasks based on a given sort parameter.
- *
- * @param {TaskType[]} tasks - The list of tasks to sort.
- * @param {SortParamsType} sortParam - The sort parameter. It must be a valid key of the TaskType interface.
- * @returns {TaskType[]} The sorted list of tasks.
- */
-export function sortTasks(tasks: TaskType[], sortParam: SortParamsType): TaskType[] {
+export function sortTasks(tasks: TaskType[], sortParam: SortParamsType, sortDesc?: boolean): TaskType[] {
   const sortParamKey = sortParam as keyof TaskType;
   let sortedTasks = tasks.sort((a: TaskType, b: TaskType) => {
-    if (a[sortParamKey] < b[sortParamKey]) return -1;
-    if (a[sortParamKey] > b[sortParamKey]) return 1;
+    if (a[sortParamKey] < b[sortParamKey]) return -1 * (sortDesc ? -1 : 1);
+    if (a[sortParamKey] > b[sortParamKey]) return 1 * (sortDesc ? -1 : 1);
     return 0;
   });
   return sortedTasks;
 }
 
-/**
- * Sort tasks within each group of a grouped task object.
- *
- * @param {Object} groupedTasks - The grouped task object.
- * @param {SortParamsType} sortParam - The sort parameter.
- * @returns {[key: string]: TaskType[]} The sorted grouped task object.
- */
 export function sortTaskGroups(
   groupedTasks: { [key: string]: TaskType[] },
   sortParam: SortParamsType,
+  sortDesc?: boolean,
 ): { [key: string]: TaskType[] } {
   const sortParamKey = sortParam as keyof TaskType;
   const keys = Object.keys(groupedTasks);
   keys.forEach((key) => {
     groupedTasks[key] = groupedTasks[key].sort((a: TaskType, b: TaskType) => {
-      if (a[sortParamKey] < b[sortParamKey]) return -1;
-      if (a[sortParamKey] > b[sortParamKey]) return 1;
+      if (a[sortParamKey] < b[sortParamKey]) return -1 * (sortDesc ? -1 : 1);
+      if (a[sortParamKey] > b[sortParamKey]) return 1 * (sortDesc ? -1 : 1);
       return 0;
     });
   });
@@ -275,6 +262,7 @@ export function groupTasks(
         }
         break;
       default:
+        console.error('Error: invalid group parameter');
         groupValue = task.createdDate;
         break;
     }
