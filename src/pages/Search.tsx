@@ -9,6 +9,7 @@ import {
   IonItem,
   IonList,
   IonMenuButton,
+  IonModal,
   IonPage,
   IonToolbar,
   useIonPopover,
@@ -21,6 +22,7 @@ import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
 import { GroupParamsType, SortParamsType, TaskType } from '../types';
 import { groupTasks, sortTaskGroups, sortTasks } from '../dataManagement/utils';
+import SortOptionsModal from '../components/modals/SortOptionsModal';
 
 const Search: React.FC = () => {
   const { tasks, projects, handleSetCurrentProjectId, currentProjectId } = useContext(Context);
@@ -88,7 +90,14 @@ const Search: React.FC = () => {
           >
             {showDetails ? 'Hide' : 'Show'} Details
           </IonButton>
-          <IonButton>Sort</IonButton>
+          <IonButton
+            onClick={() => {
+              document.getElementById('open-search-sort-modal')?.click();
+              dismissListPopover();
+            }}
+          >
+            Sort
+          </IonButton>
         </IonButtons>
       </IonContent>
     );
@@ -139,6 +148,9 @@ const Search: React.FC = () => {
               );
             })}
         </IonList>
+        {/* sorting modal*/}
+        <div id="open-search-sort-modal" />
+        <SortOptionsModal triggerId="open-search-sort-modal" />
       </IonContent>
     </IonPage>
   );
