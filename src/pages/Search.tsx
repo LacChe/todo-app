@@ -111,6 +111,13 @@ const Search: React.FC = () => {
   }
   const [presentListPopover, dismissListPopover] = useIonPopover(listOptionsPopover);
 
+  function handleSetSearchSettings(newSettings: ViewSettingsSettingsType) {
+    let newProjectList = { ...projectList } as ProjectListType;
+    newProjectList.searchSettings = newSettings;
+    handleSetProjectList(newProjectList);
+    setSearchSettings(newSettings);
+  }
+
   return (
     <IonPage>
       <IonHeader>
@@ -134,6 +141,7 @@ const Search: React.FC = () => {
         {/* list task items */}
         <IonList>
           {Object.keys(filteredTasks)?.length === 0 && <div>No tasks</div>}
+          {filteredTasks.default?.length === 0 && <div>No tasks</div>}
           {Object.keys(filteredTasks)
             .sort((a, b) => {
               if (a < b) return -1 * (searchSettings.groupDesc ? -1 : 1);
@@ -161,7 +169,11 @@ const Search: React.FC = () => {
         </IonList>
         {/* sorting modal*/}
         <div id="open-search-sort-modal" />
-        <SortOptionsModal triggerId="open-search-sort-modal" />
+        <SortOptionsModal
+          triggerId="open-search-sort-modal"
+          sortSettings={searchSettings}
+          handleSetSortSettings={handleSetSearchSettings}
+        />
       </IonContent>
     </IonPage>
   );
