@@ -60,7 +60,7 @@ const Menu: React.FC = () => {
       return;
     }
     // redirect to first project list view if no preferences
-    if (!currentTab || !currentProjectId) {
+    if (!currentTab || !currentProjectId || currentProjectId === 'search' || currentProjectId === 'settings') {
       router.push(`/app/project/${projects[0].id}/list`, 'root', 'replace');
       return;
     }

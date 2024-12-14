@@ -8,7 +8,7 @@ import {
   IonTabButton,
   IonTabs,
 } from '@ionic/react';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { triangle, ellipse, square, add } from 'ionicons/icons';
 import { Route } from 'react-router';
 
@@ -23,7 +23,11 @@ import './Project.css';
 
 const Project: React.FC = (): JSX.Element => {
   let { projectId } = useParams() as any;
-  const { handleSetCurrentTab } = useContext(Context);
+  const { handleSetCurrentTab, handleSetCurrentProjectId } = useContext(Context);
+
+  useEffect(() => {
+    handleSetCurrentProjectId(projectId);
+  });
 
   return (
     <>

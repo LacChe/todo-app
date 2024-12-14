@@ -214,7 +214,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
 
   async function setTask(newTask: TaskType) {
     // add task id to projects task list
-    if (currentProjectId) {
+    if (currentProjectId && currentProjectId !== 'search' && currentProjectId !== 'settings') {
       let newProject = { ...getProject(currentProjectId) } as ProjectType;
       if (!newProject.taskIds?.includes(newTask.id)) {
         newProject.taskIds?.push(newTask.id);
