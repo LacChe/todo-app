@@ -23,7 +23,7 @@ import { GroupParamsType, SortParamsType, TaskType } from '../types';
 import { groupTasks, sortTaskGroups, sortTasks } from '../dataManagement/utils';
 
 const Search: React.FC = () => {
-  const { tasks, projects } = useContext(Context);
+  const { tasks, projects, handleSetCurrentProjectId, currentProjectId } = useContext(Context);
 
   // TODO move settings to storage
 
@@ -58,6 +58,11 @@ const Search: React.FC = () => {
       setfilteredTasks(sortTaskGroups(groupTasks(filteredTasks, groupParam, projects), sortParam, sortDesc));
     }
   }, [tasks, searchInput]);
+
+  // clear current project id
+  useEffect(() => {
+    handleSetCurrentProjectId();
+  });
 
   /**
    * Popover for options specific to the list view
@@ -109,6 +114,7 @@ const Search: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
+        <div>{currentProjectId}</div>
         {/* list task items */}
         <IonList>
           {Object.keys(filteredTasks)?.length === 0 && <div>No tasks</div>}

@@ -119,7 +119,6 @@ const MatrixView: React.FC = () => {
   }, [loading, projectId, tasks]);
 
   // add drag gestures to all task items
-
   // TODO check why gestures arent working on first load of webpage
   useEffect(() => {
     // find blocks sizes on every resize

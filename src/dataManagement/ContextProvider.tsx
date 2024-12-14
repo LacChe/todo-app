@@ -206,26 +206,14 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     return 'deleted';
   }
 
-  /**
-   * Sets a task to the state and associates it with the current project.
-   *
-   * If the current project is not set, logs an error and returns.
-   * The task is added to the current project's task list if it doesn't already exist,
-   * and the project is updated in the state. The task is also added to the list of tasks,
-   * replacing any existing task with the same id.
-   *
-   * @param {TaskType} newTask - The new task to set.
-   */
   async function setTask(newTask: TaskType) {
-    if (!currentProjectId) {
-      console.error('Error: no current project');
-      return;
-    }
-    // add project id to project list if not exists
-    let newProject = { ...getProject(currentProjectId) } as ProjectType;
-    if (!newProject.taskIds?.includes(newTask.id)) {
-      newProject.taskIds?.push(newTask.id);
-      setProject(newProject);
+    // add task id to projects task list
+    if (currentProjectId) {
+      let newProject = { ...getProject(currentProjectId) } as ProjectType;
+      if (!newProject.taskIds?.includes(newTask.id)) {
+        newProject.taskIds?.push(newTask.id);
+        setProject(newProject);
+      }
     }
 
     // add task to tasks

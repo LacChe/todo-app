@@ -41,8 +41,8 @@ const AddProjectModal: React.FC = () => {
           settings: {
             showDetails: false,
             showDone: false,
-            sort: '', // TODO set to default
-            group: '', // TODO set to default
+            sort: 'name',
+            group: '',
           },
         },
         matrixSettings: {
@@ -59,7 +59,6 @@ const AddProjectModal: React.FC = () => {
           },
         },
         calendarSettings: {
-          dateContainer: {},
           settings: {
             showDetails: false,
             showDone: false,
