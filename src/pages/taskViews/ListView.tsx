@@ -9,23 +9,19 @@ import {
   IonList,
   IonMenuButton,
   IonPage,
-  IonReorder,
-  IonReorderGroup,
   IonTitle,
   IonToolbar,
-  ItemReorderEventDetail,
   useIonPopover,
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { ProjectType, TaskType, ViewSettingsSettingsType } from '../../types';
+import { ProjectType, TaskType } from '../../types';
 import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
 import { groupTasks, sortTaskGroups, sortTasks, taskOverdue } from '../../dataManagement/utils';
-import SortOptionsModal from '../../components/modals/SortOptionsModal';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };

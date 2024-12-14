@@ -19,7 +19,7 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './taskViews/TaskView.css';
 import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
-import { ProjectListType, TaskType, ViewSettingsSettingsType } from '../types';
+import { ProjectListType, TaskType } from '../types';
 import { groupTasks, sortTaskGroups, sortTasks, taskOverdue } from '../dataManagement/utils';
 
 const Search: React.FC = () => {
@@ -28,6 +28,7 @@ const Search: React.FC = () => {
 
   const [searchInput, setSearchInput] = useState<string>('');
   const [filteredTasks, setfilteredTasks] = useState<{ [key: string]: TaskType[] }>({});
+
   // filter tasks by keywords everytime search term changes
   useEffect(() => {
     if (!projectList?.searchSettings?.sort) return;
@@ -60,9 +61,14 @@ const Search: React.FC = () => {
     }
   }, [tasks, searchInput, projectList]);
 
-  // clear current project id
+  useEffect(() => {});
+
   useEffect(() => {
+    // clear current project id
     handleSetCurrentProjectId('search');
+    // set focus to input when displayed
+    const searchBar = document.getElementById('search-bar');
+    searchBar?.querySelector('ion-input')?.setFocus();
   });
 
   /**
@@ -110,7 +116,7 @@ const Search: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar id="search-bar">
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />
