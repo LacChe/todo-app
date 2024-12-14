@@ -9,7 +9,6 @@ import {
   IonItem,
   IonList,
   IonMenuButton,
-  IonModal,
   IonPage,
   IonToolbar,
   useIonPopover,
@@ -137,7 +136,6 @@ const Search: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <div>{currentProjectId}</div>
         {/* list task items */}
         <IonList>
           {Object.keys(filteredTasks)?.length === 0 && <div>No tasks</div>}

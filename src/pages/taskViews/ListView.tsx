@@ -1,6 +1,7 @@
 import {
   IonButton,
   IonButtons,
+  IonCard,
   IonContent,
   IonHeader,
   IonIcon,
@@ -17,19 +18,21 @@ import {
 } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { ProjectType } from '../../types';
+import { ProjectType, TaskType, ViewSettingsSettingsType } from '../../types';
 import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
-import { taskOverdue } from '../../dataManagement/utils';
+import { groupTasks, sortTaskGroups, sortTasks, taskOverdue } from '../../dataManagement/utils';
+import SortOptionsModal from '../../components/modals/SortOptionsModal';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
   const { loading, getProject, setProject, projects, tasks, getTask } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
+  const [sortedTasks, setSortedTasks] = useState<{ [key: string]: TaskType[] }>({});
 
   /**
    * Popover for options specific to the list view
@@ -71,12 +74,33 @@ const ListView: React.FC = () => {
           >
             {!retrievedProject?.viewSettings.listSettings.settings.showDetails ? 'Show ' : 'Hide '} Details
           </IonButton>
-          <IonButton>Sort</IonButton>
+          <IonButton
+            onClick={() => {
+              document.getElementById('open-list-sort-modal')?.click();
+              dismissListPopover();
+            }}
+          >
+            Sort
+          </IonButton>
         </IonButtons>
       </IonContent>
     );
   }
   const [presentListPopover, dismissListPopover] = useIonPopover(listOptionsPopover);
+
+  // fsort tasks
+  useEffect(() => {
+    if (!retrievedProject?.viewSettings.listSettings.settings) return;
+    const settings = retrievedProject?.viewSettings.listSettings.settings;
+
+    const taskArray = retrievedProject.taskIds.map((taskId) => getTask(taskId));
+    if (!settings.sort) setSortedTasks({ default: taskArray });
+    else if (!settings.group || (settings.group as string) === '') {
+      setSortedTasks({ default: sortTasks(taskArray, settings.sort, settings.sortDesc) });
+    } else {
+      setSortedTasks(sortTaskGroups(groupTasks(taskArray, settings.group, projects), settings.sort, settings.sortDesc));
+    }
+  }, [tasks, retrievedProject?.viewSettings.listSettings.settings]);
 
   // retrieve project when data changes
   useEffect(() => {
@@ -86,23 +110,12 @@ const ListView: React.FC = () => {
     }
   }, [loading, projectId, projects, tasks]);
 
-  /**
-   * Handle the task reorder event from the ion-reorder group.
-   * This function takes the event, filters out the moved task id from the current task ids,
-   * and inserts the moved task id at the correct position in the task ids array.
-   * It then updates the context with the new task ids array.
-   * @param {CustomEvent<ItemReorderEventDetail>} e - The event emitted by the ion-reorder group.
-   */
-  function handleListReorder(e: CustomEvent<ItemReorderEventDetail>) {
-    // save data to context
-    const originalTaskIds = retrievedProject?.taskIds;
-    if (originalTaskIds === undefined) return;
-
-    let reorderedTaskIds = originalTaskIds?.filter((id: string, index: number) => index !== e.detail.from);
-    reorderedTaskIds.splice(e.detail.to, 0, originalTaskIds[e.detail.from]);
-    setProject({ ...retrievedProject, taskIds: reorderedTaskIds } as ProjectType);
-
-    e.detail.complete(retrievedProject?.taskIds);
+  function handleSetSearchSettings(newSettings: ViewSettingsSettingsType) {
+    if (!retrievedProject) return;
+    let newProject = { ...retrievedProject };
+    newProject.viewSettings.listSettings.settings = newSettings;
+    setProject(newProject);
+    setRetrievedProject(newProject);
   }
 
   return (
@@ -126,27 +139,45 @@ const ListView: React.FC = () => {
       <IonContent className="ion-padding">
         {/* list task items */}
         <IonList>
-          {retrievedProject?.taskIds?.length === 0 && <div>No tasks</div>}
-          <IonReorderGroup disabled={false} onIonItemReorder={handleListReorder}>
-            {retrievedProject?.taskIds?.map((taskId, index) => {
-              if (
-                retrievedProject?.viewSettings.listSettings.settings.showDone ||
-                (!retrievedProject?.viewSettings.listSettings.settings.showDone &&
-                  taskOverdue(getTask(taskId), new Date()))
-              )
-                return (
-                  <IonItem key={index}>
-                    <TaskItem
-                      taskId={taskId}
-                      key={index}
-                      showDetails={retrievedProject?.viewSettings.listSettings.settings.showDetails}
-                    />
-                    <IonReorder slot="end"></IonReorder>
-                  </IonItem>
-                );
+          {Object.keys(sortedTasks)?.length === 0 && <div>No tasks</div>}
+          {sortedTasks.default?.length === 0 && <div>No tasks</div>}
+          {Object.keys(sortedTasks)
+            .sort((a, b) => {
+              if (a < b) return -1 * (retrievedProject?.viewSettings.listSettings.settings.groupDesc ? -1 : 1);
+              if (a > b) return 1 * (retrievedProject?.viewSettings.listSettings.settings.groupDesc ? -1 : 1);
+              return 0;
+            })
+            .map((key, groupIndex) => {
+              return (
+                <IonCard key={groupIndex}>
+                  {key !== 'default' && <div>{key}</div>}
+                  {sortedTasks[key].map((task, taskIndex) => {
+                    if (
+                      retrievedProject?.viewSettings.listSettings.settings.showDone ||
+                      (!retrievedProject?.viewSettings.listSettings.settings.showDone &&
+                        taskOverdue(getTask(task.id), new Date()))
+                    )
+                      return (
+                        <IonItem key={taskIndex}>
+                          <TaskItem
+                            taskId={task.id}
+                            key={taskIndex}
+                            showDetails={retrievedProject?.viewSettings.listSettings.settings.showDetails}
+                          />
+                        </IonItem>
+                      );
+                  })}
+                </IonCard>
+              );
             })}
-          </IonReorderGroup>
         </IonList>
+        {/* sorting modal*/}
+        <div id="open-list-sort-modal" />
+        <SortOptionsModal
+          triggerId="open-list-sort-modal"
+          sortSettings={retrievedProject?.viewSettings.listSettings.settings as ViewSettingsSettingsType}
+          handleSetSortSettings={handleSetSearchSettings}
+        />
       </IonContent>
     </IonPage>
   );
