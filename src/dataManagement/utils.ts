@@ -201,6 +201,7 @@ export function taskOverdue(task: TaskType, checkDate: Date): boolean {
 }
 
 export function sortTasks(tasks: TaskType[], sortParam: SortParamsType, sortDesc?: boolean): TaskType[] {
+  if (!sortParam || sortParam === ('' as SortParamsType)) return tasks;
   const sortParamKey = sortParam as keyof TaskType;
   let sortedTasks = tasks.sort((a: TaskType, b: TaskType) => {
     if (a[sortParamKey] < b[sortParamKey]) return -1 * (sortDesc ? -1 : 1);
@@ -217,6 +218,7 @@ export function sortTaskGroups(
   sortParam: SortParamsType,
   sortDesc?: boolean,
 ): { [key: string]: TaskType[] } {
+  if (!sortParam || sortParam === ('' as SortParamsType)) return groupedTasks;
   const sortParamKey = sortParam as keyof TaskType;
   const keys = Object.keys(groupedTasks);
   keys.forEach((key) => {

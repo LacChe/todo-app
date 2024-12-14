@@ -4,7 +4,7 @@ export type PreferenceKeyType = 'localProjectList' | 'localProjects' | 'localTas
 export type TaskTypeDataTypeNameType = 'single' | 'everyNumDays' | 'everyDaysOfWeek' | 'everyDaysOfMonth' | 'onDates';
 export type TaskTypeDataTypeValueType = undefined | number | number[] | string[];
 
-export type SortParamsType = 'name' | 'notes' | 'createdDate';
+export type SortParamsType = '' | 'name' | 'notes' | 'createdDate';
 export type GroupParamsType = '' | 'createdDate' | 'projectName' | 'typeData';
 
 export type ProjectListType = {
