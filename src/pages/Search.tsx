@@ -20,27 +20,22 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './taskViews/TaskView.css';
 import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
-import { GroupParamsType, SortParamsType, TaskType } from '../types';
+import { ProjectListType, TaskType, ViewSettingsSettingsType } from '../types';
 import { groupTasks, sortTaskGroups, sortTasks } from '../dataManagement/utils';
 import SortOptionsModal from '../components/modals/SortOptionsModal';
 
 const Search: React.FC = () => {
-  const { tasks, projects, handleSetCurrentProjectId, currentProjectId } = useContext(Context);
-
-  // TODO move settings to storage
+  const { tasks, projects, handleSetCurrentProjectId, currentProjectId, projectList, handleSetProjectList } =
+    useContext(Context);
 
   const [searchInput, setSearchInput] = useState<string>('');
   const [filteredTasks, setfilteredTasks] = useState<{ [key: string]: TaskType[] }>({});
-  const [sortParam, setSortParam] = useState<SortParamsType>('name');
-  const [sortDesc, setSortDesc] = useState<boolean>();
-  const [groupParam, setGroupParam] = useState<GroupParamsType>('projectName');
-  const [groupDesc, setGroupDesc] = useState<boolean>();
-
-  const [showDone, setShowDone] = useState<boolean>(true);
-  const [showDetails, setShowDetails] = useState<boolean>(true);
+  const [searchSettings, setSearchSettings] = useState<ViewSettingsSettingsType>(projectList?.searchSettings);
 
   // filter tasks by keywords everytime search term changes
   useEffect(() => {
+    if (!searchSettings?.sort) return;
+
     let filteredTasks: TaskType[] = [];
 
     const searchArray = searchInput.split(' ').filter((term) => term !== ' ' && term !== '');
@@ -54,12 +49,18 @@ const Search: React.FC = () => {
       if (match) filteredTasks.push(task);
     });
 
-    if (!groupParam || (groupParam as string) === '') {
-      setfilteredTasks({ default: sortTasks(filteredTasks, sortParam, sortDesc) });
+    if (!searchSettings.group || (searchSettings.group as string) === '') {
+      setfilteredTasks({ default: sortTasks(filteredTasks, searchSettings.sort, searchSettings.sortDesc) });
     } else {
-      setfilteredTasks(sortTaskGroups(groupTasks(filteredTasks, groupParam, projects), sortParam, sortDesc));
+      setfilteredTasks(
+        sortTaskGroups(
+          groupTasks(filteredTasks, searchSettings.group, projects),
+          searchSettings.sort,
+          searchSettings.sortDesc,
+        ),
+      );
     }
-  }, [tasks, searchInput]);
+  }, [tasks, searchInput, searchSettings]);
 
   // clear current project id
   useEffect(() => {
@@ -76,19 +77,25 @@ const Search: React.FC = () => {
         <IonButtons>
           <IonButton
             onClick={() => {
-              setShowDone(!showDone);
+              let newProjectList = { ...projectList } as ProjectListType;
+              newProjectList.searchSettings.showDone = !newProjectList.searchSettings.showDone;
+              handleSetProjectList(newProjectList);
+              setSearchSettings(newProjectList.searchSettings);
               dismissListPopover();
             }}
           >
-            {showDone ? 'Hide' : 'Show'} Done
+            {searchSettings.showDone ? 'Hide' : 'Show'} Done
           </IonButton>
           <IonButton
             onClick={() => {
-              setShowDetails(!showDetails);
+              let newProjectList = { ...projectList } as ProjectListType;
+              newProjectList.searchSettings.showDetails = !newProjectList.searchSettings.showDetails;
+              handleSetProjectList(newProjectList);
+              setSearchSettings(newProjectList.searchSettings);
               dismissListPopover();
             }}
           >
-            {showDetails ? 'Hide' : 'Show'} Details
+            {searchSettings.showDetails ? 'Hide' : 'Show'} Details
           </IonButton>
           <IonButton
             onClick={() => {
@@ -129,8 +136,8 @@ const Search: React.FC = () => {
           {Object.keys(filteredTasks)?.length === 0 && <div>No tasks</div>}
           {Object.keys(filteredTasks)
             .sort((a, b) => {
-              if (a < b) return -1 * (groupDesc ? -1 : 1);
-              if (a > b) return 1 * (groupDesc ? -1 : 1);
+              if (a < b) return -1 * (searchSettings.groupDesc ? -1 : 1);
+              if (a > b) return 1 * (searchSettings.groupDesc ? -1 : 1);
               return 0;
             })
             .map((key, groupIndex) => {
@@ -140,7 +147,7 @@ const Search: React.FC = () => {
                   {filteredTasks[key].map((task, taskIndex) => {
                     return (
                       <IonItem key={taskIndex}>
-                        <TaskItem taskId={task.id} key={taskIndex} showDetails={showDetails} />
+                        <TaskItem taskId={task.id} key={taskIndex} showDetails={searchSettings.showDetails} />
                       </IonItem>
                     );
                   })}

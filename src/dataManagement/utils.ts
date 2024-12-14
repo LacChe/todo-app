@@ -205,6 +205,8 @@ export function sortTasks(tasks: TaskType[], sortParam: SortParamsType, sortDesc
   let sortedTasks = tasks.sort((a: TaskType, b: TaskType) => {
     if (a[sortParamKey] < b[sortParamKey]) return -1 * (sortDesc ? -1 : 1);
     if (a[sortParamKey] > b[sortParamKey]) return 1 * (sortDesc ? -1 : 1);
+    if (a.name < b.name) return -1 * (sortDesc ? -1 : 1);
+    if (a.name > b.name) return 1 * (sortDesc ? -1 : 1);
     return 0;
   });
   return sortedTasks;
@@ -221,6 +223,8 @@ export function sortTaskGroups(
     groupedTasks[key] = groupedTasks[key].sort((a: TaskType, b: TaskType) => {
       if (a[sortParamKey] < b[sortParamKey]) return -1 * (sortDesc ? -1 : 1);
       if (a[sortParamKey] > b[sortParamKey]) return 1 * (sortDesc ? -1 : 1);
+      if (a.name < b.name) return -1 * (sortDesc ? -1 : 1);
+      if (a.name > b.name) return 1 * (sortDesc ? -1 : 1);
       return 0;
     });
   });

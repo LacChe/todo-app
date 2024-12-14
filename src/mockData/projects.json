@@ -13,8 +13,10 @@
         "settings": {
           "showDetails": false,
           "showDone": false,
-          "sort": "",
-          "group": ""
+          "sort": "createdDate",
+          "group": "",
+          "sortDesc": false,
+          "groupDes": false
         }
       },
       "matrixSettings": {
@@ -65,7 +67,9 @@
           "showDetails": false,
           "showDone": false,
           "sort": "",
-          "group": ""
+          "group": "",
+          "sortDesc": false,
+          "groupDes": false
         }
       },
       "matrixSettings": {

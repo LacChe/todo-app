@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { getPreference, getProjectList, getProjects, getTasks, getUserId, setPreference } from './dataRetrieval';
-import { ProjectListType, ProjectType, TabType, TaskType } from '../types';
+import { GroupParamsType, ProjectListType, ProjectType, SortParamsType, TabType, TaskType } from '../types';
 
 // TODO set types
 type ContextType = {
@@ -154,7 +154,13 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     if (!projectList) {
       newProjectList = {
         id: 'list-' + uuidv4(),
-        projectIds: [],
+        projectIds: [] as string[],
+        searchSettings: {
+          showDetails: false,
+          showDone: true,
+          sort: 'name' as SortParamsType,
+          group: '' as GroupParamsType,
+        },
       };
     } else {
       newProjectList = { ...projectList };

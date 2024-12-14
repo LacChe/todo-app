@@ -10,6 +10,7 @@ export type GroupParamsType = '' | 'createdDate' | 'projectName' | 'typeData';
 export type ProjectListType = {
   id: string;
   projectIds: string[];
+  searchSettings: ViewSettingsSettingsType;
 };
 
 export type ProjectType = {
