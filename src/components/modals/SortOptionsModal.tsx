@@ -1,20 +1,45 @@
 import { IonButton, IonModal } from '@ionic/react';
-import React from 'react';
-import { GroupParamsType, SortParamsType, ViewSettingsSettingsType } from '../../types';
+import React, { useContext, useEffect, useState } from 'react';
+import { GroupParamsType, ProjectListType, SortParamsType, ViewSettingsSettingsType } from '../../types';
+import { Context } from '../../dataManagement/ContextProvider';
 
-type SortOptionsModalProps = {
-  triggerId: string;
-  sortSettings: ViewSettingsSettingsType;
-  handleSetSortSettings: (newSettings: ViewSettingsSettingsType) => void;
-};
-
-const SortOptionsModal: React.FC<SortOptionsModalProps> = ({ triggerId, handleSetSortSettings, sortSettings }) => {
-  if (!sortSettings) return;
+const SortOptionsModal: React.FC = () => {
+  const { currentProjectId, projectList, handleSetProjectList, getProject, setProject } = useContext(Context);
 
   const sorts = ['name', 'notes', 'createdDate'];
   const groups = ['createdDate', 'projectName', 'typeData'];
+  const [sortSettings, setSortSettings] = useState<ViewSettingsSettingsType | undefined>();
+
+  useEffect(() => {
+    if (!projectList) return;
+    if (currentProjectId === 'settings') return;
+    if (currentProjectId === 'search') setSortSettings(projectList.searchSettings);
+    else {
+      const retrievedProject = getProject(currentProjectId);
+      if (!retrievedProject) return;
+      setSortSettings(retrievedProject.viewSettings.listSettings.settings);
+    }
+  });
+
+  if (!sortSettings) return;
+
+  function handleSetSortSettings(newSettings: ViewSettingsSettingsType) {
+    if (currentProjectId === 'search') {
+      let newProjectList = { ...projectList } as ProjectListType;
+      newProjectList.searchSettings = newSettings;
+      handleSetProjectList(newProjectList);
+    } else {
+      const retrievedProject = getProject(currentProjectId);
+      if (!retrievedProject) return;
+      let newProject = { ...retrievedProject };
+      newProject.viewSettings.listSettings.settings = newSettings;
+      setProject(newProject);
+    }
+    setSortSettings(newSettings);
+  }
+
   return (
-    <IonModal trigger={triggerId} initialBreakpoint={1} breakpoints={[0, 1]}>
+    <IonModal trigger="open-sort-options-modal" initialBreakpoint={1} breakpoints={[0, 1]}>
       <div>
         <div>
           {sorts.map((sort) => (

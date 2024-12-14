@@ -21,19 +21,16 @@ import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
 import { ProjectListType, TaskType, ViewSettingsSettingsType } from '../types';
 import { groupTasks, sortTaskGroups, sortTasks, taskOverdue } from '../dataManagement/utils';
-import SortOptionsModal from '../components/modals/SortOptionsModal';
 
 const Search: React.FC = () => {
-  const { tasks, projects, handleSetCurrentProjectId, currentProjectId, projectList, handleSetProjectList, getTask } =
+  const { tasks, projects, handleSetCurrentProjectId, projectList, handleSetProjectList, getTask } =
     useContext(Context);
 
   const [searchInput, setSearchInput] = useState<string>('');
   const [filteredTasks, setfilteredTasks] = useState<{ [key: string]: TaskType[] }>({});
-  const [searchSettings, setSearchSettings] = useState<ViewSettingsSettingsType>(projectList?.searchSettings);
-
   // filter tasks by keywords everytime search term changes
   useEffect(() => {
-    if (!searchSettings?.sort) return;
+    if (!projectList?.searchSettings?.sort) return;
 
     let filteredTasks: TaskType[] = [];
 
@@ -48,18 +45,20 @@ const Search: React.FC = () => {
       if (match) filteredTasks.push(task);
     });
 
-    if (!searchSettings.group || (searchSettings.group as string) === '') {
-      setfilteredTasks({ default: sortTasks(filteredTasks, searchSettings.sort, searchSettings.sortDesc) });
+    if (!projectList?.searchSettings.group || (projectList?.searchSettings.group as string) === '') {
+      setfilteredTasks({
+        default: sortTasks(filteredTasks, projectList?.searchSettings.sort, projectList?.searchSettings.sortDesc),
+      });
     } else {
       setfilteredTasks(
         sortTaskGroups(
-          groupTasks(filteredTasks, searchSettings.group, projects),
-          searchSettings.sort,
-          searchSettings.sortDesc,
+          groupTasks(filteredTasks, projectList?.searchSettings.group, projects),
+          projectList?.searchSettings.sort,
+          projectList?.searchSettings.sortDesc,
         ),
       );
     }
-  }, [tasks, searchInput, searchSettings]);
+  }, [tasks, searchInput, projectList]);
 
   // clear current project id
   useEffect(() => {
@@ -79,26 +78,24 @@ const Search: React.FC = () => {
               let newProjectList = { ...projectList } as ProjectListType;
               newProjectList.searchSettings.showDone = !newProjectList.searchSettings.showDone;
               handleSetProjectList(newProjectList);
-              setSearchSettings(newProjectList.searchSettings);
               dismissListPopover();
             }}
           >
-            {searchSettings.showDone ? 'Hide' : 'Show'} Done
+            {projectList?.searchSettings.showDone ? 'Hide' : 'Show'} Done
           </IonButton>
           <IonButton
             onClick={() => {
               let newProjectList = { ...projectList } as ProjectListType;
               newProjectList.searchSettings.showDetails = !newProjectList.searchSettings.showDetails;
               handleSetProjectList(newProjectList);
-              setSearchSettings(newProjectList.searchSettings);
               dismissListPopover();
             }}
           >
-            {searchSettings.showDetails ? 'Hide' : 'Show'} Details
+            {projectList?.searchSettings.showDetails ? 'Hide' : 'Show'} Details
           </IonButton>
           <IonButton
             onClick={() => {
-              document.getElementById('open-search-sort-modal')?.click();
+              document.getElementById('open-sort-options-modal')?.click();
               dismissListPopover();
             }}
           >
@@ -109,13 +106,6 @@ const Search: React.FC = () => {
     );
   }
   const [presentListPopover, dismissListPopover] = useIonPopover(listOptionsPopover);
-
-  function handleSetSearchSettings(newSettings: ViewSettingsSettingsType) {
-    let newProjectList = { ...projectList } as ProjectListType;
-    newProjectList.searchSettings = newSettings;
-    handleSetProjectList(newProjectList);
-    setSearchSettings(newSettings);
-  }
 
   return (
     <IonPage>
@@ -142,8 +132,8 @@ const Search: React.FC = () => {
           {filteredTasks.default?.length === 0 && <div>No tasks</div>}
           {Object.keys(filteredTasks)
             .sort((a, b) => {
-              if (a < b) return -1 * (searchSettings.groupDesc ? -1 : 1);
-              if (a > b) return 1 * (searchSettings.groupDesc ? -1 : 1);
+              if (a < b) return -1 * (projectList?.searchSettings.groupDesc ? -1 : 1);
+              if (a > b) return 1 * (projectList?.searchSettings.groupDesc ? -1 : 1);
               return 0;
             })
             .map((key, groupIndex) => {
@@ -152,12 +142,16 @@ const Search: React.FC = () => {
                   {key !== 'default' && <div>{key}</div>}
                   {filteredTasks[key].map((task, taskIndex) => {
                     if (
-                      searchSettings.showDone ||
-                      (!searchSettings.showDone && taskOverdue(getTask(task.id), new Date()))
+                      projectList?.searchSettings.showDone ||
+                      (!projectList?.searchSettings.showDone && taskOverdue(getTask(task.id), new Date()))
                     )
                       return (
                         <IonItem key={taskIndex}>
-                          <TaskItem taskId={task.id} key={taskIndex} showDetails={searchSettings.showDetails} />
+                          <TaskItem
+                            taskId={task.id}
+                            key={taskIndex}
+                            showDetails={projectList?.searchSettings.showDetails}
+                          />
                         </IonItem>
                       );
                   })}
@@ -165,13 +159,6 @@ const Search: React.FC = () => {
               );
             })}
         </IonList>
-        {/* sorting modal*/}
-        <div id="open-search-sort-modal" />
-        <SortOptionsModal
-          triggerId="open-search-sort-modal"
-          sortSettings={searchSettings}
-          handleSetSortSettings={handleSetSearchSettings}
-        />
       </IonContent>
     </IonPage>
   );

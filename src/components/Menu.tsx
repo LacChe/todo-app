@@ -35,6 +35,7 @@ import { ProjectType, TaskType } from '../types';
 import EditTaskModal from './modals/EditTaskModal';
 import { taskOverdue } from '../dataManagement/utils';
 import Search from '../pages/Search';
+import SortOptionsModal from './modals/SortOptionsModal';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
@@ -110,21 +111,21 @@ const Menu: React.FC = () => {
           <IonHeader>
             {/* toolbar with buttons to add project and go to settings */}
             <IonToolbar color={'secondary'}>
-              <IonTitle>Menu</IonTitle>
-              <IonRow slot="end" className="ion-padding-end">
-                <IonButton id="open-add-project-modal">
-                  <IonIcon icon={add}></IonIcon>
-                </IonButton>
+              <IonRow className="ion-padding-end">
                 <IonMenuToggle autoHide={false}>
                   <IonButton routerLink="/app/settings" routerDirection="none">
                     <IonIcon icon={settings}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
+                <IonTitle>Projects</IonTitle>
                 <IonMenuToggle autoHide={false}>
                   <IonButton routerLink="/app/search" routerDirection="none">
                     <IonIcon icon={search}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
+                <IonButton id="open-add-project-modal">
+                  <IonIcon icon={add}></IonIcon>
+                </IonButton>
               </IonRow>
             </IonToolbar>
           </IonHeader>
@@ -164,6 +165,9 @@ const Menu: React.FC = () => {
             {/* modal to edit project */}
             <div id="open-edit-task-modal" />
             <EditTaskModal basicTaskInfo={basicTaskInfo} setBasicTaskInfo={setBasicTaskInfo} />
+            {/* sorting modal*/}
+            <div id="open-sort-options-modal" />
+            <SortOptionsModal />
           </IonContent>
         </IonMenu>
         <IonRouterOutlet id="main">

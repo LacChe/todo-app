@@ -76,7 +76,7 @@ const ListView: React.FC = () => {
           </IonButton>
           <IonButton
             onClick={() => {
-              document.getElementById('open-list-sort-modal')?.click();
+              document.getElementById('open-sort-options-modal')?.click();
               dismissListPopover();
             }}
           >
@@ -109,14 +109,6 @@ const ListView: React.FC = () => {
       setRetrievedProject(getProject(projectId));
     }
   }, [loading, projectId, projects, tasks]);
-
-  function handleSetSearchSettings(newSettings: ViewSettingsSettingsType) {
-    if (!retrievedProject) return;
-    let newProject = { ...retrievedProject };
-    newProject.viewSettings.listSettings.settings = newSettings;
-    setProject(newProject);
-    setRetrievedProject(newProject);
-  }
 
   return (
     <IonPage>
@@ -171,13 +163,6 @@ const ListView: React.FC = () => {
               );
             })}
         </IonList>
-        {/* sorting modal*/}
-        <div id="open-list-sort-modal" />
-        <SortOptionsModal
-          triggerId="open-list-sort-modal"
-          sortSettings={retrievedProject?.viewSettings.listSettings.settings as ViewSettingsSettingsType}
-          handleSetSortSettings={handleSetSearchSettings}
-        />
       </IonContent>
     </IonPage>
   );
