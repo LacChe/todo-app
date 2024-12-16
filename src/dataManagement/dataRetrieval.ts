@@ -9,8 +9,7 @@ import { mockProjectList, mockProjects, mockTasks } from '../mockData/index';
  * A promise that resolves to the ID of the user.
  */
 export function getUserId(): string {
-  // TODO load real data
-  console.log('TODO load real data');
+  // console.log('load real data');
   return 'user-0000';
 }
 

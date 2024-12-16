@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { getPreference, getProjectList, getProjects, getTasks, getUserId, setPreference } from './dataRetrieval';
 import { GroupParamsType, ProjectListType, ProjectType, SortParamsType, TabType, TaskType } from '../types';
 
-// TODO set types
 type ContextType = {
   [key: string]: any;
 };
