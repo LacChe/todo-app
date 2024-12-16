@@ -212,6 +212,14 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     return 'deleted';
   }
 
+  /**
+   * Set a task and add it to the current project's task list and the master task list.
+   *
+   * This function adds the task to the task list of the current project and to the
+   * master task list if it is not already there.
+   *
+   * @param {TaskType} newTask - The task to add.
+   */
   async function setTask(newTask: TaskType) {
     // add task id to projects task list
     if (currentProjectId && currentProjectId !== 'search' && currentProjectId !== 'settings') {
