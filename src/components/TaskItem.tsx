@@ -90,6 +90,8 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
     setTask(task);
   }
 
+  if (!task) return <></>;
+
   return (
     <IonItemSliding id={taskId} className="task-item">
       {/* start options */}
@@ -115,14 +117,13 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
           />
         )}
         <IonLabel>
-          {/* TODO these two divs swap places when swiped*/}
-          <div>{task?.name}</div>
-          {((task?.showDetailsOverride && !matrixView) || showDetails) && (
-            <div>
-              {task?.createdDate} {task?.typeData.name}
-            </div>
-          )}
+          <div>{task.name}</div>
         </IonLabel>
+        {((task.showDetailsOverride && !matrixView) || showDetails) && (
+          <div>
+            {task.createdDate} {task.typeData.name}
+          </div>
+        )}
       </IonItem>
     </IonItemSliding>
   );
