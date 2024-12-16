@@ -35,8 +35,6 @@ const MatrixView: React.FC = () => {
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
-  // TODO cant drag on first load
-
   /**
    * Popover for options specific to the matrix view
    * @returns {JSX.Element}
@@ -95,7 +93,6 @@ const MatrixView: React.FC = () => {
   }, [loading, projectId, tasks]);
 
   // add drag gestures to all task items
-  // TODO check why gestures arent working on first load of webpage
   useEffect(() => {
     // find blocks sizes on every resize
     let blockBoundingBoxes: [
@@ -206,9 +203,6 @@ const MatrixView: React.FC = () => {
         });
       };
     });
-
-    // clean listener
-    return () => window.removeEventListener('resize', handleResize);
   });
 
   return (

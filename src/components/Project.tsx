@@ -23,11 +23,7 @@ import './Project.css';
 
 const Project: React.FC = (): JSX.Element => {
   let { projectId } = useParams() as any;
-  const { handleSetCurrentTab, handleSetCurrentProjectId, currentProjectId } = useContext(Context);
-
-  useEffect(() => {
-    handleSetCurrentProjectId(projectId);
-  });
+  const { handleSetCurrentTab, currentProjectId } = useContext(Context);
 
   return (
     <>
