@@ -252,8 +252,15 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
       console.error('Error: no parent project found');
       return 'Error: no parent project found';
     }
+
+    // remove from project master list
     newProject.taskIds = newProject.taskIds.filter((id: string) => id !== deletedTaskId);
-    // TODO remove from parent project task views (matrix, calendar)
+
+    // remove from project matrix view settings
+    newProject.viewSettings.matrixSettings.blocks.forEach((block, index) => {
+      block.taskIds = block.taskIds.filter((id) => id !== deletedTaskId);
+      newProject.viewSettings.matrixSettings.blocks[index] = block;
+    });
     await setProject(newProject);
 
     // remove from task list
