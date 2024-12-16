@@ -107,7 +107,7 @@ const Menu: React.FC = () => {
   return (
     <IonPage>
       <IonSplitPane contentId="main">
-        <IonMenu contentId="main">
+        <IonMenu contentId="main" id="side-menu">
           <IonHeader>
             {/* toolbar with buttons to add project and go to settings */}
             <IonToolbar color={'secondary'}>

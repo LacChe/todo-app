@@ -35,6 +35,8 @@ const MatrixView: React.FC = () => {
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
+  // TODO cant drag on first load
+
   /**
    * Find tasks that are not part of any block in the current project's matrix view.
    * This is done by combining the task IDs of all blocks and then filtering out
@@ -172,10 +174,12 @@ const MatrixView: React.FC = () => {
 
       const onStart = () => {
         // add clone to grid
+        let sideMenuWidth = document.getElementById('side-menu')?.getBoundingClientRect().width;
+        if (!sideMenuWidth) sideMenuWidth = 0;
         matrixGridElem.appendChild(clonedTaskItemElem);
         cloneStyle.position = 'fixed';
         cloneStyle.width = taskItemElem.getBoundingClientRect().width + 'px';
-        cloneStyle.left = taskItemElem.getBoundingClientRect().left + 'px';
+        cloneStyle.left = taskItemElem.getBoundingClientRect().left - sideMenuWidth + 'px';
         cloneStyle.top = taskItemElem.getBoundingClientRect().top + 'px';
         cloneStyle.transform = 'translate(0px, 0px)';
         cloneStyle.zIndex = '9999';
