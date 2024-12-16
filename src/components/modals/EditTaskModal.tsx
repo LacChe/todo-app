@@ -15,6 +15,7 @@ import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useStat
 import { Context } from '../../dataManagement/ContextProvider';
 import { checkmark, close } from 'ionicons/icons';
 import { TaskType, TaskTypeDataTypeNameType, TaskTypeDataTypeValueType } from '../../types';
+import DayOfMonthSelection from '../DayOfMonthSelection';
 
 type EditTaskModalProps = {
   basicTaskInfo: TaskType | undefined;
@@ -221,47 +222,11 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
             </IonSelect>
           )}
           {/* TypeData Value Input everyDaysOfMonth */}
-          {/* TODO change to custom grid selection component */}
           {newTaskTypeDataName === 'everyDaysOfMonth' && (
-            <IonSelect
-              value={everyDaysOfMonthValue}
-              onIonChange={(e) => setEveryDaysOfMonthValue(e.detail.value)}
-              interface="popover"
-              multiple={true}
-              placeholder="Choose days of the month"
-            >
-              <IonSelectOption value={1}>1</IonSelectOption>
-              <IonSelectOption value={2}>2</IonSelectOption>
-              <IonSelectOption value={3}>3</IonSelectOption>
-              <IonSelectOption value={4}>4</IonSelectOption>
-              <IonSelectOption value={5}>5</IonSelectOption>
-              <IonSelectOption value={6}>6</IonSelectOption>
-              <IonSelectOption value={7}>7</IonSelectOption>
-              <IonSelectOption value={8}>8</IonSelectOption>
-              <IonSelectOption value={9}>9</IonSelectOption>
-              <IonSelectOption value={10}>10</IonSelectOption>
-              <IonSelectOption value={11}>11</IonSelectOption>
-              <IonSelectOption value={12}>12</IonSelectOption>
-              <IonSelectOption value={13}>13</IonSelectOption>
-              <IonSelectOption value={14}>14</IonSelectOption>
-              <IonSelectOption value={15}>15</IonSelectOption>
-              <IonSelectOption value={16}>16</IonSelectOption>
-              <IonSelectOption value={17}>17</IonSelectOption>
-              <IonSelectOption value={18}>18</IonSelectOption>
-              <IonSelectOption value={19}>19</IonSelectOption>
-              <IonSelectOption value={20}>20</IonSelectOption>
-              <IonSelectOption value={21}>21</IonSelectOption>
-              <IonSelectOption value={22}>22</IonSelectOption>
-              <IonSelectOption value={23}>23</IonSelectOption>
-              <IonSelectOption value={24}>24</IonSelectOption>
-              <IonSelectOption value={25}>25</IonSelectOption>
-              <IonSelectOption value={26}>26</IonSelectOption>
-              <IonSelectOption value={27}>27</IonSelectOption>
-              <IonSelectOption value={28}>28</IonSelectOption>
-              <IonSelectOption value={29}>29</IonSelectOption>
-              <IonSelectOption value={30}>30</IonSelectOption>
-              <IonSelectOption value={31}>31</IonSelectOption>
-            </IonSelect>
+            <DayOfMonthSelection
+              everyDaysOfMonthValue={everyDaysOfMonthValue}
+              setEveryDaysOfMonthValue={setEveryDaysOfMonthValue}
+            />
           )}
           {/* TypeData Value Input everyDaysOfWeek */}
           {newTaskTypeDataName === 'onDates' && (

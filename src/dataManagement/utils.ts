@@ -75,7 +75,6 @@ function findLastDueDate(task: TaskType, checkDate: Date): Date | undefined {
     /* CHECK EVERY DAYS OF WEEK */
     case 'everyDaysOfWeek':
       // check if is due today
-      console.log(123, task.typeData);
       if ((task.typeData.value as number[]).includes(checkDate.getDay())) lastDate = checkDate;
       else {
         // order required days
