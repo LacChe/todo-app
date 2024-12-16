@@ -38,7 +38,11 @@
           },
           {
             "name": "Urgent & Not Important",
-            "taskIds": [],
+            "taskIds": [
+              "task-74126476-f758-4aa8-abf0-76c43c234849",
+              "task-67bf42a1-e1f9-4305-ac53-3f25deeceecb",
+              "task-4e7a1fce-f4d8-40f5-97c4-0a4dd16f6ee7"
+            ],
             "color": "#CB69BC"
           }
         ],
@@ -91,7 +95,7 @@
           },
           {
             "name": "Not Urgent & Not Important",
-            "taskIds": [],
+            "taskIds": ["task-072bb56c-68e8-4389-a0eb-133901ce831c", "task-e3201a69-c222-439d-8c2d-d6268064e175"],
             "color": "#1E8351"
           }
         ],

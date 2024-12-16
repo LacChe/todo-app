@@ -221,12 +221,25 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
    * @param {TaskType} newTask - The task to add.
    */
   async function setTask(newTask: TaskType) {
-    // add task id to projects task list
     if (currentProjectId && currentProjectId !== 'search' && currentProjectId !== 'settings') {
       let newProject = { ...getProject(currentProjectId) } as ProjectType;
+      // add task id to projects task list if doesnt exist
       if (!newProject.taskIds?.includes(newTask.id)) {
         newProject.taskIds?.push(newTask.id);
         setProject(newProject);
+      }
+      // add task to matrix view last block if doesnt exist
+      let combinedBlocksTaskIds: string[] = [];
+      let block0 = newProject?.viewSettings.matrixSettings.blocks[0].taskIds;
+      let block1 = newProject?.viewSettings.matrixSettings.blocks[1].taskIds;
+      let block2 = newProject?.viewSettings.matrixSettings.blocks[2].taskIds;
+      let block3 = newProject?.viewSettings.matrixSettings.blocks[3].taskIds;
+      if (block0) combinedBlocksTaskIds = combinedBlocksTaskIds.concat(block0);
+      if (block1) combinedBlocksTaskIds = combinedBlocksTaskIds.concat(block1);
+      if (block2) combinedBlocksTaskIds = combinedBlocksTaskIds.concat(block2);
+      if (block3) combinedBlocksTaskIds = combinedBlocksTaskIds.concat(block3);
+      if (!combinedBlocksTaskIds.includes(newTask.id)) {
+        newProject?.viewSettings.matrixSettings.blocks[3].taskIds.push(newTask.id);
       }
     }
 
