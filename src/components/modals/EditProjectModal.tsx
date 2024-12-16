@@ -22,12 +22,11 @@ import { BlockType, ProjectType } from '../../types';
 
 const EditProjectModal: React.FC = () => {
   const router = useIonRouter();
-  // TODO temp selection
   const colors = [
-    ['#000000', '#FFFFFF', '#FF0000', '#00FF00'],
-    ['#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'],
-    ['#FFA500', '#800080', '#0000FF', '#FFFF00'],
-    ['#FF00FF', '#00FFFF', '#FFA500', '#800080'],
+    ['#FF5733', '#FF7F0E', '#FFD700', '#32CD32'],
+    ['#2CA02C', '#1F77B4', '#00BFFF', '#8A2BE2'],
+    ['#9467BD', '#8B0000', '#D2691E', '#FF6347'],
+    ['#C71585', '#4B0082', '#0000FF', '#7F7F7F'],
   ];
 
   const editProjectModal = useRef<HTMLIonModalElement>(null);

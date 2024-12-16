@@ -113,7 +113,7 @@ const MatrixView: React.FC = () => {
 
       // add loose tasks to last block
       const looseTasks = findLooseTasks(retrievedProject);
-      retrievedProject.viewSettings.matrixSettings.blocks[3].taskIds.push(...looseTasks);
+      retrievedProject?.viewSettings?.matrixSettings.blocks[3].taskIds.push(...looseTasks);
 
       if (retrievedProject) setRetrievedProject(retrievedProject);
       else console.error(`ProjectId: ${projectId} not found`);
