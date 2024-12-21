@@ -7,9 +7,10 @@ import {
   IonTabBar,
   IonTabButton,
   IonTabs,
+  useIonRouter,
 } from '@ionic/react';
-import React, { useContext, useEffect } from 'react';
-import { triangle, ellipse, square, add } from 'ionicons/icons';
+import React, { useContext } from 'react';
+import { triangle, ellipse, square } from 'ionicons/icons';
 import { Route } from 'react-router';
 
 import ListView from '../pages/taskViews/ListView';
@@ -22,6 +23,7 @@ import { Context } from '../dataManagement/ContextProvider';
 
 const Project: React.FC = (): JSX.Element => {
   let { projectId } = useParams() as any;
+  const router = useIonRouter();
   const { handleSetCurrentTab } = useContext(Context);
 
   return (
@@ -29,9 +31,9 @@ const Project: React.FC = (): JSX.Element => {
       <IonTabBar slot="bottom">
         <IonTabButton
           tab="list"
-          href={`/app/project/${projectId}/list`}
           onClick={() => {
             handleSetCurrentTab('list');
+            router.push(`/app/project/${projectId}/list`, 'root', 'replace');
           }}
         >
           <IonIcon icon={triangle} />
@@ -39,9 +41,9 @@ const Project: React.FC = (): JSX.Element => {
         </IonTabButton>
         <IonTabButton
           tab="matrix"
-          href={`/app/project/${projectId}/matrix`}
           onClick={() => {
             handleSetCurrentTab('matrix');
+            router.push(`/app/project/${projectId}/matrix`, 'root', 'replace');
           }}
         >
           <IonIcon icon={ellipse} />
@@ -49,9 +51,9 @@ const Project: React.FC = (): JSX.Element => {
         </IonTabButton>
         <IonTabButton
           tab="calendar"
-          href={`/app/project/${projectId}/calendar`}
           onClick={() => {
             handleSetCurrentTab('calendar');
+            router.push(`/app/project/${projectId}/calendar`, 'root', 'replace');
           }}
         >
           <IonIcon icon={square} />

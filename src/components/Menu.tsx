@@ -135,15 +135,15 @@ const Menu: React.FC = () => {
               {projectList?.projectIds.map((projectId: string, index: number) => {
                 return (
                   <IonMenuToggle key={index} autoHide={false}>
-                    <IonItem
-                      className="menu-item"
-                      onClick={() => {
-                        handleSetCurrentProjectId(projectId);
-                      }}
-                      routerLink={`/app/project/${projectId}/${currentTab ? currentTab : 'list'}`}
-                      routerDirection="none"
-                    >
-                      <div>{projects.filter((project: ProjectType) => project.id === projectId)[0].name}</div>
+                    <IonItem className="menu-item">
+                      <IonButton
+                        onClick={() => {
+                          handleSetCurrentProjectId(projectId);
+                          router.push(`/app/project/${projectId}/${currentTab}`, 'root', 'replace');
+                        }}
+                      >
+                        {projects.filter((project: ProjectType) => project.id === projectId)[0].name}
+                      </IonButton>
                       {getIncompleteTasksCount(projectId) > 0 && (
                         <IonBadge slot="end">{getIncompleteTasksCount(projectId)}</IonBadge>
                       )}
