@@ -1,4 +1,5 @@
 ion-fab {
+  position: absolute;
   margin-right: 20px;
   margin-bottom: calc(max(var(--ion-safe-area-bottom, 0), 75px));
 }
