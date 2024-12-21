@@ -18,14 +18,13 @@ import {
   ItemReorderEventDetail,
   useIonRouter,
 } from '@ionic/react';
-import { addOutline, searchOutline, settingsOutline } from 'ionicons/icons';
+import { addOutline, menuOutline, searchOutline, settingsOutline } from 'ionicons/icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router';
 
 import Project from './Project';
 import Settings from '../pages/Settings';
 
-import './Menu.css';
 import NewProject from '../pages/NewProject';
 import AddProjectModal from './modals/AddProjectModal';
 import EditProjectModal from './modals/EditProjectModal';
@@ -36,6 +35,9 @@ import EditTaskModal from './modals/EditTaskModal';
 import { taskOverdue } from '../dataManagement/utils';
 import Search from '../pages/Search';
 import SortOptionsModal from './modals/SortOptionsModal';
+
+import './Menu.css';
+import './ModalStyles.css';
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
@@ -110,20 +112,30 @@ const Menu: React.FC = () => {
         <IonMenu contentId="main" id="side-menu">
           <IonHeader>
             {/* toolbar with buttons to add project and go to settings */}
-            <IonToolbar color={'secondary'}>
+            <IonToolbar>
               <IonRow className="ion-padding-end">
                 <IonMenuToggle autoHide={false}>
-                  <IonButton routerLink="/app/settings" routerDirection="none">
+                  <IonButton
+                    fill="clear"
+                    onClick={() => {
+                      router.push('/app/project/settings', 'root', 'replace');
+                    }}
+                  >
                     <IonIcon icon={settingsOutline}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
-                <IonTitle>Projects</IonTitle>
+                <IonTitle color="primary">Projects</IonTitle>
                 <IonMenuToggle autoHide={false}>
-                  <IonButton routerLink="/app/search" routerDirection="none">
+                  <IonButton
+                    fill="outline"
+                    onClick={() => {
+                      router.push('/app/project/search', 'root', 'replace');
+                    }}
+                  >
                     <IonIcon icon={searchOutline}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
-                <IonButton id="open-add-project-modal">
+                <IonButton fill="outline" id="open-add-project-modal">
                   <IonIcon icon={addOutline}></IonIcon>
                 </IonButton>
               </IonRow>
@@ -135,19 +147,23 @@ const Menu: React.FC = () => {
               {projectList?.projectIds.map((projectId: string, index: number) => {
                 return (
                   <IonMenuToggle key={index} autoHide={false}>
-                    <IonItem className="menu-item">
+                    <IonItem className={`${currentProjectId === projectId ? 'selected-project ' : ''}menu-item`}>
+                      <IonReorder slot="start">
+                        <IonIcon color="primary" icon={menuOutline}></IonIcon>
+                      </IonReorder>
                       <IonButton
+                        fill="clear"
+                        className="project-selection-button"
                         onClick={() => {
                           handleSetCurrentProjectId(projectId);
                           router.push(`/app/project/${projectId}/${currentTab}`, 'root', 'replace');
                         }}
                       >
-                        {projects.filter((project: ProjectType) => project.id === projectId)[0].name}
+                        <div>{projects.filter((project: ProjectType) => project.id === projectId)[0].name}</div>
+                        {getIncompleteTasksCount(projectId) > 0 && (
+                          <IonBadge slot="end">{getIncompleteTasksCount(projectId)}</IonBadge>
+                        )}
                       </IonButton>
-                      {getIncompleteTasksCount(projectId) > 0 && (
-                        <IonBadge slot="end">{getIncompleteTasksCount(projectId)}</IonBadge>
-                      )}
-                      <IonReorder slot="end"></IonReorder>
                     </IonItem>
                   </IonMenuToggle>
                 );

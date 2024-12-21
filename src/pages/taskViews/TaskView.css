@@ -3,10 +3,6 @@ ion-buttons {
   flex-direction: column;
 }
 
-ion-reorder {
-  height: 100%;
-}
-
 .matrix-grid {
   --ion-grid-columns: 2;
   --ion-grid-padding: 2px;
