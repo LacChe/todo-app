@@ -1,16 +1,6 @@
-import {
-  IonFab,
-  IonFabButton,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs,
-  useIonRouter,
-} from '@ionic/react';
+import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, useIonRouter } from '@ionic/react';
 import React, { useContext } from 'react';
-import { triangle, ellipse, square } from 'ionicons/icons';
+import { listOutline, gridOutline, calendarNumberOutline } from 'ionicons/icons';
 import { Route } from 'react-router';
 
 import ListView from '../pages/taskViews/ListView';
@@ -36,8 +26,7 @@ const Project: React.FC = (): JSX.Element => {
             router.push(`/app/project/${projectId}/list`, 'root', 'replace');
           }}
         >
-          <IonIcon icon={triangle} />
-          <IonLabel>List</IonLabel>
+          <IonIcon icon={listOutline} />
         </IonTabButton>
         <IonTabButton
           tab="matrix"
@@ -46,8 +35,7 @@ const Project: React.FC = (): JSX.Element => {
             router.push(`/app/project/${projectId}/matrix`, 'root', 'replace');
           }}
         >
-          <IonIcon icon={ellipse} />
-          <IonLabel>Matrix</IonLabel>
+          <IonIcon icon={gridOutline} />
         </IonTabButton>
         <IonTabButton
           tab="calendar"
@@ -56,8 +44,7 @@ const Project: React.FC = (): JSX.Element => {
             router.push(`/app/project/${projectId}/calendar`, 'root', 'replace');
           }}
         >
-          <IonIcon icon={square} />
-          <IonLabel>Calendar</IonLabel>
+          <IonIcon icon={calendarNumberOutline} />
         </IonTabButton>
       </IonTabBar>
 
