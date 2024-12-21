@@ -94,7 +94,7 @@ export const getPreference = async (key: PreferenceKeyType): Promise<string | nu
   if (import.meta.env.VITE_MOCK_DATA_MODE) {
     switch (key) {
       case 'localProjectList':
-        return JSON.stringify(mockProjectList);
+        return JSON.stringify(mockProjectList[0]);
       case 'localProjects':
         return JSON.stringify(mockProjects);
       case 'localTasks':

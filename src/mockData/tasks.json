@@ -1,73 +1,296 @@
 [
-  {
-      "id": "task-072bb56c-68e8-4389-a0eb-133901ce831c",
-      "createdDate": "2024-12-12",
-      "name": "4",
+    {
+      "id": "t1",
+      "name": "Task One",
+      "createdDate": "2024-01-01",
       "typeData": {
-          "name": "everyDaysOfMonth",
-          "completedOnDates": [],
-          "value": [
-              16,
-              10
-          ]
+        "name": "single",
+        "value": 5,
+        "completedOnDates": ["2024-01-01"]
       },
       "showDetailsOverride": true,
-      "notes": "notes4"
-  },
-  {
-      "id": "task-4e7a1fce-f4d8-40f5-97c4-0a4dd16f6ee7",
-      "createdDate": "2024-12-12",
-      "name": "3",
+      "notes": "Urgent task"
+    },
+    {
+      "id": "t2",
+      "name": "Task Two",
+      "createdDate": "2024-02-01",
       "typeData": {
-          "name": "everyDaysOfWeek",
-          "completedOnDates": [],
-          "value": [
-              2,
-              4
-          ]
+        "name": "everyNumDays",
+        "value": 3,
+        "completedOnDates": ["2024-02-01", "2024-02-04"]
+      },
+      "showDetailsOverride": false,
+      "notes": "Every 3 days task"
+    },
+    {
+      "id": "t3",
+      "name": "Task Three",
+      "createdDate": "2024-03-01",
+      "typeData": {
+        "name": "everyDaysOfWeek",
+        "value": [1, 3, 5],
+        "completedOnDates": ["2024-03-01", "2024-03-03"]
       },
       "showDetailsOverride": true,
-      "notes": "notes3"
-  },
-  {
-      "id": "task-67bf42a1-e1f9-4305-ac53-3f25deeceecb",
-      "createdDate": "2024-12-12",
-      "name": "2",
+      "notes": ""
+    },
+    {
+      "id": "t4",
+      "name": "Task Four",
+      "createdDate": "2024-04-01",
       "typeData": {
-          "name": "everyNumDays",
-          "completedOnDates": [],
-          "value": 2
+        "name": "everyDaysOfMonth",
+        "value": [1, 15],
+        "completedOnDates": ["2024-04-01", "2024-04-15"]
+      },
+      "showDetailsOverride": false,
+      "notes": "End of the month task"
+    },
+    {
+      "id": "t5",
+      "name": "Task Five",
+      "createdDate": "2024-05-01",
+      "typeData": {
+        "name": "onDates",
+        "value": ["2024-05-01", "2024-05-15"],
+        "completedOnDates": ["2024-05-01"]
+      },
+      "showDetailsOverride": false,
+      "notes": ""
+    },
+    {
+      "id": "t6",
+      "name": "Task Six",
+      "createdDate": "2024-06-01",
+      "typeData": {
+        "name": "single",
+        "completedOnDates": []
       },
       "showDetailsOverride": true,
-      "notes": "notes2"
-  },
-  {
-      "id": "task-e3201a69-c222-439d-8c2d-d6268064e175",
-      "createdDate": "2024-12-12",
-      "name": "5",
+      "notes": "No specific date yet"
+    },
+    {
+      "id": "t7",
+      "name": "Task Seven",
+      "createdDate": "2024-07-01",
       "typeData": {
-          "name": "onDates",
-          "completedOnDates": [],
-          "value": [
-              "2024-11-13",
-              "2024-12-04",
-              "2024-12-16",
-              "2024-12-21",
-              "2025-01-31"
-          ]
+        "name": "single",
+        "completedOnDates": ["2024-07-01"]
+      },
+      "showDetailsOverride": false,
+      "notes": "First task"
+    },
+    {
+      "id": "t8",
+      "name": "Task Eight",
+      "createdDate": "2024-08-01",
+      "typeData": {
+        "name": "everyNumDays",
+        "value": 5,
+        "completedOnDates": ["2024-08-01", "2024-08-06"]
       },
       "showDetailsOverride": true,
-      "notes": "notes5"
-  },
-  {
-      "id": "task-74126476-f758-4aa8-abf0-76c43c234849",
-      "createdDate": "2024-12-12",
-      "name": "1",
+      "notes": "Repeat every 5 days"
+    },
+    {
+      "id": "t9",
+      "name": "Task Nine",
+      "createdDate": "2024-09-01",
       "typeData": {
-          "name": "single",
-          "completedOnDates": []
+        "name": "onDates",
+        "value": ["2024-09-01"],
+        "completedOnDates": ["2024-09-01"]
       },
       "showDetailsOverride": true,
-      "notes": "notes1"
-  }
+      "notes": "Special task on the first of the month"
+    },
+    {
+      "id": "t10",
+      "name": "Task Ten",
+      "createdDate": "2024-10-01",
+      "typeData": {
+        "name": "everyDaysOfWeek",
+        "value": [2, 4],
+        "completedOnDates": ["2024-10-01"]
+      },
+      "showDetailsOverride": false,
+      "notes": ""
+    },
+    {
+      "id": "t11",
+      "name": "Task Eleven",
+      "createdDate": "2024-11-01",
+      "typeData": {
+        "name": "everyDaysOfMonth",
+        "value": [10, 20],
+        "completedOnDates": ["2024-11-01", "2024-11-10"]
+      },
+      "showDetailsOverride": true,
+      "notes": "Task with specific days of the month"
+    },
+    {
+      "id": "t12",
+      "name": "Task Twelve",
+      "createdDate": "2024-12-01",
+      "typeData": {
+        "name": "single",
+        "completedOnDates": ["2024-12-01"]
+      },
+      "showDetailsOverride": true,
+      "notes": "Task for the last day of the year"
+    },
+    {
+      "id": "t13",
+      "name": "Task Thirteen",
+      "createdDate": "2024-01-15",
+      "typeData": {
+        "name": "single",
+        "completedOnDates": []
+      },
+      "showDetailsOverride": false,
+      "notes": "Edge case with undefined value"
+    },
+    {
+      "id": "t14",
+      "name": "Task Fourteen",
+      "createdDate": "2024-02-15",
+      "typeData": {
+        "name": "everyNumDays",
+        "value": 7,
+        "completedOnDates": ["2024-02-15"]
+      },
+      "showDetailsOverride": true,
+      "notes": "Weekly task"
+    },
+    {
+      "id": "t15",
+      "name": "Task Fifteen",
+      "createdDate": "2024-03-15",
+      "typeData": {
+        "name": "onDates",
+        "value": ["2024-03-15"],
+        "completedOnDates": []
+      },
+      "showDetailsOverride": false,
+      "notes": "Not completed yet"
+    },
+    {
+      "id": "t16",
+      "name": "Task Sixteen",
+      "createdDate": "2024-04-15",
+      "typeData": {
+        "name": "onDates",
+        "value": ["2024-04-15"],
+        "completedOnDates": ["2024-04-15"]
+      },
+      "showDetailsOverride": true,
+      "notes": "Completed task"
+    },
+    {
+      "id": "t17",
+      "name": "Task Seventeen",
+      "createdDate": "2024-05-15",
+      "typeData": {
+        "name": "single",
+        "completedOnDates": ["2024-05-15"]
+      },
+      "showDetailsOverride": false,
+      "notes": "Completed on a specific date"
+    },
+    {
+      "id": "t18",
+      "name": "Task Eighteen",
+      "createdDate": "2024-06-15",
+      "typeData": {
+        "name": "everyDaysOfMonth",
+        "value": [15],
+        "completedOnDates": ["2024-06-15"]
+      },
+      "showDetailsOverride": true,
+      "notes": "A monthly task"
+    },
+    {
+      "id": "t19",
+      "name": "Task Nineteen",
+      "createdDate": "2024-07-15",
+      "typeData": {
+        "name": "everyDaysOfMonth",
+        "value": [10, 20],
+        "completedOnDates": ["2024-07-20"]
+      },
+      "showDetailsOverride": true,
+      "notes": "Completed on one of the dates"
+    },
+    {
+      "id": "t20",
+      "name": "Task Twenty",
+      "createdDate": "2024-08-15",
+      "typeData": {
+        "name": "onDates",
+        "value": ["2024-08-15"],
+        "completedOnDates": []
+      },
+      "showDetailsOverride": false,
+      "notes": "Scheduled but not completed"
+    },
+    {
+      "id": "t21",
+      "name": "Task Twenty-One",
+      "createdDate": "2024-09-15",
+      "typeData": {
+        "name": "everyNumDays",
+        "value": 10,
+        "completedOnDates": ["2024-09-15", "2024-09-25"]
+      },
+      "showDetailsOverride": true,
+      "notes": "Repeat every 10 days"
+    },
+    {
+      "id": "t22",
+      "name": "Task Twenty-Two",
+      "createdDate": "2024-10-15",
+      "typeData": {
+        "name": "everyDaysOfWeek",
+        "value": [3, 5],
+        "completedOnDates": ["2024-10-15"]
+      },
+      "showDetailsOverride": false,
+      "notes": "Weekly recurring task"
+    },
+    {
+      "id": "t23",
+      "name": "Task Twenty-Three",
+      "createdDate": "2024-11-15",
+      "typeData": {
+        "name": "single",
+        "completedOnDates": []
+      },
+      "showDetailsOverride": true,
+      "notes": "Task with no value set"
+    },
+    {
+      "id": "t24",
+      "name": "Task Twenty-Four",
+      "createdDate": "2024-12-15",
+      "typeData": {
+        "name": "onDates",
+        "value": ["2024-12-15"],
+        "completedOnDates": ["2024-12-15"]
+      },
+      "showDetailsOverride": true,
+      "notes": "Completed on the date"
+    },
+    {
+      "id": "t25",
+      "name": "Task Twenty-Five",
+      "createdDate": "2024-01-01",
+      "typeData": {
+        "name": "everyDaysOfMonth",
+        "value": [1],
+        "completedOnDates": ["2024-01-01"]
+      },
+      "showDetailsOverride": false,
+      "notes": ""
+    }
 ]

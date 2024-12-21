@@ -1,114 +1,220 @@
 [
   {
-    "id": "proj-c618ca0a-0b2d-4b8b-a51d-2315157b7248",
-    "name": "123",
-    "color": "#00FF00",
-    "taskIds": [
-      "task-74126476-f758-4aa8-abf0-76c43c234849",
-      "task-67bf42a1-e1f9-4305-ac53-3f25deeceecb",
-      "task-4e7a1fce-f4d8-40f5-97c4-0a4dd16f6ee7"
-    ],
+    "id": "p1",
+    "name": "Project One",
+    "color": "red",
+    "taskIds": ["t1", "t2", "t3"],
+    "viewSettings": {
+      "listSettings": {
+        "settings": {
+          "showDetails": true,
+          "showDone": false,
+          "sort": "createdDate",
+          "sortDesc": true,
+          "group": "projectName",
+          "groupDesc": false
+        }
+      },
+      "matrixSettings": {
+        "blocks": [
+          { "name": "Block 1", "taskIds": ["t1"], "color": "blue" },
+          { "name": "Block 2", "taskIds": ["t2"], "color": "green" },
+          { "name": "Block 3", "taskIds": ["t3"], "color": "yellow" },
+          { "name": "Block 4", "taskIds": [], "color": "purple" }
+        ],
+        "settings": {
+          "showDetails": true,
+          "showDone": false,
+          "sort": "name",
+          "sortDesc": false,
+          "group": "typeData",
+          "groupDesc": true
+        }
+      },
+      "calendarSettings": {
+        "settings": {
+          "showDetails": true,
+          "showDone": false,
+          "sort": "createdDate",
+          "sortDesc": true,
+          "group": "createdDate",
+          "groupDesc": true
+        }
+      }
+    }
+  },
+  {
+    "id": "p2",
+    "name": "Project Two",
+    "color": "blue",
+    "taskIds": ["t4", "t5"],
+    "viewSettings": {
+      "listSettings": {
+        "settings": {
+          "showDetails": false,
+          "showDone": true,
+          "sort": "name",
+          "sortDesc": true,
+          "group": "createdDate",
+          "groupDesc": true
+        }
+      },
+      "matrixSettings": {
+        "blocks": [
+          { "name": "Block 1", "taskIds": ["t4"], "color": "purple" },
+          { "name": "Block 2", "taskIds": ["t5"], "color": "orange" },
+          { "name": "Block 3", "taskIds": [], "color": "black" },
+          { "name": "Block 4", "taskIds": [], "color": "gray" }
+        ],
+        "settings": {
+          "showDetails": true,
+          "showDone": true,
+          "sort": "name",
+          "sortDesc": true,
+          "group": "createdDate",
+          "groupDesc": true
+        }
+      },
+      "calendarSettings": {
+        "settings": {
+          "showDetails": false,
+          "showDone": false,
+          "sort": "",
+          "sortDesc": false,
+          "group": "projectName",
+          "groupDesc": true
+        }
+      }
+    }
+  },
+  {
+    "id": "p3",
+    "name": "Project Three",
+    "color": "green",
+    "taskIds": ["t6"],
+    "viewSettings": {
+      "listSettings": {
+        "settings": {
+          "showDetails": false,
+          "showDone": true,
+          "sort": "createdDate",
+          "sortDesc": false,
+          "group": "",
+          "groupDesc": false
+        }
+      },
+      "matrixSettings": {
+        "blocks": [
+          { "name": "Block 1", "taskIds": ["t6"], "color": "teal" },
+          { "name": "Block 2", "taskIds": [], "color": "gray" },
+          { "name": "Block 3", "taskIds": [], "color": "pink" },
+          { "name": "Block 4", "taskIds": [], "color": "brown" }
+        ],
+        "settings": {
+          "showDetails": true,
+          "showDone": false,
+          "sort": "createdDate",
+          "sortDesc": true,
+          "group": "",
+          "groupDesc": false
+        }
+      },
+      "calendarSettings": {
+        "settings": {
+          "showDetails": true,
+          "showDone": false,
+          "sort": "createdDate",
+          "sortDesc": true,
+          "group": "projectName",
+          "groupDesc": false
+        }
+      }
+    }
+  },
+  {
+    "id": "p4",
+    "name": "Project Four",
+    "color": "purple",
+    "taskIds": ["t7", "t8", "t9"],
+    "viewSettings": {
+      "listSettings": {
+        "settings": {
+          "showDetails": true,
+          "showDone": false,
+          "sort": "name",
+          "sortDesc": true,
+          "group": "typeData",
+          "groupDesc": false
+        }
+      },
+      "matrixSettings": {
+        "blocks": [
+          { "name": "Block 1", "taskIds": ["t7"], "color": "yellow" },
+          { "name": "Block 2", "taskIds": ["t8"], "color": "blue" },
+          { "name": "Block 3", "taskIds": ["t9"], "color": "green" },
+          { "name": "Block 4", "taskIds": [], "color": "gray" }
+        ],
+        "settings": {
+          "showDetails": true,
+          "showDone": true,
+          "sort": "createdDate",
+          "sortDesc": false,
+          "group": "createdDate",
+          "groupDesc": false
+        }
+      },
+      "calendarSettings": {
+        "settings": {
+          "showDetails": false,
+          "showDone": true,
+          "sort": "",
+          "sortDesc": false,
+          "group": "projectName",
+          "groupDesc": true
+        }
+      }
+    }
+  },
+  {
+    "id": "p5",
+    "name": "Project Five",
+    "color": "orange",
+    "taskIds": ["t10", "t11"],
     "viewSettings": {
       "listSettings": {
         "settings": {
           "showDetails": false,
           "showDone": false,
           "sort": "createdDate",
-          "group": "",
           "sortDesc": false,
-          "groupDes": false
+          "group": "",
+          "groupDesc": true
         }
       },
       "matrixSettings": {
         "blocks": [
-          {
-            "name": "Not Urgent & Not Important",
-            "taskIds": [],
-            "color": "#1E8351"
-          },
-          {
-            "name": "Urgent & Important",
-            "taskIds": [],
-            "color": "#E12330"
-          },
-          {
-            "name": "Not Urgent & Important",
-            "taskIds": [],
-            "color": "#1D2A90"
-          },
-          {
-            "name": "Urgent & Not Important",
-            "taskIds": [
-              "task-74126476-f758-4aa8-abf0-76c43c234849",
-              "task-67bf42a1-e1f9-4305-ac53-3f25deeceecb",
-              "task-4e7a1fce-f4d8-40f5-97c4-0a4dd16f6ee7"
-            ],
-            "color": "#CB69BC"
-          }
+          { "name": "Block 1", "taskIds": ["t10"], "color": "teal" },
+          { "name": "Block 2", "taskIds": ["t11"], "color": "gray" },
+          { "name": "Block 3", "taskIds": [], "color": "yellow" },
+          { "name": "Block 4", "taskIds": [], "color": "blue" }
         ],
         "settings": {
-          "showDetails": false,
-          "showDone": false
-        }
-      },
-      "calendarSettings": {
-        "dateContainer": {},
-        "settings": {
-          "showDetails": false,
-          "showDone": false
-        }
-      }
-    }
-  },
-  {
-    "id": "proj-0c532c7d-c7ea-4b26-a066-5d78f4f9196f",
-    "name": "qwe",
-    "color": "#000000",
-    "taskIds": ["task-072bb56c-68e8-4389-a0eb-133901ce831c", "task-e3201a69-c222-439d-8c2d-d6268064e175"],
-    "viewSettings": {
-      "listSettings": {
-        "settings": {
-          "showDetails": false,
+          "showDetails": true,
           "showDone": false,
-          "sort": "",
-          "group": "",
-          "sortDesc": false,
-          "groupDes": false
-        }
-      },
-      "matrixSettings": {
-        "blocks": [
-          {
-            "name": "Urgent & Important",
-            "taskIds": [],
-            "color": "#E12330"
-          },
-          {
-            "name": "Not Urgent & Important",
-            "taskIds": [],
-            "color": "#1D2A90"
-          },
-          {
-            "name": "Urgent & Not Important",
-            "taskIds": [],
-            "color": "#CB69BC"
-          },
-          {
-            "name": "Not Urgent & Not Important",
-            "taskIds": ["task-072bb56c-68e8-4389-a0eb-133901ce831c", "task-e3201a69-c222-439d-8c2d-d6268064e175"],
-            "color": "#1E8351"
-          }
-        ],
-        "settings": {
-          "showDetails": false,
-          "showDone": false
+          "sort": "createdDate",
+          "sortDesc": true,
+          "group": "projectName",
+          "groupDesc": true
         }
       },
       "calendarSettings": {
-        "dateContainer": {},
         "settings": {
-          "showDetails": false,
-          "showDone": false
+          "showDetails": true,
+          "showDone": true,
+          "sort": "name",
+          "sortDesc": true,
+          "group": "",
+          "groupDesc": false
         }
       }
     }
