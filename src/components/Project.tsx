@@ -1,4 +1,4 @@
-import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, useIonRouter } from '@ionic/react';
+import { IonIcon, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, useIonRouter } from '@ionic/react';
 import React, { useContext } from 'react';
 import { listOutline, gridOutline, calendarNumberOutline } from 'ionicons/icons';
 import { Route } from 'react-router';

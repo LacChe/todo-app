@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { TaskType } from '../../types';
 import { Context } from '../../dataManagement/ContextProvider';
-import { add } from 'ionicons/icons';
+import { addOutline } from 'ionicons/icons';
 
 type AddTaskModalProps = {
   setBasicTaskInfo: Dispatch<SetStateAction<TaskType | undefined>>;
@@ -90,7 +90,7 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
               document.getElementById('open-edit-task-modal')?.click();
             }}
           >
-            <IonIcon icon={add}></IonIcon>
+            <IonIcon icon={addOutline}></IonIcon>
           </IonButton>
         </div>
         <IonButton type="submit" onClick={handleSubmit}>

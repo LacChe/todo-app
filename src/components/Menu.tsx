@@ -18,7 +18,7 @@ import {
   ItemReorderEventDetail,
   useIonRouter,
 } from '@ionic/react';
-import { add, search, settings } from 'ionicons/icons';
+import { addOutline, searchOutline, settingsOutline } from 'ionicons/icons';
 import React, { useContext, useEffect, useState } from 'react';
 import { Redirect, Route } from 'react-router';
 
@@ -114,17 +114,17 @@ const Menu: React.FC = () => {
               <IonRow className="ion-padding-end">
                 <IonMenuToggle autoHide={false}>
                   <IonButton routerLink="/app/settings" routerDirection="none">
-                    <IonIcon icon={settings}></IonIcon>
+                    <IonIcon icon={settingsOutline}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
                 <IonTitle>Projects</IonTitle>
                 <IonMenuToggle autoHide={false}>
                   <IonButton routerLink="/app/search" routerDirection="none">
-                    <IonIcon icon={search}></IonIcon>
+                    <IonIcon icon={searchOutline}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
                 <IonButton id="open-add-project-modal">
-                  <IonIcon icon={add}></IonIcon>
+                  <IonIcon icon={addOutline}></IonIcon>
                 </IonButton>
               </IonRow>
             </IonToolbar>

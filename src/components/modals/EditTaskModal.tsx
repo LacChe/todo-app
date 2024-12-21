@@ -13,7 +13,7 @@ import {
 import React, { Dispatch, SetStateAction, useContext, useEffect, useRef, useState } from 'react';
 
 import { Context } from '../../dataManagement/ContextProvider';
-import { checkmark, close } from 'ionicons/icons';
+import { checkmarkOutline, closeOutline } from 'ionicons/icons';
 import { TaskType, TaskTypeDataTypeNameType, TaskTypeDataTypeValueType } from '../../types';
 import DayOfMonthSelection from '../DayOfMonthSelection';
 
@@ -157,10 +157,10 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
       <form onSubmit={handleSubmit} className="edit-task-modal-form">
         <IonToolbar>
           <IonButton type="button" slot="start" id="present-delete-confirmation">
-            <IonIcon icon={close} />
+            <IonIcon icon={closeOutline} />
           </IonButton>
           <IonButton type="submit" slot="end">
-            <IonIcon icon={checkmark} />
+            <IonIcon icon={checkmarkOutline} />
           </IonButton>
         </IonToolbar>
         <div className="form-inputs">

@@ -10,7 +10,7 @@ import {
   IonToolbar,
 } from '@ionic/react';
 import React from 'react';
-import { add } from 'ionicons/icons';
+import { addOutline } from 'ionicons/icons';
 
 const NewProject: React.FC = () => {
   return (
@@ -25,7 +25,7 @@ const NewProject: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding">
         <IonButton onClick={() => document.getElementById('open-add-project-modal')?.click()}>
-          <IonIcon icon={add} />
+          <IonIcon icon={addOutline} />
           Add a new Project to Begin
         </IonButton>
       </IonContent>

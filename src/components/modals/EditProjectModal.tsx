@@ -16,7 +16,7 @@ import {
 } from '@ionic/react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
-import { checkmark, close } from 'ionicons/icons';
+import { checkmarkOutline, closeOutline } from 'ionicons/icons';
 import { Context } from '../../dataManagement/ContextProvider';
 import { BlockType, ProjectType } from '../../types';
 
@@ -168,10 +168,10 @@ const EditProjectModal: React.FC = () => {
       <form onSubmit={handleSubmit} className="edit-project-modal-form">
         <IonToolbar>
           <IonButton type="button" slot="start" id="present-delete-confirmation">
-            <IonIcon icon={close} />
+            <IonIcon icon={closeOutline} />
           </IonButton>
           <IonButton type="submit" slot="end">
-            <IonIcon icon={checkmark} />
+            <IonIcon icon={checkmarkOutline} />
           </IonButton>
         </IonToolbar>
         <div className="form-inputs">

@@ -33,7 +33,7 @@ import './theme/variables.css';
 import './App.css';
 import Menu from './components/Menu';
 import { Redirect, Route } from 'react-router';
-import { add } from 'ionicons/icons';
+import { addOutline } from 'ionicons/icons';
 import { useContext } from 'react';
 import { Context } from './dataManagement/ContextProvider';
 
@@ -49,7 +49,7 @@ const App: React.FC = () => {
         horizontal="end"
       >
         <IonFabButton onClick={() => document.getElementById('open-add-task-modal')?.click()}>
-          <IonIcon icon={add}></IonIcon>
+          <IonIcon icon={addOutline}></IonIcon>
         </IonFabButton>
       </IonFab>
       <IonReactRouter>
