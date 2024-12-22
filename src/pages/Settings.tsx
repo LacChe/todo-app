@@ -5,11 +5,6 @@ import { Context } from '../dataManagement/ContextProvider';
 const Settings: React.FC = () => {
   const { handleSetCurrentProjectId } = useContext(Context);
 
-  // clear current project id
-  useEffect(() => {
-    handleSetCurrentProjectId('settings');
-  });
-
   return (
     <IonPage>
       <IonHeader>

@@ -73,11 +73,7 @@ const Search: React.FC = () => {
     }
   }, [tasks, searchInput, projectList]);
 
-  useEffect(() => {});
-
   useEffect(() => {
-    // clear current project id
-    handleSetCurrentProjectId('search');
     // set focus to input when displayed
     const searchBar = document.getElementById('search-bar');
     searchBar?.querySelector('ion-input')?.setFocus();

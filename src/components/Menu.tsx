@@ -60,12 +60,10 @@ const Menu: React.FC = () => {
     // redirect to new project page if no preferences
     if (!projectList || !projects || projectList.projectIds.length === 0) {
       router.push('/app/project/new', 'root', 'replace');
-      return;
     }
     // redirect to first project list view if no preferences
     if (!currentTab || !currentProjectId || currentProjectId === 'search' || currentProjectId === 'settings') {
       router.push(`/app/project/${projects[0].id}/list`, 'root', 'replace');
-      return;
     }
     // redirect to saved link after finishing loading
     router.push(`/app/project/${currentProjectId}/${currentTab}`, 'root', 'replace');
@@ -118,17 +116,19 @@ const Menu: React.FC = () => {
                   <IonButton
                     fill="clear"
                     onClick={() => {
+                      handleSetCurrentProjectId('settings');
                       router.push('/app/settings', 'root', 'replace');
                     }}
                   >
                     <IonIcon icon={settingsOutline}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
-                <IonTitle>Projects</IonTitle>
+                <IonTitle>{currentProjectId} Projects</IonTitle>
                 <IonMenuToggle autoHide={false}>
                   <IonButton
                     fill="outline"
                     onClick={() => {
+                      handleSetCurrentProjectId('search');
                       router.push('/app/search', 'root', 'replace');
                     }}
                   >
