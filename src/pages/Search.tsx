@@ -73,12 +73,6 @@ const Search: React.FC = () => {
     }
   }, [tasks, searchInput, projectList]);
 
-  useEffect(() => {
-    // set focus to input when displayed
-    const searchBar = document.getElementById('search-bar');
-    searchBar?.querySelector('ion-input')?.setFocus();
-  });
-
   /**
    * Popover for options specific to the list view
    * @returns {JSX.Element}

@@ -40,7 +40,7 @@ const SortOptionsModal: React.FC = () => {
   }
 
   return (
-    <IonModal trigger="sort-options-modal" initialBreakpoint={1} breakpoints={[0, 1]}>
+    <IonModal trigger="open-sort-options-modal" initialBreakpoint={1} breakpoints={[0, 1]}>
       <div className="sort-options-modal">
         <IonLabel>Sort By</IonLabel>
         <div>
