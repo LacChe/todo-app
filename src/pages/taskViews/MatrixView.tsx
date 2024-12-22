@@ -34,6 +34,7 @@ const MatrixView: React.FC = () => {
   const { loading, getProject, setProject, tasks, getTask } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
+  const [hoverOverBlock, setHoverOverBlock] = useState<number>(-1);
 
   /**
    * Popover for options specific to the matrix view
@@ -142,15 +143,17 @@ const MatrixView: React.FC = () => {
         gestureName: 'draggable',
       });
       gestureLabel.enable();
-      const gestureNotes = createGesture({
-        el: taskItemElem.children[1].children[2],
-        threshold: 0,
-        onStart: () => onStart(),
-        onMove: (detail: GestureDetail) => onMove(detail),
-        onEnd: (detail: GestureDetail) => onEnd(detail),
-        gestureName: 'draggable',
-      });
-      gestureNotes.enable();
+      if (retrievedProject?.viewSettings.matrixSettings.settings.showDetails) {
+        const gestureNotes = createGesture({
+          el: taskItemElem.children[1].children[2],
+          threshold: 0,
+          onStart: () => onStart(),
+          onMove: (detail: GestureDetail) => onMove(detail),
+          onEnd: (detail: GestureDetail) => onEnd(detail),
+          gestureName: 'draggable',
+        });
+        gestureNotes.enable();
+      }
 
       const onStart = () => {
         // add clone to grid
@@ -165,9 +168,18 @@ const MatrixView: React.FC = () => {
         cloneStyle.zIndex = '9999';
         // set original to low opacity
         style.opacity = '0.5';
+        // set hover flag
+        setHoverOverBlock(-1);
       };
       const onMove = (detail: GestureDetail) => {
         cloneStyle.transform = `translate(${detail.deltaX}px, ${detail.deltaY}px)`;
+        let hoverBlockIndex = -1;
+        blockBoundingBoxes.forEach((box, index) => {
+          if (inBlock(box, detail.currentX, detail.currentY)) {
+            hoverBlockIndex = index;
+          }
+        });
+        if (hoverBlockIndex !== -1) setHoverOverBlock(hoverBlockIndex);
       };
       const onEnd = (detail: GestureDetail) => {
         // remove clone
@@ -177,12 +189,7 @@ const MatrixView: React.FC = () => {
         // find dest block
         let destBoxIndex = 3;
         blockBoundingBoxes.forEach((box, index) => {
-          if (
-            detail.currentX >= box.x &&
-            detail.currentX <= box.x + box.w &&
-            detail.currentY >= box.y &&
-            detail.currentY <= box.y + box.h
-          ) {
+          if (inBlock(box, detail.currentX, detail.currentY)) {
             destBoxIndex = index;
           }
         });
@@ -210,9 +217,22 @@ const MatrixView: React.FC = () => {
           handleResize();
           return newProject;
         });
+        // set hover flag
+        setHoverOverBlock(-1);
       };
     });
   });
+
+  /**
+   * Checks if a point (x, y) is inside a bounding box (defined by x, y, width and height).
+   * @param {Object} box - An object with x, y, width and height properties.
+   * @param {number} x - The x coordinate of the point to check.
+   * @param {number} y - The y coordinate of the point to check.
+   * @returns {boolean} Whether the point is inside the box or not.
+   */
+  function inBlock(box: { x: number; y: number; w: number; h: number }, x: number, y: number): boolean {
+    return x >= box.x && x <= box.x + box.w && y >= box.y && y <= box.y + box.h;
+  }
 
   return (
     <IonPage>
@@ -238,7 +258,10 @@ const MatrixView: React.FC = () => {
             {retrievedProject?.viewSettings.matrixSettings.blocks.map((block, blockIndex) => {
               return (
                 <IonCol size="1" key={blockIndex} className={`matrix-block-${blockIndex}`}>
-                  <IonCard>
+                  <IonCard
+                    style={{ outlineColor: block?.color }}
+                    className={blockIndex === hoverOverBlock ? 'drag-hover' : ''}
+                  >
                     <IonCardHeader>
                       <IonCardSubtitle style={{ fontSize: '0.65rem', color: block?.color }}>
                         {block.name}

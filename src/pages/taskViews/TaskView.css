@@ -19,6 +19,11 @@ ion-buttons {
   margin: 0px;
 }
 
+.drag-hover {
+  outline-width: 2px;
+  outline-style: solid;
+}
+
 .calendar-view-date-slider {
   display: flex;
   flex-direction: row;
