@@ -84,19 +84,27 @@ const ListView: React.FC = () => {
   }
   const [presentListPopover, dismissListPopover] = useIonPopover(listOptionsPopover);
 
-  // fsort tasks
+  // sort tasks
   useEffect(() => {
     if (!retrievedProject?.viewSettings.listSettings.settings) return;
     const settings = retrievedProject?.viewSettings.listSettings.settings;
 
-    const taskArray = retrievedProject.taskIds.map((taskId) => getTask(taskId));
+    let taskArray = retrievedProject.taskIds.map((taskId) => getTask(taskId));
+
+    // remove done if hidden
+    taskArray = taskArray.filter(
+      (task) =>
+        retrievedProject?.viewSettings.listSettings.settings.showDone ||
+        (!retrievedProject?.viewSettings.listSettings.settings.showDone && taskOverdue(getTask(task.id), new Date())),
+    );
+
     if (!settings.sort) setSortedTasks({ default: taskArray });
     else if (!settings.group || (settings.group as string) === '') {
       setSortedTasks({ default: sortTasks(taskArray, settings.sort, settings.sortDesc) });
     } else {
       setSortedTasks(sortTaskGroups(groupTasks(taskArray, settings.group, projects), settings.sort, settings.sortDesc));
     }
-  }, [tasks, retrievedProject?.viewSettings.listSettings.settings]);
+  }, [tasks, projects, retrievedProject]);
 
   // retrieve project when data changes
   useEffect(() => {

@@ -35,17 +35,29 @@ const Search: React.FC = () => {
 
     let filteredTasks: TaskType[] = [];
 
+    // search
     const searchArray = searchInput.split(' ').filter((term) => term !== ' ' && term !== '');
     tasks.forEach((task: TaskType) => {
       let match = false;
       searchArray.forEach((term) => {
-        if (task.name.indexOf(term) !== -1 || task.notes.indexOf(term) !== -1) {
+        if (
+          task.name.toLowerCase().indexOf(term.toLowerCase()) !== -1 ||
+          task.notes.toLowerCase().indexOf(term.toLowerCase()) !== -1
+        ) {
           match = true;
         }
       });
       if (match) filteredTasks.push(task);
     });
 
+    // remove done if hidden
+    filteredTasks = filteredTasks.filter(
+      (task) =>
+        projectList?.searchSettings.showDone ||
+        (!projectList?.searchSettings.showDone && taskOverdue(getTask(task.id), new Date())),
+    );
+
+    // sort
     if (!projectList?.searchSettings.group || (projectList?.searchSettings.group as string) === '') {
       setfilteredTasks({
         default: sortTasks(filteredTasks, projectList?.searchSettings.sort, projectList?.searchSettings.sortDesc),

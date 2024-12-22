@@ -4,8 +4,6 @@ import { GroupParamsType, ProjectListType, SortParamsType, ViewSettingsSettingsT
 import { Context } from '../../dataManagement/ContextProvider';
 import { chevronDownOutline, chevronUpOutline } from 'ionicons/icons';
 
-import './SortOptionsModal.css';
-
 const SortOptionsModal: React.FC = () => {
   const { currentProjectId, projectList, handleSetProjectList, getProject, setProject } = useContext(Context);
 
