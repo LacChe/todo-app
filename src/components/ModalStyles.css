@@ -1,14 +1,20 @@
 .add-project-modal-form,
+.add-task-modal-form,
+.edit-project-modal-form,
+.edit-task-modal-form {
+  padding: 5px;
+}
+
+.add-project-modal-form,
 .add-task-modal-form {
   width: 100%;
   height: max-content;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 50px;
 }
 
-.add-task-modal-form > div {
+.add-task-modal-form > div:first-child {
   width: 100%;
 }
 
@@ -25,6 +31,10 @@
   align-items: start;
   justify-content: center;
   gap: 10px;
+}
+
+.ion-label {
+  font-style: italic;
 }
 
 .form-inputs-color-picker {
@@ -52,7 +62,9 @@
 }
 
 .form-inputs-block-list {
-  width: 100%;
+  margin: 0 auto;
+  border: 1px solid blue;
+  border-radius: 5px;;
 }
 
 .open-sort-options-modal {
@@ -65,4 +77,37 @@
 
 ion-modal {
   --height: auto;
+}
+
+.add-task-button-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-task-button-wrapper > ion-button {
+  margin: 2px;
+}
+
+.add-button {
+  height: 60px;
+}
+
+.add-task-input-wrapper > ion-input:last-child {
+  font-size: 0.9rem;
+}
+
+.edit-task-input-every-num-days {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.edit-task-input-on-dates, .edit-task-input-every-days-of-month {
+  margin: 0 auto;
+}
+
+.days-of-month-selection {
+  border: 1px solid blue;
+  border-radius: 10px;
 }

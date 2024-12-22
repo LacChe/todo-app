@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { TaskType } from '../../types';
 import { Context } from '../../dataManagement/ContextProvider';
-import { addOutline } from 'ionicons/icons';
+import { ellipsisHorizontalOutline, sendOutline } from 'ionicons/icons';
 
 type AddTaskModalProps = {
   setBasicTaskInfo: Dispatch<SetStateAction<TaskType | undefined>>;
@@ -72,11 +72,14 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
       breakpoints={[0, 1]}
     >
       <form onSubmit={handleSubmit} className="add-task-modal-form">
-        <div>
+        <div className="add-task-input-wrapper">
           <IonInput placeholder="What needs doing..." onIonInput={(e) => setNewTaskName(e.detail.value as string)} />
           <IonInput placeholder="Notes" onIonInput={(e) => setNewTaskNotes(e.detail.value as string)} />
+        </div>
+        <div className="add-task-button-wrapper">
           {/* button to change to detailed creation mode */}
           <IonButton
+            className="expand-button"
             onClick={() => {
               setBasicTaskInfo({
                 id: 'task-' + uuidv4(),
@@ -90,12 +93,12 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
               document.getElementById('open-edit-task-modal')?.click();
             }}
           >
-            <IonIcon icon={addOutline}></IonIcon>
+            <IonIcon icon={ellipsisHorizontalOutline}></IonIcon>
+          </IonButton>
+          <IonButton className="add-button" type="submit" onClick={handleSubmit}>
+            <IonIcon icon={sendOutline} />
           </IonButton>
         </div>
-        <IonButton type="submit" onClick={handleSubmit}>
-          Save
-        </IonButton>
       </form>
     </IonModal>
   );

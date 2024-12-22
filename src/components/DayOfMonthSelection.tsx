@@ -1,4 +1,4 @@
-import { IonButton } from '@ionic/react';
+import { IonButton, IonCol, IonGrid, IonRow } from '@ionic/react';
 import React, { Dispatch, SetStateAction } from 'react';
 
 type DayOfMonthSelectionProps = {
@@ -15,32 +15,37 @@ const DayOfMonthSelection: React.FC<DayOfMonthSelectionProps> = ({
     [8, 9, 10, 11, 12, 13, 14],
     [15, 16, 17, 18, 19, 20, 21],
     [22, 23, 24, 25, 26, 27, 28],
-    [29, 30, 31],
+    [29, 30, 31, -1, -1, -1, -1],
   ];
 
   return (
-    <div>
+    <IonGrid className="days-of-month-selection">
       {days.map((row, index) => (
-        <div key={index}>
-          {row.map((day) => (
-            <IonButton
-              key={day}
-              onClick={() => {
-                setEveryDaysOfMonthValue((prev: number[] | undefined) => {
-                  let newPrev = prev ? [...prev] : [];
-                  if (newPrev.includes(day)) newPrev = newPrev.filter((d) => d !== day);
-                  else newPrev.push(day);
-                  return newPrev;
-                });
-              }}
-              fill={everyDaysOfMonthValue?.includes(day) ? 'solid' : 'clear'}
-            >
-              {day}
-            </IonButton>
-          ))}
-        </div>
+        <IonRow key={index}>
+          {row.map((day) => {
+            if (day === -1) return <IonCol></IonCol>;
+            else
+              return (
+                <IonCol key={day}>
+                  <IonButton
+                    onClick={() => {
+                      setEveryDaysOfMonthValue((prev: number[] | undefined) => {
+                        let newPrev = prev ? [...prev] : [];
+                        if (newPrev.includes(day)) newPrev = newPrev.filter((d) => d !== day);
+                        else newPrev.push(day);
+                        return newPrev;
+                      });
+                    }}
+                    fill={everyDaysOfMonthValue?.includes(day) ? 'solid' : 'clear'}
+                  >
+                    {day}
+                  </IonButton>
+                </IonCol>
+              );
+          })}
+        </IonRow>
       ))}
-    </div>
+    </IonGrid>
   );
 };
 

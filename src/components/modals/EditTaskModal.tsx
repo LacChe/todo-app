@@ -167,6 +167,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
         <div className="form-inputs">
           {/* Name Input */}
           <IonInput
+            labelPlacement="floating"
             label="Name"
             placeholder="Task Name"
             value={newTaskName}
@@ -174,6 +175,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           />
           {/* Notes Input */}
           <IonTextarea
+            labelPlacement="floating"
             label="Notes"
             placeholder="Task Notes"
             value={newTaskNotes}
@@ -181,6 +183,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           />
           {/* TypeData Name Input */}
           <IonSelect
+            labelPlacement="floating"
             value={newTaskTypeDataName}
             onIonChange={(e) => setNewTaskTypeDataName(e.detail.value)}
             interface="popover"
@@ -193,9 +196,10 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           </IonSelect>
           {/* TypeData Value Input everyNumDays */}
           {newTaskTypeDataName === 'everyNumDays' && (
-            <div>
+            <div className="edit-task-input-every-num-days">
               Every
               <IonInput
+                min={1}
                 type="number"
                 placeholder="#"
                 value={everyNumDaysValue}
@@ -207,6 +211,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           {/* TypeData Value Input everyDaysOfWeek */}
           {newTaskTypeDataName === 'everyDaysOfWeek' && (
             <IonSelect
+              labelPlacement="floating"
               value={everyDaysOfWeekValue}
               onIonChange={(e) => setEveryDaysOfWeekValue(e.detail.value as number[])}
               interface="popover"
@@ -224,14 +229,17 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           )}
           {/* TypeData Value Input everyDaysOfMonth */}
           {newTaskTypeDataName === 'everyDaysOfMonth' && (
-            <DayOfMonthSelection
-              everyDaysOfMonthValue={everyDaysOfMonthValue}
-              setEveryDaysOfMonthValue={setEveryDaysOfMonthValue}
-            />
+            <div className="edit-task-input-every-days-of-month">
+              <DayOfMonthSelection
+                everyDaysOfMonthValue={everyDaysOfMonthValue}
+                setEveryDaysOfMonthValue={setEveryDaysOfMonthValue}
+              />
+            </div>
           )}
           {/* TypeData Value Input everyDaysOfWeek */}
           {newTaskTypeDataName === 'onDates' && (
             <IonDatetime
+              className="edit-task-input-on-dates"
               onIonChange={(e) => setOnDatesValue(e.detail.value as string[])}
               presentation="date"
               multiple={true}

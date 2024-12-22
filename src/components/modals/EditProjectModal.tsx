@@ -177,6 +177,7 @@ const EditProjectModal: React.FC = () => {
         <div className="form-inputs">
           {/* Name Input */}
           <IonInput
+            labelPlacement="floating"
             label="Name"
             placeholder="Project Name"
             value={newProjectName}
@@ -185,7 +186,7 @@ const EditProjectModal: React.FC = () => {
           {/* Color Input */}
           <div className="form-inputs-color-picker">
             <IonLabel>Color</IonLabel>
-            <IonButton id="color-trigger">
+            <IonButton fill="clear" id="color-trigger">
               <div className="color-picker-popover-button" style={{ backgroundColor: newProjectColor }} />
             </IonButton>
             <IonPopover
@@ -229,7 +230,7 @@ const EditProjectModal: React.FC = () => {
                     onIonChange={(e) => handleBlockNameChange(blockIndex, e.detail.value as string)}
                   />
 
-                  <IonButton id={`color-trigger-${blockIndex}`}>
+                  <IonButton fill="clear" id={`color-trigger-${blockIndex}`}>
                     <div className="color-picker-popover-button" style={{ backgroundColor: block.color }} />
                   </IonButton>
                   <IonPopover
