@@ -55,7 +55,7 @@ const CalendarView: React.FC = () => {
         const changeDateColSwiperGesture = createGesture({
           el: changeDateColSwiperTarget,
           onEnd: function onContentSwipeEnd(detail: GestureDetail) {
-            if (detail.deltaX > 100) {
+            if (detail.deltaX < -100) {
               setDateColOffset((prev) => {
                 let newColOffset = prev + 1;
                 if (newColOffset > 6) {
@@ -65,7 +65,7 @@ const CalendarView: React.FC = () => {
                 return newColOffset;
               });
             }
-            if (detail.deltaX < -100) {
+            if (detail.deltaX > 100) {
               setDateColOffset((prev) => {
                 let newColOffset = prev - 1;
                 if (newColOffset < 0) {
@@ -85,8 +85,8 @@ const CalendarView: React.FC = () => {
         const changeDateRowSwiperGesture = createGesture({
           el: changeDateRowSwiperTarget,
           onEnd: function onSliderSwipeEnd(detail: GestureDetail) {
-            if (detail.deltaX > 100) setDateRowOffset((prev) => prev + 1);
-            if (detail.deltaX < -100) setDateRowOffset((prev) => prev - 1);
+            if (detail.deltaX < -100) setDateRowOffset((prev) => prev + 1);
+            if (detail.deltaX > 100) setDateRowOffset((prev) => prev - 1);
           },
           gestureName: 'changeDateRowSwiperGesture',
         });
@@ -184,7 +184,12 @@ const CalendarView: React.FC = () => {
     date.setDate(today.getDate() - today.getDay() + dateColOffset + dateRowOffset * 7);
     return (
       <div>
-        <div>
+        <div
+          style={{
+            borderBottom: `${retrievedProject?.color} 5px solid`,
+          }}
+          className="date-slider-label"
+        >
           {/* year and month */}
           {date.getFullYear()} {monthsOfYearAbbr[date.getMonth()]}
         </div>
@@ -204,7 +209,12 @@ const CalendarView: React.FC = () => {
                 setTaskIdsForDate([]);
                 setDateColOffset(index);
               }}
-              className={dateColOffset === index ? 'selected' : ''}
+              /*style={{ outlineColor: retrievedProject?.color, outlineWidth: dateColOffset === index ? '2px' : '0px' }}*/
+              style={{
+                outlineColor: retrievedProject?.color,
+                outlineWidth: dateColOffset === index ? '2px' : '0px',
+                outlineStyle: 'solid',
+              }}
               key={date}
             >
               <div>{dayOfWeekInitials[index]}</div>
@@ -227,7 +237,7 @@ const CalendarView: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar style={{ '--background': retrievedProject?.color }}>
+        <IonToolbar>
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />

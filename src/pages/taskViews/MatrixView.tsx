@@ -237,13 +237,21 @@ const MatrixView: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar style={{ '--background': retrievedProject?.color }}>
+        <IonToolbar>
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />
           </IonButtons>
           {/* title */}
-          <IonTitle>{retrievedProject?.name} MatrixView</IonTitle>
+          <IonTitle>
+            <p
+              style={{
+                borderBottom: `${retrievedProject?.color} 5px solid`,
+              }}
+            >
+              {retrievedProject?.name}
+            </p>
+          </IonTitle>
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
             <IonButton onClick={(e: any) => presentMatrixPopover({ event: e })}>
@@ -268,7 +276,6 @@ const MatrixView: React.FC = () => {
                           textDecoration: 'underline',
                           textDecorationColor: block?.color,
                           textDecorationThickness: '10px',
-                          text: block?.color,
                         }}
                       >
                         {block.name}

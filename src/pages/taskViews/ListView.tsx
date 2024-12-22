@@ -123,13 +123,21 @@ const ListView: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar style={{ '--background': retrievedProject?.color }}>
+        <IonToolbar>
           {/* menu button */}
           <IonButtons slot="start" collapse={true}>
             <IonMenuButton />
           </IonButtons>
           {/* title */}
-          <IonTitle>{retrievedProject?.name} ListView</IonTitle>
+          <IonTitle>
+            <p
+              style={{
+                borderBottom: `${retrievedProject?.color} 5px solid`,
+              }}
+            >
+              {retrievedProject?.name}
+            </p>
+          </IonTitle>
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
             <IonButton onClick={(e: any) => presentListPopover({ event: e })}>
