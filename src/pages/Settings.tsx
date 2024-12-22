@@ -3,8 +3,6 @@ import React, { useContext, useEffect } from 'react';
 import { Context } from '../dataManagement/ContextProvider';
 
 const Settings: React.FC = () => {
-  const { handleSetCurrentProjectId } = useContext(Context);
-
   return (
     <IonPage>
       <IonHeader>

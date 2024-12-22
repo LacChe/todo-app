@@ -23,8 +23,7 @@ import { ProjectListType, TaskType } from '../types';
 import { groupTasks, sortTaskGroups, sortTasks, taskOverdue, typeDataToDisplayString } from '../dataManagement/utils';
 
 const Search: React.FC = () => {
-  const { tasks, projects, handleSetCurrentProjectId, projectList, handleSetProjectList, getTask } =
-    useContext(Context);
+  const { tasks, projects, projectList, handleSetProjectList, getTask } = useContext(Context);
 
   const [searchInput, setSearchInput] = useState<string>('');
   const [filteredTasks, setfilteredTasks] = useState<{ [key: string]: TaskType[] }>({});
@@ -34,6 +33,7 @@ const Search: React.FC = () => {
     if (!projectList?.searchSettings?.sort) return;
 
     let filteredTasks: TaskType[] = [];
+    setfilteredTasks({});
 
     // search
     const searchArray = searchInput.split(' ').filter((term) => term !== ' ' && term !== '');
