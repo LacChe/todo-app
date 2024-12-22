@@ -22,7 +22,7 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { BlockType, ProjectType } from '../../types';
-import { ellipsisVerticalOutline } from 'ionicons/icons';
+import { ellipsisVerticalOutline, textOutline } from 'ionicons/icons';
 
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
@@ -263,7 +263,14 @@ const MatrixView: React.FC = () => {
                     className={blockIndex === hoverOverBlock ? 'drag-hover' : ''}
                   >
                     <IonCardHeader>
-                      <IonCardSubtitle style={{ fontSize: '0.65rem', color: block?.color }}>
+                      <IonCardSubtitle
+                        style={{
+                          textDecoration: 'underline',
+                          textDecorationColor: block?.color,
+                          textDecorationThickness: '10px',
+                          text: block?.color,
+                        }}
+                      >
                         {block.name}
                       </IonCardSubtitle>
                     </IonCardHeader>
