@@ -123,7 +123,7 @@ const Menu: React.FC = () => {
                     <IonIcon icon={settingsOutline}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
-                <IonTitle>{currentProjectId} Projects</IonTitle>
+                <IonTitle>Projects</IonTitle>
                 <IonMenuToggle autoHide={false}>
                   <IonButton
                     fill="outline"
@@ -145,6 +145,7 @@ const Menu: React.FC = () => {
             {/* list all project names */}
             <IonReorderGroup disabled={false} onIonItemReorder={handleListReorder}>
               {projectList?.projectIds.map((projectId: string, index: number) => {
+                const project = projects.filter((project: ProjectType) => project.id === projectId)[0];
                 return (
                   <IonMenuToggle key={index} autoHide={false}>
                     <IonItem className={`${currentProjectId === projectId ? 'selected-project ' : ''}menu-item`}>
@@ -152,6 +153,9 @@ const Menu: React.FC = () => {
                         <IonIcon color="primary" icon={menuOutline}></IonIcon>
                       </IonReorder>
                       <IonButton
+                        style={{
+                          textDecorationColor: project?.color,
+                        }}
                         fill="clear"
                         className="project-selection-button"
                         onClick={() => {
@@ -159,7 +163,7 @@ const Menu: React.FC = () => {
                           router.push(`/app/project/${projectId}/${currentTab}`, 'root', 'replace');
                         }}
                       >
-                        <div>{projects.filter((project: ProjectType) => project.id === projectId)[0].name}</div>
+                        <div style={{ color: project.color }}>{project.name}</div>
                         {getIncompleteTasksCount(projectId) > 0 && (
                           <IonBadge slot="end">{getIncompleteTasksCount(projectId)}</IonBadge>
                         )}

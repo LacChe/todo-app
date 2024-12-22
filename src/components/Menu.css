@@ -9,8 +9,14 @@ ion-reorder {
   align-content: center;
 }
 
+.menu-item div {
+  text-decoration: none;
+}
+
 .selected-project div {
   font-style: italic;
+  text-decoration: underline;
+  text-decoration-thickness: 5px;
 }
 
 .project-selection-button {
