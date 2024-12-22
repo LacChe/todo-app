@@ -21,7 +21,13 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
-import { groupTasks, sortTaskGroups, sortTasks, taskOverdue } from '../../dataManagement/utils';
+import {
+  groupTasks,
+  sortTaskGroups,
+  sortTasks,
+  taskOverdue,
+  typeDataToDisplayString,
+} from '../../dataManagement/utils';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
@@ -146,7 +152,13 @@ const ListView: React.FC = () => {
             .map((key, groupIndex) => {
               return (
                 <IonCard key={groupIndex}>
-                  {key !== 'default' && <div>{key}</div>}
+                  {key !== 'default' && (
+                    <div className="group-label">
+                      {retrievedProject?.viewSettings.listSettings.settings.group === 'typeData'
+                        ? typeDataToDisplayString(key)
+                        : key}
+                    </div>
+                  )}
                   {sortedTasks[key].map((task, taskIndex) => {
                     if (
                       retrievedProject?.viewSettings.listSettings.settings.showDone ||

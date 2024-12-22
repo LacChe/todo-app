@@ -1,5 +1,20 @@
 import { GroupParamsType, ProjectType, SortParamsType, TaskType } from '../types';
 
+export function typeDataToDisplayString(typeDataName: string) {
+  switch (typeDataName) {
+    case 'single':
+      return 'Singular';
+    case 'everyNumDays':
+      return 'Every # Days';
+    case 'everyDaysOfWeek':
+      return 'On Days of Week';
+    case 'everyDaysOfMonth':
+      return 'On Days of Month';
+    case 'onDates':
+      return 'On Dates';
+  }
+}
+
 function daysInMonth(month: number, year: number) {
   const daysInMonths = [
     31,

@@ -20,7 +20,7 @@ import './taskViews/TaskView.css';
 import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
 import { ProjectListType, TaskType } from '../types';
-import { groupTasks, sortTaskGroups, sortTasks, taskOverdue } from '../dataManagement/utils';
+import { groupTasks, sortTaskGroups, sortTasks, taskOverdue, typeDataToDisplayString } from '../dataManagement/utils';
 
 const Search: React.FC = () => {
   const { tasks, projects, handleSetCurrentProjectId, projectList, handleSetProjectList, getTask } =
@@ -157,7 +157,11 @@ const Search: React.FC = () => {
             .map((key, groupIndex) => {
               return (
                 <IonCard key={groupIndex}>
-                  {key !== 'default' && <div>{key}</div>}
+                  {key !== 'default' && (
+                    <div className="group-label">
+                      {projectList?.searchSettings.group === 'typeData' ? typeDataToDisplayString(key) : key}
+                    </div>
+                  )}
                   {filteredTasks[key].map((task, taskIndex) => {
                     if (
                       projectList?.searchSettings.showDone ||

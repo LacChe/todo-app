@@ -44,3 +44,8 @@ ion-buttons {
 .calendar-view-date-slider > button.selected {
   background-color: blue;
 }
+
+.group-label {
+  font-style: italic;
+  padding: 2px 10px;
+}

@@ -120,7 +120,7 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
           <div>{task.name}</div>
         </IonLabel>
         <div className={`${(task.showDetailsOverride && !matrixView) || showDetails ? '' : 'hidden '}task-notes`}>
-          {task.createdDate} {task.typeData.name}
+          {task.notes}
         </div>
       </IonItem>
     </IonItemSliding>

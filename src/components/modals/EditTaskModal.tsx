@@ -16,6 +16,7 @@ import { Context } from '../../dataManagement/ContextProvider';
 import { checkmarkOutline, closeOutline } from 'ionicons/icons';
 import { TaskType, TaskTypeDataTypeNameType, TaskTypeDataTypeValueType } from '../../types';
 import DayOfMonthSelection from '../DayOfMonthSelection';
+import { typeDataToDisplayString } from '../../dataManagement/utils';
 
 type EditTaskModalProps = {
   basicTaskInfo: TaskType | undefined;
@@ -184,11 +185,11 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
             onIonChange={(e) => setNewTaskTypeDataName(e.detail.value)}
             interface="popover"
           >
-            <IonSelectOption value="single">Singular</IonSelectOption>
-            <IonSelectOption value="everyNumDays">Every # Days</IonSelectOption>
-            <IonSelectOption value="everyDaysOfWeek">On Days of Week</IonSelectOption>
-            <IonSelectOption value="everyDaysOfMonth">On Days of Month</IonSelectOption>
-            <IonSelectOption value="onDates">On Dates</IonSelectOption>
+            <IonSelectOption value="single">{typeDataToDisplayString('single')}</IonSelectOption>
+            <IonSelectOption value="everyNumDays">{typeDataToDisplayString('everyNumDays')}</IonSelectOption>
+            <IonSelectOption value="everyDaysOfWeek">{typeDataToDisplayString('everyDaysOfWeek')}</IonSelectOption>
+            <IonSelectOption value="everyDaysOfMonth">{typeDataToDisplayString('everyDaysOfMonth')}</IonSelectOption>
+            <IonSelectOption value="onDates">{typeDataToDisplayString('onDates')}</IonSelectOption>
           </IonSelect>
           {/* TypeData Value Input everyNumDays */}
           {newTaskTypeDataName === 'everyNumDays' && (
