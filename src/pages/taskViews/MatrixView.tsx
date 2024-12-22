@@ -131,9 +131,9 @@ const MatrixView: React.FC = () => {
       const clonedTaskItemElem = taskItemElem.cloneNode(true) as HTMLElement;
       const cloneStyle = clonedTaskItemElem.style;
 
-      // only make child label draggable
+      // only make child label and notes draggable
       if (!taskItemElem.children[1].children[1]) return;
-      const gesture = createGesture({
+      const gestureLabel = createGesture({
         el: taskItemElem.children[1].children[1],
         threshold: 0,
         onStart: () => onStart(),
@@ -141,7 +141,16 @@ const MatrixView: React.FC = () => {
         onEnd: (detail: GestureDetail) => onEnd(detail),
         gestureName: 'draggable',
       });
-      gesture.enable();
+      gestureLabel.enable();
+      const gestureNotes = createGesture({
+        el: taskItemElem.children[1].children[2],
+        threshold: 0,
+        onStart: () => onStart(),
+        onMove: (detail: GestureDetail) => onMove(detail),
+        onEnd: (detail: GestureDetail) => onEnd(detail),
+        gestureName: 'draggable',
+      });
+      gestureNotes.enable();
 
       const onStart = () => {
         // add clone to grid
