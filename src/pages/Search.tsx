@@ -142,8 +142,8 @@ const Search: React.FC = () => {
       <IonContent className="ion-padding">
         {/* list task items */}
         <IonList>
-          {Object.keys(filteredTasks)?.length === 0 && <div>No tasks</div>}
-          {filteredTasks.default?.length === 0 && <div>No tasks</div>}
+          {Object.keys(filteredTasks)?.length === 0 && <div>Nothing here...</div>}
+          {filteredTasks.default?.length === 0 && <div>Nothing here...</div>}
           {Object.keys(filteredTasks)
             .sort((a, b) => {
               if (a < b) return -1 * (projectList?.searchSettings.groupDesc ? -1 : 1);

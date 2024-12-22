@@ -16,7 +16,7 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { ProjectType } from '../../types';
-import { ellipsisVerticalOutline } from 'ionicons/icons';
+import { chevronBackOutline, chevronForwardOutline, ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
@@ -32,6 +32,9 @@ const CalendarView: React.FC = () => {
   const [dateRowOffset, setDateRowOffset] = useState<number>(0);
   const [dateColOffset, setDateColOffset] = useState<number>(new Date().getDay());
   const [taskIdsForDate, setTaskIdsForDate] = useState<string[]>([]);
+
+  const [sliderSlidingDirection, setSliderSlidingDirection] = useState<'back' | 'forward' | ''>('');
+  const [listSlidingDirection, setListSlidingDirection] = useState<'back' | 'forward' | ''>('');
 
   const today = new Date();
   const dayOfWeekInitials = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
@@ -54,6 +57,10 @@ const CalendarView: React.FC = () => {
       if (changeDateColSwiperTarget) {
         const changeDateColSwiperGesture = createGesture({
           el: changeDateColSwiperTarget,
+          onMove: function onContentSwipeMove(detail: GestureDetail) {
+            if (detail.deltaX < -100) setListSlidingDirection('back');
+            if (detail.deltaX > 100) setListSlidingDirection('forward');
+          },
           onEnd: function onContentSwipeEnd(detail: GestureDetail) {
             if (detail.deltaX < -100) {
               setDateColOffset((prev) => {
@@ -75,6 +82,7 @@ const CalendarView: React.FC = () => {
                 return newColOffset;
               });
             }
+            setListSlidingDirection('');
           },
           gestureName: 'changeDateColSwiperGesture',
         });
@@ -84,9 +92,14 @@ const CalendarView: React.FC = () => {
       if (changeDateRowSwiperTarget) {
         const changeDateRowSwiperGesture = createGesture({
           el: changeDateRowSwiperTarget,
+          onMove: function onSliderSwipeMove(detail: GestureDetail) {
+            if (detail.deltaX < -100) setSliderSlidingDirection('back');
+            if (detail.deltaX > 100) setSliderSlidingDirection('forward');
+          },
           onEnd: function onSliderSwipeEnd(detail: GestureDetail) {
             if (detail.deltaX < -100) setDateRowOffset((prev) => prev + 1);
             if (detail.deltaX > 100) setDateRowOffset((prev) => prev - 1);
+            setSliderSlidingDirection('');
           },
           gestureName: 'changeDateRowSwiperGesture',
         });
@@ -191,16 +204,20 @@ const CalendarView: React.FC = () => {
           className="date-slider-label"
         >
           {/* year and month */}
-          {date.getFullYear()} {monthsOfYearAbbr[date.getMonth()]}
+          {date.getFullYear()} {monthsOfYearAbbr[date.getMonth()]}.
         </div>
-        <div className="calendar-view-date-slider">
+        <div
+          className={`${sliderSlidingDirection === 'forward' ? 'slider-forward ' : ''}
+          ${sliderSlidingDirection === 'back' ? 'slider-back ' : ''}
+          calendar-view-date-slider`}
+        >
           <button
             onClick={() => {
               setTaskIdsForDate([]);
               setDateRowOffset((prev) => prev - 1);
             }}
           >
-            {'<'}
+            <IonIcon icon={chevronBackOutline} />
           </button>
           {/* this weeks dates */}
           {dates.map((date, index) => (
@@ -227,7 +244,7 @@ const CalendarView: React.FC = () => {
               setDateRowOffset((prev) => prev + 1);
             }}
           >
-            {'>'}
+            <IonIcon icon={chevronForwardOutline} />
           </button>
         </div>
       </div>
@@ -253,8 +270,12 @@ const CalendarView: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding calendar-content">
-        <IonList>
-          {taskIdsForDate?.length === 0 && <div>No tasks</div>}
+        <IonList
+          className={`${listSlidingDirection === 'forward' ? 'list-forward ' : ''}
+          ${listSlidingDirection === 'back' ? 'list-back ' : ''}
+          calendar-view-date-list`}
+        >
+          {taskIdsForDate?.length === 0 && <div>Nothing here...</div>}
           {taskIdsForDate.map((taskId: string, index: number) => {
             if (
               retrievedProject?.viewSettings.calendarSettings.settings.showDone ||

@@ -25,16 +25,31 @@ ion-buttons {
 }
 
 .calendar-view-date-slider {
+  transition: all 0.1s;
   display: flex;
   flex-direction: row;
+  justify-content: center;
   gap: 5px;
   padding: 5px;
 }
 
+.calendar-view-date-list {
+  transition: all 0.1s;
+  transform: translate(0px, 0px);
+}
+
+.slider-forward, .list-forward {
+  transform: translate(100px, 0px);
+}
+
+.slider-back, .list-back {
+  transform: translate(-100px, 0px);
+}
+
 .calendar-view-date-slider > button {
-  padding: 5px;
+  transition: all 0.1s;
+  padding: 5px 15px;
   border-radius: 10px;
-  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
