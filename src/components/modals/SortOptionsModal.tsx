@@ -1,7 +1,10 @@
-import { IonButton, IonModal } from '@ionic/react';
+import { IonButton, IonIcon, IonLabel, IonModal } from '@ionic/react';
 import React, { useContext, useEffect, useState } from 'react';
 import { GroupParamsType, ProjectListType, SortParamsType, ViewSettingsSettingsType } from '../../types';
 import { Context } from '../../dataManagement/ContextProvider';
+import { chevronDownOutline, chevronUpOutline } from 'ionicons/icons';
+
+import './SortOptionsModal.css';
 
 const SortOptionsModal: React.FC = () => {
   const { currentProjectId, projectList, handleSetProjectList, getProject, setProject } = useContext(Context);
@@ -40,7 +43,8 @@ const SortOptionsModal: React.FC = () => {
 
   return (
     <IonModal trigger="open-sort-options-modal" initialBreakpoint={1} breakpoints={[0, 1]}>
-      <div>
+      <div className="open-sort-options-modal">
+        <IonLabel>Sort By</IonLabel>
         <div>
           {sorts.map((sort) => (
             <IonButton
@@ -53,31 +57,53 @@ const SortOptionsModal: React.FC = () => {
                 handleSetSortSettings(newSortSettings);
               }}
             >
-              {sort} {sortSettings.sort === sort ? (sortSettings.sortDesc ? 'D' : 'A') : ''}
+              {sort}
+              {sortSettings.sort === sort ? (
+                sortSettings.sortDesc ? (
+                  <IonIcon icon={chevronDownOutline} />
+                ) : (
+                  <IonIcon icon={chevronUpOutline} />
+                )
+              ) : (
+                ''
+              )}
             </IonButton>
           ))}
         </div>
+        <IonLabel>Group By</IonLabel>
         <div>
-          {groups.map((group) => (
-            <IonButton
-              fill={sortSettings.group === group ? 'solid' : 'outline'}
-              key={group}
-              onClick={() => {
-                let newSortSettings = { ...sortSettings } as ViewSettingsSettingsType;
-                if (newSortSettings.group !== group) {
-                  newSortSettings.group = group as GroupParamsType;
-                  newSortSettings.groupDesc = false;
-                } else if (newSortSettings.group === group && newSortSettings.groupDesc === false) {
-                  newSortSettings.groupDesc = true;
-                } else {
-                  newSortSettings.group = '';
-                }
-                handleSetSortSettings(newSortSettings);
-              }}
-            >
-              {group} {sortSettings.group === group ? (sortSettings.groupDesc ? 'D' : 'A') : ''}
-            </IonButton>
-          ))}
+          {groups.map((group) => {
+            if (group === 'projectName' && currentProjectId !== 'search') return;
+            return (
+              <IonButton
+                fill={sortSettings.group === group ? 'solid' : 'outline'}
+                key={group}
+                onClick={() => {
+                  let newSortSettings = { ...sortSettings } as ViewSettingsSettingsType;
+                  if (newSortSettings.group !== group) {
+                    newSortSettings.group = group as GroupParamsType;
+                    newSortSettings.groupDesc = false;
+                  } else if (newSortSettings.group === group && newSortSettings.groupDesc === false) {
+                    newSortSettings.groupDesc = true;
+                  } else {
+                    newSortSettings.group = '';
+                  }
+                  handleSetSortSettings(newSortSettings);
+                }}
+              >
+                {group}
+                {sortSettings.group === group ? (
+                  sortSettings.groupDesc ? (
+                    <IonIcon icon={chevronDownOutline} />
+                  ) : (
+                    <IonIcon icon={chevronUpOutline} />
+                  )
+                ) : (
+                  ''
+                )}
+              </IonButton>
+            );
+          })}
         </div>
       </div>
     </IonModal>

@@ -11,7 +11,7 @@
           "showDone": false,
           "sort": "createdDate",
           "sortDesc": true,
-          "group": "projectName",
+          "group": "",
           "groupDesc": false
         }
       },
