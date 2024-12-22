@@ -14,12 +14,13 @@ import { Context } from '../dataManagement/ContextProvider';
 const Project: React.FC = (): JSX.Element => {
   let { projectId } = useParams() as any;
   const router = useIonRouter();
-  const { handleSetCurrentTab } = useContext(Context);
+  const { currentTab, handleSetCurrentTab } = useContext(Context);
 
   return (
     <IonTabs>
       <IonTabBar slot="bottom">
         <IonTabButton
+          className={`${currentTab === 'list' ? 'selected' : ''}`}
           tab="list"
           onClick={() => {
             handleSetCurrentTab('list');
@@ -29,6 +30,7 @@ const Project: React.FC = (): JSX.Element => {
           <IonIcon icon={listOutline} />
         </IonTabButton>
         <IonTabButton
+          className={`${currentTab === 'matrix' ? 'selected' : ''}`}
           tab="matrix"
           onClick={() => {
             handleSetCurrentTab('matrix');
@@ -38,6 +40,7 @@ const Project: React.FC = (): JSX.Element => {
           <IonIcon icon={gridOutline} />
         </IonTabButton>
         <IonTabButton
+          className={`${currentTab === 'calendar' ? 'selected' : ''}`}
           tab="calendar"
           onClick={() => {
             handleSetCurrentTab('calendar');
