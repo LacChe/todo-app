@@ -10,3 +10,17 @@ ion-label {
   flex-direction: column;
   align-content: center;
 }
+
+.task-notes {
+  width: 50%;
+  font-style: italic;
+  text-align: end;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: all 0.5s;
+}
+
+.hidden {
+  width: 0px;
+}
