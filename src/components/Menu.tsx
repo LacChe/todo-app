@@ -54,7 +54,7 @@ const Menu: React.FC = () => {
 
   const [basicTaskInfo, setBasicTaskInfo] = useState<TaskType | undefined>();
 
-  //direct to correct page after loading
+  // direct to correct page after loading
   useEffect(() => {
     if (loading) return;
     // redirect to new project page if no preferences
@@ -118,18 +118,18 @@ const Menu: React.FC = () => {
                   <IonButton
                     fill="clear"
                     onClick={() => {
-                      router.push('/app/project/settings', 'root', 'replace');
+                      router.push('/app/settings', 'root', 'replace');
                     }}
                   >
                     <IonIcon icon={settingsOutline}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
-                <IonTitle color="primary">Projects</IonTitle>
+                <IonTitle>Projects</IonTitle>
                 <IonMenuToggle autoHide={false}>
                   <IonButton
                     fill="outline"
                     onClick={() => {
-                      router.push('/app/project/search', 'root', 'replace');
+                      router.push('/app/search', 'root', 'replace');
                     }}
                   >
                     <IonIcon icon={searchOutline}></IonIcon>
