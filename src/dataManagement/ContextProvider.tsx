@@ -43,6 +43,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   async function loadPreferences(): Promise<void> {
     // TODO error checking
     let retrievedCurrentTab = await getPreference('currentTab');
+    if (!retrievedCurrentTab) retrievedCurrentTab = 'list';
     setCurrentTab(retrievedCurrentTab as TabType);
     let retrievedCurrentProjectId = await getPreference('currentProjectId');
     setCurrentProjectId(retrievedCurrentProjectId as string);
