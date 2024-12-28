@@ -22,6 +22,16 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   const [projects, setProjects] = useState<ProjectType[]>([]);
   const [tasks, setTasks] = useState<TaskType[]>([]);
 
+  const colorGrid = [
+    ['#FF5733', '#FF7F0E', '#FFD700', '#32CD32'],
+    ['#2CA02C', '#1F77B4', '#00BFFF', '#8A2BE2'],
+    ['#9467BD', '#8B0000', '#D2691E', '#FF6347'],
+    ['#C71585', '#4B0082', '#0000FF', '#7F7F7F'],
+  ];
+
+  const dayOfWeekInitials = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+  const monthsOfYearAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
   // load on first render
   useEffect(() => {
     handleLoading();
@@ -293,6 +303,9 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     <Context.Provider
       value={{
         loading,
+        colorGrid,
+        dayOfWeekInitials,
+        monthsOfYearAbbr,
         //
         currentTab,
         handleSetCurrentTab,

@@ -25,7 +25,7 @@ import { taskDue, taskOverdue } from '../../dataManagement/utils';
 
 const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, setProject, getTask, tasks } = useContext(Context);
+  const { loading, getProject, setProject, getTask, tasks, dayOfWeekInitials, monthsOfYearAbbr } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
@@ -35,10 +35,6 @@ const CalendarView: React.FC = () => {
 
   const [sliderSlidingDirection, setSliderSlidingDirection] = useState<'back' | 'forward' | ''>('');
   const [listSlidingDirection, setListSlidingDirection] = useState<'back' | 'forward' | ''>('');
-
-  const today = new Date();
-  const dayOfWeekInitials = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  const monthsOfYearAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // retrieve project when id changes
   useEffect(() => {
@@ -120,8 +116,8 @@ const CalendarView: React.FC = () => {
    * @param {ProjectType} retrievedProject - The project to find tasks for.
    */
   function findTasksForThisDate(retrievedProject: ProjectType) {
-    let checkDate = new Date(today);
-    checkDate.setDate(checkDate.getDate() - today.getDay() + dateColOffset + dateRowOffset * 7);
+    let checkDate = new Date();
+    checkDate.setDate(checkDate.getDate() - new Date().getDay() + dateColOffset + dateRowOffset * 7);
 
     let foundTaskIds: string[] = [];
     retrievedProject.taskIds.forEach((taskId: string) => {
@@ -187,14 +183,14 @@ const CalendarView: React.FC = () => {
    */
   function dateSlider(): JSX.Element {
     let dates = [];
-    let date = new Date(today);
+    let date = new Date();
     for (let i = 0; i < 7; i++) {
-      date = new Date(today);
-      date.setDate(date.getDate() + i - today.getDay() + dateRowOffset * 7);
+      date = new Date();
+      date.setDate(date.getDate() + i - new Date().getDay() + dateRowOffset * 7);
       dates.push(date.toISOString().split('T')[0] + ' ' + date.getDay());
     }
-    date = new Date(today);
-    date.setDate(today.getDate() - today.getDay() + dateColOffset + dateRowOffset * 7);
+    date = new Date();
+    date.setDate(new Date().getDate() - new Date().getDay() + dateColOffset + dateRowOffset * 7);
     return (
       <div>
         <div
@@ -226,12 +222,10 @@ const CalendarView: React.FC = () => {
                 setTaskIdsForDate([]);
                 setDateColOffset(index);
               }}
-              /*style={{ outlineColor: retrievedProject?.color, outlineWidth: dateColOffset === index ? '2px' : '0px' }}*/
               style={{
-                borderColor: retrievedProject?.color,
-                borderWidth: dateColOffset === index ? '2px' : '0px',
+                borderColor: dateColOffset === index ? retrievedProject?.color : '#00000000',
+                borderWidth: '2px',
                 borderStyle: 'solid',
-                padding: '-1px',
               }}
               key={date}
             >
@@ -285,7 +279,7 @@ const CalendarView: React.FC = () => {
               return (
                 <IonItem key={index}>
                   <TaskItem
-                    offsetDays={dateRowOffset * 7 - today.getDay() + dateColOffset}
+                    offsetDays={dateRowOffset * 7 - new Date().getDay() + dateColOffset}
                     taskId={taskId}
                     key={index}
                     showDetails={retrievedProject?.viewSettings.calendarSettings.settings.showDetails}

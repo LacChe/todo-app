@@ -22,17 +22,18 @@ import { BlockType, ProjectType } from '../../types';
 
 const EditProjectModal: React.FC = () => {
   const router = useIonRouter();
-  // TODO move outside
-  const colors = [
-    ['#FF5733', '#FF7F0E', '#FFD700', '#32CD32'],
-    ['#2CA02C', '#1F77B4', '#00BFFF', '#8A2BE2'],
-    ['#9467BD', '#8B0000', '#D2691E', '#FF6347'],
-    ['#C71585', '#4B0082', '#0000FF', '#7F7F7F'],
-  ];
 
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const { projects, setProject, deleteProject, projectList, getProject, currentProjectId, handleSetCurrentProjectId } =
-    useContext(Context);
+  const {
+    colorGrid,
+    projects,
+    setProject,
+    deleteProject,
+    projectList,
+    getProject,
+    currentProjectId,
+    handleSetCurrentProjectId,
+  } = useContext(Context);
 
   let retrievedProject: ProjectType = getProject(currentProjectId);
 
@@ -198,7 +199,7 @@ const EditProjectModal: React.FC = () => {
               triggerAction="click"
             >
               <IonContent class="ion-padding color-picker-popover">
-                {colors.map((row, index) => {
+                {colorGrid.map((row: string[], index: number) => {
                   return (
                     <div key={index}>
                       {row.map((color, index) => {
@@ -242,7 +243,7 @@ const EditProjectModal: React.FC = () => {
                     triggerAction="click"
                   >
                     <IonContent class="ion-padding color-picker-popover">
-                      {colors.map((row, colorIndex) => {
+                      {colorGrid.map((row: string[], colorIndex: number) => {
                         return (
                           <div key={colorIndex}>
                             {row.map((color, rowIndex) => {

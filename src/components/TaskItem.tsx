@@ -24,7 +24,7 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
     task = getTask(taskId);
 
     shownDate = new Date();
-    if (offsetDays) shownDate.setDate(shownDate.getDate() + offsetDays);
+    if (offsetDays) shownDate.setDate(new Date().getDate() + offsetDays);
     setTaskDueBool(taskDue(task, shownDate));
     setTaskOverdueBool(taskOverdue(task, shownDate));
   }, [tasks, offsetDays]);
