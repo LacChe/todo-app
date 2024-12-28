@@ -74,7 +74,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
    * After editing, dismisses the modal.
    */
   function handleEditTask() {
-    // TODO check values
     if (!newTaskName || newTaskName === '') return;
     if (!newTaskTypeDataName) return;
 

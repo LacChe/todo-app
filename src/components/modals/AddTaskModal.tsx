@@ -32,7 +32,6 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
    * added to the context and input states are cleared.
    */
   function handleCreateNewTask() {
-    // TODO check values
     if (!newTaskName || newTaskName === '') return;
 
     // create new task

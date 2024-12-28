@@ -28,7 +28,6 @@ const AddProjectModal: React.FC = () => {
    * Redirects the user to the new project's list view.
    */
   function handleCreateNewProject() {
-    // TODO check valid name
     if (!newProjectName || newProjectName === '') return;
 
     // create new project

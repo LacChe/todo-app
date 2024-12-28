@@ -22,6 +22,7 @@ import { BlockType, ProjectType } from '../../types';
 
 const EditProjectModal: React.FC = () => {
   const router = useIonRouter();
+  // TODO move outside
   const colors = [
     ['#FF5733', '#FF7F0E', '#FFD700', '#32CD32'],
     ['#2CA02C', '#1F77B4', '#00BFFF', '#8A2BE2'],
@@ -63,7 +64,6 @@ const EditProjectModal: React.FC = () => {
    * If the new project name is empty, do nothing.
    */
   function handleEditProject() {
-    // TODO check valid values
     if (!newProjectName || newProjectName === '') return;
 
     // set input values

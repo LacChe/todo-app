@@ -41,7 +41,6 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
    * @returns {Promise<void>}
    */
   async function loadPreferences(): Promise<void> {
-    // TODO error checking
     let retrievedCurrentTab = await getPreference('currentTab');
     if (!retrievedCurrentTab) retrievedCurrentTab = 'list';
     setCurrentTab(retrievedCurrentTab as TabType);
@@ -61,7 +60,6 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
    * and set to the state.
    */
   async function loadUserData(): Promise<void> {
-    // TODO error checking
     const retrievedProjectList = await getProjectList(getUserId());
     setProjectList(retrievedProjectList);
     const retrievedProjects = await getProjects(getUserId());
