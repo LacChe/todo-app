@@ -149,8 +149,6 @@ const ListView: React.FC = () => {
       <IonContent className="ion-padding">
         {/* list task items */}
         <IonList>
-          {Object.keys(sortedTasks)?.length === 0 && <div>Nothing here...</div>}
-          {sortedTasks.default?.length === 0 && <div>Nothing here...</div>}
           {Object.keys(sortedTasks)
             .sort((a, b) => {
               if (a < b) return -1 * (retrievedProject?.viewSettings.listSettings.settings.groupDesc ? -1 : 1);

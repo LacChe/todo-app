@@ -231,6 +231,7 @@ const CalendarView: React.FC = () => {
                 borderColor: retrievedProject?.color,
                 borderWidth: dateColOffset === index ? '2px' : '0px',
                 borderStyle: 'solid',
+                padding: '-1px',
               }}
               key={date}
             >
@@ -275,7 +276,6 @@ const CalendarView: React.FC = () => {
           ${listSlidingDirection === 'back' ? 'list-back ' : ''}
           calendar-view-date-list`}
         >
-          {taskIdsForDate?.length === 0 && <div>Nothing here...</div>}
           {taskIdsForDate.map((taskId: string, index: number) => {
             if (
               retrievedProject?.viewSettings.calendarSettings.settings.showDone ||
