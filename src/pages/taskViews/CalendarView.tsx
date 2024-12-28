@@ -228,9 +228,9 @@ const CalendarView: React.FC = () => {
               }}
               /*style={{ outlineColor: retrievedProject?.color, outlineWidth: dateColOffset === index ? '2px' : '0px' }}*/
               style={{
-                outlineColor: retrievedProject?.color,
-                outlineWidth: dateColOffset === index ? '2px' : '0px',
-                outlineStyle: 'solid',
+                borderColor: retrievedProject?.color,
+                borderWidth: dateColOffset === index ? '2px' : '0px',
+                borderStyle: 'solid',
               }}
               key={date}
             >

@@ -29,7 +29,6 @@ ion-buttons {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  gap: 5px;
   padding: 5px;
 }
 
@@ -46,7 +45,6 @@ ion-buttons {
   transform: translate(-100px, 0px);
 }
 
-
 .calendar-view-date-slider > button:first-child , .calendar-view-date-slider > button:last-child {
   opacity: 0.5;
 }
@@ -54,16 +52,13 @@ ion-buttons {
 .calendar-view-date-slider > button {
   transition: all 0.1s;
   padding: 5px;
+  margin: 1px;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 40px;
-}
-
-.calendar-view-date-slider > button.selected {
-  background-color: blue;
 }
 
 .group-label, .date-slider-label {
