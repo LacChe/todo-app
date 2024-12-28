@@ -13,6 +13,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   let [loading, setLoading] = useState<boolean>(true);
 
   // preferences
+  let [locale, setLocale] = useState<string>('en');
   let [currentTaskId, setCurrentTaskId] = useState<string>();
   let [currentProjectId, setCurrentProjectId] = useState<string>();
   let [currentTab, setCurrentTab] = useState<TabType>();
@@ -28,9 +29,6 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     ['#9467BD', '#8B0000', '#D2691E', '#FF6347'],
     ['#C71585', '#4B0082', '#0000FF', '#7F7F7F'],
   ];
-
-  const dayOfWeekInitials = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
-  const monthsOfYearAbbr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   // load on first render
   useEffect(() => {
@@ -304,9 +302,9 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
       value={{
         loading,
         colorGrid,
-        dayOfWeekInitials,
-        monthsOfYearAbbr,
         //
+        locale,
+        setLocale,
         currentTab,
         handleSetCurrentTab,
         currentProjectId,

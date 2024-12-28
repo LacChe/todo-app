@@ -22,7 +22,7 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { BlockType, ProjectType } from '../../types';
-import { ellipsisVerticalOutline, textOutline } from 'ionicons/icons';
+import { ellipsisVerticalOutline } from 'ionicons/icons';
 
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';

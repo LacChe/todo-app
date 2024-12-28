@@ -176,7 +176,6 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           <IonTextarea
             labelPlacement="floating"
             label="Notes"
-            placeholder="Task Notes"
             value={newTaskNotes}
             onIonInput={(e) => setNewTaskNotes(e.detail.value as string)}
           />

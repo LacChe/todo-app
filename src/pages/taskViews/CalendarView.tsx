@@ -22,10 +22,11 @@ import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
 import { taskDue, taskOverdue } from '../../dataManagement/utils';
+import { localeToString } from '../../dataManagement/localeToString';
 
 const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, setProject, getTask, tasks, dayOfWeekInitials, monthsOfYearAbbr } = useContext(Context);
+  const { loading, getProject, setProject, getTask, tasks, locale } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
 
@@ -200,7 +201,7 @@ const CalendarView: React.FC = () => {
           className="date-slider-label"
         >
           {/* year and month */}
-          {date.getFullYear()} {monthsOfYearAbbr[date.getMonth()]}.
+          {date.getFullYear()} {(localeToString('monthsOfYearAbbr', locale) as string[])[date.getMonth()]}.
         </div>
         <div
           className={`${sliderSlidingDirection === 'forward' ? 'slider-forward ' : ''}
@@ -229,7 +230,7 @@ const CalendarView: React.FC = () => {
               }}
               key={date}
             >
-              <div>{dayOfWeekInitials[index]}</div>
+              <div>{(localeToString('dayOfWeekInitials', locale) as string[])[index]}</div>
               <div>{date.substring(8, 10).replace(/^0+/, '')}</div>
             </button>
           ))}
