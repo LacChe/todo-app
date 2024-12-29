@@ -11,4 +11,4 @@ A task management app built with <a href="https://www.typescriptlang.org/">Types
 * Edit and delete projects and tasks
 * Search for tasks
 
-<img src="https://github.com/LacChe/todo-app/raw/main/readme-screenshots/1.png"/>
+<img src="https://github.com/LacChe/todo-app/raw/main/readme-screenshots/1.png" width="240"/>
