@@ -188,7 +188,9 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
             {Object.keys(localeToString('taskTypeDisplayString', locale)).map((key, index) => {
               const displayStrings = localeToString('taskTypeDisplayString', locale);
               return (
-                <IonSelectOption value={key}>{displayStrings[key as keyof typeof displayStrings]}</IonSelectOption>
+                <IonSelectOption key={index} value={key}>
+                  {displayStrings[key as keyof typeof displayStrings]}
+                </IonSelectOption>
               );
             })}
           </IonSelect>
@@ -217,7 +219,9 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
               placeholder={localeToString('everyDaysOfWeekLabel', locale) as string}
             >
               {(localeToString('weekdaysNames', locale) as string[]).map((weekdayName, index) => (
-                <IonSelectOption value={index}>{weekdayName}</IonSelectOption>
+                <IonSelectOption key={index} value={index}>
+                  {weekdayName}
+                </IonSelectOption>
               ))}
             </IonSelect>
           )}

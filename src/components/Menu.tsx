@@ -40,8 +40,6 @@ import { localeToString } from '../dataManagement/utils';
 import './Menu.css';
 import './ModalStyles.css';
 
-// TODO correctly route search and settings while currentTab exists
-
 const Menu: React.FC = () => {
   const router = useIonRouter();
   const {
@@ -64,11 +62,21 @@ const Menu: React.FC = () => {
     // redirect to new project page if no preferences
     if (!projectList || !projects || projectList.projectIds.length === 0) {
       router.push('/app/project/new', 'root', 'replace');
+      return;
     }
+
+    // redirect to settings or search page
+    if (currentProjectId === 'search' || currentProjectId === 'settings') {
+      router.push(`/app/${currentProjectId}`, 'root', 'replace');
+      return;
+    }
+
     // redirect to first project list view if no preferences
-    if (!currentTab || !currentProjectId || currentProjectId === 'search' || currentProjectId === 'settings') {
+    if (!currentTab || !currentProjectId) {
       router.push(`/app/project/${projects[0].id}/list`, 'root', 'replace');
+      return;
     }
+
     // redirect to saved link after finishing loading
     router.push(`/app/project/${currentProjectId}/${currentTab}`, 'root', 'replace');
   }, [loading]);

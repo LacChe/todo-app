@@ -1,6 +1,12 @@
 export type TabType = 'list' | 'matrix' | 'calendar';
 
-export type PreferenceKeyType = 'localProjectList' | 'localProjects' | 'localTasks' | 'currentTab' | 'currentProjectId';
+export type PreferenceKeyType =
+  | 'localProjectList'
+  | 'localProjects'
+  | 'localTasks'
+  | 'currentTab'
+  | 'currentProjectId'
+  | 'currentLocale';
 export type TaskTypeDataTypeNameType = 'single' | 'everyNumDays' | 'everyDaysOfWeek' | 'everyDaysOfMonth' | 'onDates';
 export type TaskTypeDataTypeValueType = undefined | number | number[] | string[];
 

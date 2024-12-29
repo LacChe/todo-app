@@ -54,6 +54,8 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     setCurrentTab(retrievedCurrentTab as TabType);
     let retrievedCurrentProjectId = await getPreference('currentProjectId');
     setCurrentProjectId(retrievedCurrentProjectId as string);
+    let retrievedLocale = await getPreference('currentLocale');
+    setLocale(retrievedLocale as string);
   }
 
   /**
@@ -93,6 +95,11 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
   async function handleSetCurrentProjectId(projectId: string) {
     setCurrentProjectId(projectId);
     setPreference('currentProjectId', projectId);
+  }
+
+  async function handleSetLocale(locale: string) {
+    setLocale(locale);
+    setPreference('currentLocale', locale);
   }
 
   /**
@@ -304,7 +311,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
         colorGrid,
         //
         locale,
-        setLocale,
+        handleSetLocale,
         currentTab,
         handleSetCurrentTab,
         currentProjectId,

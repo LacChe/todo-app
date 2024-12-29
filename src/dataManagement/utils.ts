@@ -1,13 +1,19 @@
 import { GroupParamsType, ProjectType, SortParamsType, TaskType } from '../types';
 
 import en from '../strings/en.json';
+import cn from '../strings/cn.json';
 
 type stringKeys = typeof en;
 
 export function localeToString(string: keyof stringKeys, locale: string) {
+  let retString = en[string];
   switch (locale) {
     case 'en':
-      const retString = en[string];
+      retString = en[string];
+      if (retString) return retString;
+      else return '';
+    case 'cn':
+      retString = cn[string];
       if (retString) return retString;
       else return '';
     default:
