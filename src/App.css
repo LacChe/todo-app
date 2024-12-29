@@ -7,3 +7,16 @@ ion-fab {
 .hidden {
   visibility: hidden;
 }
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+ion-spinner {
+  width: 30vh;
+  height: 30vh;
+  color: cadetblue;
+}

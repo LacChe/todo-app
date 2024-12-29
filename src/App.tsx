@@ -1,4 +1,4 @@
-import { IonApp, IonFab, IonFabButton, IonIcon, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonApp, IonFab, IonFabButton, IonIcon, IonRouterOutlet, IonSpinner, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 
 /* Core CSS required for Ionic components to work properly */
@@ -40,7 +40,13 @@ import { Context } from './dataManagement/ContextProvider';
 setupIonicReact();
 
 const App: React.FC = () => {
-  const { currentProjectId } = useContext(Context);
+  const { currentProjectId, loading } = useContext(Context);
+  if (loading)
+    return (
+      <div className="spinner-container">
+        <IonSpinner name="crescent" />
+      </div>
+    );
   return (
     <IonApp>
       <IonFab
@@ -58,7 +64,7 @@ const App: React.FC = () => {
           <Route exact path="/">
             <div>login / data loading</div>
           </Route>
-        */}
+          */}
           <Route exact path="/">
             <Redirect to="/app" />
           </Route>
