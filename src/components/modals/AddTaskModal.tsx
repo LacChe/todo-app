@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { TaskType } from '../../types';
 import { Context } from '../../dataManagement/ContextProvider';
 import { ellipsisHorizontalOutline, sendOutline } from 'ionicons/icons';
+import { localeToString } from '../../dataManagement/utils';
 
 type AddTaskModalProps = {
   setBasicTaskInfo: Dispatch<SetStateAction<TaskType | undefined>>;
@@ -12,7 +13,7 @@ type AddTaskModalProps = {
 
 const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
-  const { setTask } = useContext(Context);
+  const { setTask, locale } = useContext(Context);
 
   const [newTaskName, setNewTaskName] = useState<string>('');
   const [newTaskNotes, setNewTaskNotes] = useState<string>('');
@@ -72,8 +73,14 @@ const AddTaskModal: React.FC<AddTaskModalProps> = ({ setBasicTaskInfo }) => {
     >
       <form onSubmit={handleSubmit} className="add-task-modal-form">
         <div className="add-task-input-wrapper">
-          <IonInput placeholder="What needs doing..." onIonInput={(e) => setNewTaskName(e.detail.value as string)} />
-          <IonInput placeholder="Notes" onIonInput={(e) => setNewTaskNotes(e.detail.value as string)} />
+          <IonInput
+            placeholder={localeToString('taskNamePlaceholder', locale) as string}
+            onIonInput={(e) => setNewTaskName(e.detail.value as string)}
+          />
+          <IonInput
+            placeholder={localeToString('notesPlaceholder', locale) as string}
+            onIonInput={(e) => setNewTaskNotes(e.detail.value as string)}
+          />
         </div>
         <div className="add-task-button-wrapper">
           {/* button to change to detailed creation mode */}

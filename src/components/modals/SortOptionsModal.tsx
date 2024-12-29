@@ -3,9 +3,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { GroupParamsType, ProjectListType, SortParamsType, ViewSettingsSettingsType } from '../../types';
 import { Context } from '../../dataManagement/ContextProvider';
 import { chevronDownOutline, chevronUpOutline } from 'ionicons/icons';
+import { localeToString } from '../../dataManagement/utils';
 
 const SortOptionsModal: React.FC = () => {
-  const { currentProjectId, projectList, handleSetProjectList, getProject, setProject } = useContext(Context);
+  const { currentProjectId, projectList, handleSetProjectList, getProject, setProject, locale } = useContext(Context);
 
   const sorts = ['name', 'notes', 'createdDate'];
   const groups = ['createdDate', 'projectName', 'typeData'];
@@ -42,46 +43,52 @@ const SortOptionsModal: React.FC = () => {
   return (
     <IonModal trigger="open-sort-options-modal" initialBreakpoint={1} breakpoints={[0, 1]}>
       <div className="sort-options-modal">
-        <IonLabel>Sort By</IonLabel>
+        <IonLabel>{localeToString('sortBy', locale) as string}</IonLabel>
         <div>
-          {sorts.map((sort) => (
-            <IonButton
-              fill={sortSettings.sort === sort ? 'solid' : 'outline'}
-              key={sort}
-              onClick={() => {
-                let newSortSettings = { ...sortSettings } as ViewSettingsSettingsType;
-                if (newSortSettings.sort !== sort) newSortSettings.sort = sort as SortParamsType;
-                else newSortSettings.sortDesc = !newSortSettings.sortDesc;
-                handleSetSortSettings(newSortSettings);
-              }}
-            >
-              {sort}
-              {sortSettings.sort === sort ? (
-                sortSettings.sortDesc ? (
-                  <IonIcon icon={chevronDownOutline} />
-                ) : (
-                  <IonIcon icon={chevronUpOutline} />
-                )
-              ) : (
-                ''
-              )}
-            </IonButton>
-          ))}
-        </div>
-        <IonLabel>Group By</IonLabel>
-        <div>
-          {groups.map((group) => {
-            if (group === 'projectName' && currentProjectId !== 'search') return;
+          {Object.keys(localeToString('sortsList', locale)).map((sortKey) => {
+            const displayString = (localeToString('sortsList', locale) as { [key: string]: string })[sortKey] as string;
             return (
               <IonButton
-                fill={sortSettings.group === group ? 'solid' : 'outline'}
-                key={group}
+                fill={sortSettings.sort === sortKey ? 'solid' : 'outline'}
+                key={sortKey}
                 onClick={() => {
                   let newSortSettings = { ...sortSettings } as ViewSettingsSettingsType;
-                  if (newSortSettings.group !== group) {
-                    newSortSettings.group = group as GroupParamsType;
+                  if (newSortSettings.sort !== sortKey) newSortSettings.sort = sortKey as SortParamsType;
+                  else newSortSettings.sortDesc = !newSortSettings.sortDesc;
+                  handleSetSortSettings(newSortSettings);
+                }}
+              >
+                {displayString}
+                {sortSettings.sort === sortKey ? (
+                  sortSettings.sortDesc ? (
+                    <IonIcon icon={chevronDownOutline} />
+                  ) : (
+                    <IonIcon icon={chevronUpOutline} />
+                  )
+                ) : (
+                  ''
+                )}
+              </IonButton>
+            );
+          })}
+        </div>
+        <IonLabel>{localeToString('groupBy', locale) as string}</IonLabel>
+        <div>
+          {Object.keys(localeToString('groupsList', locale)).map((groupKey) => {
+            if (groupKey === 'projectName' && currentProjectId !== 'search') return;
+            const displayString = (localeToString('groupsList', locale) as { [key: string]: string })[
+              groupKey
+            ] as string;
+            return (
+              <IonButton
+                fill={sortSettings.group === groupKey ? 'solid' : 'outline'}
+                key={groupKey}
+                onClick={() => {
+                  let newSortSettings = { ...sortSettings } as ViewSettingsSettingsType;
+                  if (newSortSettings.group !== groupKey) {
+                    newSortSettings.group = groupKey as GroupParamsType;
                     newSortSettings.groupDesc = false;
-                  } else if (newSortSettings.group === group && newSortSettings.groupDesc === false) {
+                  } else if (newSortSettings.group === groupKey && newSortSettings.groupDesc === false) {
                     newSortSettings.groupDesc = true;
                   } else {
                     newSortSettings.group = '';
@@ -89,8 +96,8 @@ const SortOptionsModal: React.FC = () => {
                   handleSetSortSettings(newSortSettings);
                 }}
               >
-                {group}
-                {sortSettings.group === group ? (
+                {displayString}
+                {sortSettings.group === groupKey ? (
                   sortSettings.groupDesc ? (
                     <IonIcon icon={chevronDownOutline} />
                   ) : (

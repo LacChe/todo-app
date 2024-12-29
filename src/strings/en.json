@@ -4,6 +4,7 @@
   "show": "Show",
   "hide": "Hide",
   "done": "Done",
+  "toDo": "To Do",
   "details": "Details",
   "sort": "Sort",
   "addAProject": "Add a Project",
@@ -33,5 +34,12 @@
   "everyDaysOfWeekLabel": "Choose days of the week",
   "weekdaysNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
   "dayOfWeekInitials": ["S", "M", "T", "W", "T", "F", "S"],
-  "monthsOfYearAbbr": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+  "monthsOfYearAbbr": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  "taskTypeDisplayString": {
+    "single": "Singular",
+    "everyNumDays": "Every # Days",
+    "everyDaysOfWeek": "On Days of Week",
+    "everyDaysOfMonth": "On Days of Month",
+    "onDates": "On Dates"
+  }
 }

@@ -1,17 +1,18 @@
 import { GroupParamsType, ProjectType, SortParamsType, TaskType } from '../types';
 
-export function typeDataToDisplayString(typeDataName: string) {
-  switch (typeDataName) {
-    case 'single':
-      return 'Singular';
-    case 'everyNumDays':
-      return 'Every # Days';
-    case 'everyDaysOfWeek':
-      return 'On Days of Week';
-    case 'everyDaysOfMonth':
-      return 'On Days of Month';
-    case 'onDates':
-      return 'On Dates';
+import en from '../strings/en.json';
+
+type stringKeys = typeof en;
+
+export function localeToString(string: keyof stringKeys, locale: string) {
+  switch (locale) {
+    case 'en':
+      const retString = en[string];
+      if (retString) return retString;
+      else return '';
+    default:
+      console.error('locale not found');
+      return '';
   }
 }
 

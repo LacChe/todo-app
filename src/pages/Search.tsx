@@ -20,10 +20,10 @@ import './taskViews/TaskView.css';
 import { Context } from '../dataManagement/ContextProvider';
 import TaskItem from '../components/TaskItem';
 import { ProjectListType, TaskType } from '../types';
-import { groupTasks, sortTaskGroups, sortTasks, taskOverdue, typeDataToDisplayString } from '../dataManagement/utils';
+import { groupTasks, sortTaskGroups, sortTasks, taskOverdue, localeToString } from '../dataManagement/utils';
 
 const Search: React.FC = () => {
-  const { tasks, projects, projectList, handleSetProjectList, getTask } = useContext(Context);
+  const { tasks, projects, projectList, handleSetProjectList, getTask, locale } = useContext(Context);
 
   const [searchInput, setSearchInput] = useState<string>('');
   const [filteredTasks, setfilteredTasks] = useState<{ [key: string]: TaskType[] }>({});
@@ -89,7 +89,8 @@ const Search: React.FC = () => {
               dismissListPopover();
             }}
           >
-            {projectList?.searchSettings.showDone ? 'Hide' : 'Show'} Done
+            {localeToString(projectList?.searchSettings.showDone ? 'hide' : 'show', locale) as string}{' '}
+            {localeToString('done', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -99,7 +100,8 @@ const Search: React.FC = () => {
               dismissListPopover();
             }}
           >
-            {projectList?.searchSettings.showDetails ? 'Hide' : 'Show'} Details
+            {localeToString(projectList?.searchSettings.showDetails ? 'hide' : 'show', locale) as string}{' '}
+            {localeToString('details', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -107,7 +109,7 @@ const Search: React.FC = () => {
               dismissListPopover();
             }}
           >
-            Sort
+            {localeToString('sort', locale) as string}
           </IonButton>
         </IonButtons>
       </IonContent>
@@ -124,7 +126,10 @@ const Search: React.FC = () => {
             <IonMenuButton />
           </IonButtons>
           {/* search bar */}
-          <IonInput placeholder="Search" onIonInput={(e) => setSearchInput(e.target.value as string)} />
+          <IonInput
+            placeholder={localeToString('search', locale) as string}
+            onIonInput={(e) => setSearchInput(e.target.value as string)}
+          />
           {/* options button */}
           <IonButtons slot="end" collapse={true}>
             <IonButton onClick={(e: any) => presentListPopover({ event: e })}>
@@ -143,11 +148,14 @@ const Search: React.FC = () => {
               return 0;
             })
             .map((key, groupIndex) => {
+              const displayStrings = localeToString('taskTypeDisplayString', locale);
               return (
                 <IonCard key={groupIndex}>
                   {key !== 'default' && (
                     <div className="group-label">
-                      {projectList?.searchSettings.group === 'typeData' ? typeDataToDisplayString(key) : key}
+                      {projectList?.searchSettings.group === 'typeData'
+                        ? (displayStrings[key as keyof typeof displayStrings] as string)
+                        : key}
                     </div>
                   )}
                   {filteredTasks[key].map((task, taskIndex) => {

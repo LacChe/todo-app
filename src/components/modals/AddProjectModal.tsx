@@ -5,11 +5,12 @@ import { v4 as uuidv4 } from 'uuid';
 import { ProjectType } from '../../types';
 import { Context } from '../../dataManagement/ContextProvider';
 import { sendOutline } from 'ionicons/icons';
+import { localeToString } from '../../dataManagement/utils';
 
 const AddProjectModal: React.FC = () => {
   const addProjectModal = useRef<HTMLIonModalElement>(null);
   const router = useIonRouter();
-  const { setProject, handleSetCurrentProjectId, handleSetCurrentTab } = useContext(Context);
+  const { setProject, handleSetCurrentProjectId, handleSetCurrentTab, locale } = useContext(Context);
 
   const [newProjectName, setNewProjectName] = useState<string>('');
 
@@ -47,10 +48,10 @@ const AddProjectModal: React.FC = () => {
         },
         matrixSettings: {
           blocks: [
-            { name: 'Urgent & Important', taskIds: [], color: '#FF5733' },
-            { name: 'Not Urgent & Important', taskIds: [], color: '#1F77B4' },
-            { name: 'Urgent & Not Important', taskIds: [], color: '#2CA02C' },
-            { name: 'Not Urgent & Not Important', taskIds: [], color: '#4B0082' },
+            { name: (localeToString('defaultBlockNames', locale) as string[])[0], taskIds: [], color: '#FF5733' },
+            { name: (localeToString('defaultBlockNames', locale) as string[])[1], taskIds: [], color: '#1F77B4' },
+            { name: (localeToString('defaultBlockNames', locale) as string[])[2], taskIds: [], color: '#2CA02C' },
+            { name: (localeToString('defaultBlockNames', locale) as string[])[3], taskIds: [], color: '#4B0082' },
           ],
           settings: {
             showDetails: false,
@@ -101,8 +102,7 @@ const AddProjectModal: React.FC = () => {
       <form onSubmit={handleSubmit} className="add-project-modal-form">
         <IonInput
           labelPlacement="floating"
-          label="Name"
-          placeholder="Project Name"
+          label={localeToString('projectNamePlaceholder', locale) as string}
           value={newProjectName}
           onIonInput={(e) => setNewProjectName(e.detail.value as string)}
         />

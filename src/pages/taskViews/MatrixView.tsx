@@ -28,10 +28,11 @@ import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
 import { taskOverdue } from '../../dataManagement/utils';
+import { localeToString } from '../../dataManagement/utils';
 
 const MatrixView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, setProject, tasks, getTask } = useContext(Context);
+  const { loading, getProject, setProject, tasks, getTask, locale } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
   const [hoverOverBlock, setHoverOverBlock] = useState<number>(-1);
@@ -50,7 +51,7 @@ const MatrixView: React.FC = () => {
               dismissMatrixPopover();
             }}
           >
-            Edit
+            {localeToString('edit', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -62,7 +63,13 @@ const MatrixView: React.FC = () => {
               dismissMatrixPopover();
             }}
           >
-            {!retrievedProject?.viewSettings.matrixSettings.settings.showDone ? 'Show ' : 'Hide '} Done
+            {
+              localeToString(
+                !retrievedProject?.viewSettings.matrixSettings.settings.showDone ? 'hide' : 'show',
+                locale,
+              ) as string
+            }{' '}
+            {localeToString('done', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -74,7 +81,13 @@ const MatrixView: React.FC = () => {
               dismissMatrixPopover();
             }}
           >
-            {!retrievedProject?.viewSettings.matrixSettings.settings.showDetails ? 'Show ' : 'Hide '} Details
+            {
+              localeToString(
+                !retrievedProject?.viewSettings.matrixSettings.settings.showDetails ? 'hide' : 'show',
+                locale,
+              ) as string
+            }{' '}
+            {localeToString('details', locale) as string}
           </IonButton>
         </IonButtons>
       </IonContent>

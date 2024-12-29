@@ -22,7 +22,7 @@ import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
 import { taskDue, taskOverdue } from '../../dataManagement/utils';
-import { localeToString } from '../../dataManagement/localeToString';
+import { localeToString } from '../../dataManagement/utils';
 
 const CalendarView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
@@ -145,7 +145,7 @@ const CalendarView: React.FC = () => {
               dismissCalendarPopover();
             }}
           >
-            Edit
+            {localeToString('edit', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -157,7 +157,13 @@ const CalendarView: React.FC = () => {
               dismissCalendarPopover();
             }}
           >
-            {!retrievedProject?.viewSettings.calendarSettings.settings.showDone ? 'Show ' : 'Hide '} Done
+            {
+              localeToString(
+                !retrievedProject?.viewSettings.calendarSettings.settings.showDone ? 'hide' : 'show',
+                locale,
+              ) as string
+            }{' '}
+            {localeToString('done', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -169,7 +175,13 @@ const CalendarView: React.FC = () => {
               dismissCalendarPopover();
             }}
           >
-            {!retrievedProject?.viewSettings.calendarSettings.settings.showDetails ? 'Show ' : 'Hide '} Details
+            {
+              localeToString(
+                !retrievedProject?.viewSettings.calendarSettings.settings.showDetails ? 'hide' : 'show',
+                locale,
+              ) as string
+            }{' '}
+            {localeToString('details', locale) as string}
           </IonButton>
           {/* add option for hiding singular tasks */}
         </IonButtons>

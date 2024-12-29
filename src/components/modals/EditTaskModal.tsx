@@ -16,7 +16,7 @@ import { Context } from '../../dataManagement/ContextProvider';
 import { checkmarkOutline, closeOutline } from 'ionicons/icons';
 import { TaskType, TaskTypeDataTypeNameType, TaskTypeDataTypeValueType } from '../../types';
 import DayOfMonthSelection from '../DayOfMonthSelection';
-import { typeDataToDisplayString } from '../../dataManagement/utils';
+import { localeToString } from '../../dataManagement/utils';
 
 type EditTaskModalProps = {
   basicTaskInfo: TaskType | undefined;
@@ -25,7 +25,7 @@ type EditTaskModalProps = {
 
 const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTaskInfo }) => {
   const editProjectModal = useRef<HTMLIonModalElement>(null);
-  const { getTask, setTask, tasks, deleteTask, currentTaskId } = useContext(Context);
+  const { getTask, setTask, tasks, deleteTask, currentTaskId, locale } = useContext(Context);
 
   let retrievedTask: TaskType;
   const [newTaskName, setNewTaskName] = useState<string | undefined>();
@@ -167,15 +167,14 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           {/* Name Input */}
           <IonInput
             labelPlacement="floating"
-            label="Name"
-            placeholder="Task Name"
+            label={localeToString('taskNamePlaceholder', locale) as string}
             value={newTaskName}
             onIonInput={(e) => setNewTaskName(e.detail.value as string)}
           />
           {/* Notes Input */}
           <IonTextarea
             labelPlacement="floating"
-            label="Notes"
+            label={localeToString('notesPlaceholder', locale) as string}
             value={newTaskNotes}
             onIonInput={(e) => setNewTaskNotes(e.detail.value as string)}
           />
@@ -186,16 +185,17 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
             onIonChange={(e) => setNewTaskTypeDataName(e.detail.value)}
             interface="popover"
           >
-            <IonSelectOption value="single">{typeDataToDisplayString('single')}</IonSelectOption>
-            <IonSelectOption value="everyNumDays">{typeDataToDisplayString('everyNumDays')}</IonSelectOption>
-            <IonSelectOption value="everyDaysOfWeek">{typeDataToDisplayString('everyDaysOfWeek')}</IonSelectOption>
-            <IonSelectOption value="everyDaysOfMonth">{typeDataToDisplayString('everyDaysOfMonth')}</IonSelectOption>
-            <IonSelectOption value="onDates">{typeDataToDisplayString('onDates')}</IonSelectOption>
+            {Object.keys(localeToString('taskTypeDisplayString', locale)).map((key, index) => {
+              const displayStrings = localeToString('taskTypeDisplayString', locale);
+              return (
+                <IonSelectOption value={key}>{displayStrings[key as keyof typeof displayStrings]}</IonSelectOption>
+              );
+            })}
           </IonSelect>
           {/* TypeData Value Input everyNumDays */}
           {newTaskTypeDataName === 'everyNumDays' && (
             <div className="edit-task-input-every-num-days">
-              Every
+              {(localeToString('everyNumDaysLabelList', locale) as string[])[0]}
               <IonInput
                 min={1}
                 type="number"
@@ -203,7 +203,7 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
                 value={everyNumDaysValue}
                 onIonChange={(e) => setEveryNumDaysValue(e.detail.value ? Number.parseInt(e.detail.value) : 0)}
               />
-              Days
+              {(localeToString('everyNumDaysLabelList', locale) as string[])[1]}
             </div>
           )}
           {/* TypeData Value Input everyDaysOfWeek */}
@@ -214,15 +214,11 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
               onIonChange={(e) => setEveryDaysOfWeekValue(e.detail.value as number[])}
               interface="popover"
               multiple={true}
-              placeholder="Choose days of the week"
+              placeholder={localeToString('everyDaysOfWeekLabel', locale) as string}
             >
-              <IonSelectOption value={0}>Sunday</IonSelectOption>
-              <IonSelectOption value={1}>Monday</IonSelectOption>
-              <IonSelectOption value={2}>Tuesday</IonSelectOption>
-              <IonSelectOption value={3}>Wednesday</IonSelectOption>
-              <IonSelectOption value={4}>Thursday</IonSelectOption>
-              <IonSelectOption value={5}>Friday</IonSelectOption>
-              <IonSelectOption value={6}>Saturday</IonSelectOption>
+              {(localeToString('weekdaysNames', locale) as string[]).map((weekdayName, index) => (
+                <IonSelectOption value={index}>{weekdayName}</IonSelectOption>
+              ))}
             </IonSelect>
           )}
           {/* TypeData Value Input everyDaysOfMonth */}
@@ -246,14 +242,14 @@ const EditTaskModal: React.FC<EditTaskModalProps> = ({ basicTaskInfo, setBasicTa
           )}
           {/* Confirmation Alert for Deleting */}
           <IonAlert
-            header={`Delete task ${newTaskName}?`}
+            header={`${localeToString('delete', locale)} ${newTaskName}?`}
             trigger="present-delete-confirmation"
             buttons={[
               {
-                text: 'Cancel',
+                text: localeToString('cancel', locale) as string,
               },
               {
-                text: 'Delete',
+                text: localeToString('delete', locale) as string,
                 role: 'confirm',
                 handler: handleDeleteTask,
               },

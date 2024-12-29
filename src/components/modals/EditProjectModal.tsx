@@ -19,6 +19,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { checkmarkOutline, closeOutline } from 'ionicons/icons';
 import { Context } from '../../dataManagement/ContextProvider';
 import { BlockType, ProjectType } from '../../types';
+import { localeToString } from '../../dataManagement/utils';
 
 const EditProjectModal: React.FC = () => {
   const router = useIonRouter();
@@ -33,6 +34,7 @@ const EditProjectModal: React.FC = () => {
     getProject,
     currentProjectId,
     handleSetCurrentProjectId,
+    locale,
   } = useContext(Context);
 
   let retrievedProject: ProjectType = getProject(currentProjectId);
@@ -179,14 +181,13 @@ const EditProjectModal: React.FC = () => {
           {/* Name Input */}
           <IonInput
             labelPlacement="floating"
-            label="Name"
-            placeholder="Project Name"
+            label={localeToString('projectNamePlaceholder', locale) as string}
             value={newProjectName}
             onIonInput={(e) => setNewProjectName(e.detail.value as string)}
           />
           {/* Color Input */}
           <div className="form-inputs-color-picker">
-            <IonLabel>Color</IonLabel>
+            <IonLabel>{localeToString('colorPlaceholder', locale) as string}</IonLabel>
             <IonButton fill="clear" id="color-trigger">
               <div className="color-picker-popover-button" style={{ backgroundColor: newProjectColor }} />
             </IonButton>
@@ -221,7 +222,7 @@ const EditProjectModal: React.FC = () => {
             </IonPopover>
           </div>
           {/* Block Editing */}
-          <IonLabel>Blocks</IonLabel>
+          <IonLabel>{localeToString('blocksPlaceholder', locale) as string}</IonLabel>
           <IonList className="form-inputs-block-list">
             <IonReorderGroup disabled={false} onIonItemReorder={handleBlockReorder}>
               {newProjectBlocks?.map((block, blockIndex) => (
@@ -270,14 +271,16 @@ const EditProjectModal: React.FC = () => {
           </IonList>
           {/* Confirmation Alert for Deleting */}
           <IonAlert
-            header={`Delete project ${retrievedProject?.name} and all its tasks?`}
+            header={`${(localeToString('deleteConfirmationTextList', locale) as string[])[0]}
+             ${retrievedProject?.name} 
+            ${(localeToString('deleteConfirmationTextList', locale) as string[])[1]}`}
             trigger="present-delete-confirmation"
             buttons={[
               {
-                text: 'Cancel',
+                text: localeToString('cancel', locale) as string,
               },
               {
-                text: 'Delete',
+                text: localeToString('delete', locale) as string,
                 role: 'confirm',
                 handler: handleDeleteProject,
               },

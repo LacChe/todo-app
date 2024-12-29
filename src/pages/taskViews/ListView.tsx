@@ -21,17 +21,11 @@ import { ellipsisVerticalOutline } from 'ionicons/icons';
 import './TaskView.css';
 import { Context } from '../../dataManagement/ContextProvider';
 import TaskItem from '../../components/TaskItem';
-import {
-  groupTasks,
-  sortTaskGroups,
-  sortTasks,
-  taskOverdue,
-  typeDataToDisplayString,
-} from '../../dataManagement/utils';
+import { groupTasks, sortTaskGroups, sortTasks, taskOverdue, localeToString } from '../../dataManagement/utils';
 
 const ListView: React.FC = () => {
   let { projectId } = useParams() as { projectId: string };
-  const { loading, getProject, setProject, projects, tasks, getTask } = useContext(Context);
+  const { loading, getProject, setProject, projects, tasks, getTask, locale } = useContext(Context);
 
   const [retrievedProject, setRetrievedProject] = useState<ProjectType>();
   const [sortedTasks, setSortedTasks] = useState<{ [key: string]: TaskType[] }>({});
@@ -50,7 +44,7 @@ const ListView: React.FC = () => {
               dismissListPopover();
             }}
           >
-            Edit
+            {localeToString('edit', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -62,7 +56,13 @@ const ListView: React.FC = () => {
               dismissListPopover();
             }}
           >
-            {!retrievedProject?.viewSettings.listSettings.settings.showDone ? 'Show ' : 'Hide '} Done
+            {
+              localeToString(
+                !retrievedProject?.viewSettings.listSettings.settings.showDone ? 'hide' : 'show',
+                locale,
+              ) as string
+            }{' '}
+            {localeToString('done', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -74,7 +74,13 @@ const ListView: React.FC = () => {
               dismissListPopover();
             }}
           >
-            {!retrievedProject?.viewSettings.listSettings.settings.showDetails ? 'Show ' : 'Hide '} Details
+            {
+              localeToString(
+                !retrievedProject?.viewSettings.listSettings.settings.showDetails ? 'hide' : 'show',
+                locale,
+              ) as string
+            }{' '}
+            {localeToString('details', locale) as string}
           </IonButton>
           <IonButton
             onClick={() => {
@@ -82,7 +88,7 @@ const ListView: React.FC = () => {
               dismissListPopover();
             }}
           >
-            Sort
+            {localeToString('sort', locale) as string}
           </IonButton>
         </IonButtons>
       </IonContent>
@@ -156,12 +162,13 @@ const ListView: React.FC = () => {
               return 0;
             })
             .map((key, groupIndex) => {
+              const displayStrings = localeToString('taskTypeDisplayString', locale);
               return (
                 <IonCard key={groupIndex}>
                   {key !== 'default' && (
                     <div className="group-label">
                       {retrievedProject?.viewSettings.listSettings.settings.group === 'typeData'
-                        ? typeDataToDisplayString(key)
+                        ? (displayStrings[key as keyof typeof displayStrings] as string)
                         : key}
                     </div>
                   )}

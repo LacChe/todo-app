@@ -5,6 +5,8 @@ import { Context } from '../dataManagement/ContextProvider';
 import './TaskItem.css';
 import { taskDue, taskOverdue } from '../dataManagement/utils';
 
+import { localeToString } from '../dataManagement/utils';
+
 const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: boolean; matrixView?: boolean }> = ({
   taskId,
   offsetDays,
@@ -15,6 +17,8 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
 
   const [taskDueBool, setTaskDueBool] = useState<boolean>(true);
   const [taskOverdueBool, setTaskOverdueBool] = useState<boolean>(true);
+
+  const { locale } = useContext(Context);
 
   let task = getTask(taskId);
   let shownDate = new Date();
@@ -98,10 +102,12 @@ const TaskItem: React.FC<{ taskId: string; offsetDays?: number; showDetails?: bo
       <IonItemOptions side="start">
         {/* only allow toggle if task is due */}
         {taskDueBool && (
-          <IonItemOption onClick={handleStatusToggle}>{taskOverdueBool === true ? 'Done' : 'To Do'}</IonItemOption>
+          <IonItemOption onClick={handleStatusToggle}>
+            {localeToString(taskOverdueBool === true ? 'done' : 'toDo', locale) as string}
+          </IonItemOption>
         )}
 
-        <IonItemOption onClick={handleEdit}>Edit</IonItemOption>
+        <IonItemOption onClick={handleEdit}>{localeToString('edit', locale) as string}</IonItemOption>
       </IonItemOptions>
       {/* task content */}
       <IonItem onClick={toggleShowDetailsOverride} className={taskOverdueBool !== true ? 'done' : ''}>

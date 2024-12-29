@@ -35,9 +35,12 @@ import EditTaskModal from './modals/EditTaskModal';
 import { taskOverdue } from '../dataManagement/utils';
 import Search from '../pages/Search';
 import SortOptionsModal from './modals/SortOptionsModal';
+import { localeToString } from '../dataManagement/utils';
 
 import './Menu.css';
 import './ModalStyles.css';
+
+// TODO correctly route search and settings while currentTab exists
 
 const Menu: React.FC = () => {
   const router = useIonRouter();
@@ -50,6 +53,7 @@ const Menu: React.FC = () => {
     getTask,
     handleSetCurrentProjectId,
     handleSetProjectList,
+    locale,
   } = useContext(Context);
 
   const [basicTaskInfo, setBasicTaskInfo] = useState<TaskType | undefined>();
@@ -123,7 +127,7 @@ const Menu: React.FC = () => {
                     <IonIcon icon={settingsOutline}></IonIcon>
                   </IonButton>
                 </IonMenuToggle>
-                <IonTitle>Projects</IonTitle>
+                <IonTitle>{localeToString('projects', locale) as string}</IonTitle>
                 <IonMenuToggle autoHide={false}>
                   <IonButton
                     fill="outline"

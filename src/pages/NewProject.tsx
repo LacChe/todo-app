@@ -9,10 +9,14 @@ import {
   IonTitle,
   IonToolbar,
 } from '@ionic/react';
-import React from 'react';
+import React, { useContext } from 'react';
 import { addOutline } from 'ionicons/icons';
+import { Context } from '../dataManagement/ContextProvider';
+import { localeToString } from '../dataManagement/utils';
 
 const NewProject: React.FC = () => {
+  const { locale } = useContext(Context);
+
   return (
     <IonPage>
       <IonHeader>
@@ -20,13 +24,13 @@ const NewProject: React.FC = () => {
           <IonButtons slot="start">
             <IonMenuButton />
           </IonButtons>
-          <IonTitle>Add a Project</IonTitle>
+          <IonTitle>{localeToString('addAProject', locale) as string}</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
         <IonButton onClick={() => document.getElementById('open-add-project-modal')?.click()}>
           <IonIcon icon={addOutline} />
-          Add a new Project to Begin
+          {localeToString('addANewProjectToBegin', locale) as string}
         </IonButton>
       </IonContent>
     </IonPage>
