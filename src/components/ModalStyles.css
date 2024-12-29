@@ -122,3 +122,16 @@ ion-modal {
   border: 1px solid blue;
   border-radius: 10px;
 }
+
+.days-of-month-selection ion-row {
+  flex-wrap: nowrap;
+}
+
+.days-of-month-selection ion-col {
+  padding: 0px;
+}
+
+.days-of-month-selection ion-button , .days-of-month-selection .button-native {
+  margin: 1px;
+  width: 10vw;
+}
