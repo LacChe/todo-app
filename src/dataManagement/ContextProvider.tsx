@@ -55,6 +55,7 @@ export const ContextProvider: React.FC<PropsWithChildren<{}>> = ({ children }) =
     let retrievedCurrentProjectId = await getPreference('currentProjectId');
     setCurrentProjectId(retrievedCurrentProjectId as string);
     let retrievedLocale = await getPreference('currentLocale');
+    if (!retrievedLocale) retrievedLocale = 'en';
     setLocale(retrievedLocale as string);
   }
 
